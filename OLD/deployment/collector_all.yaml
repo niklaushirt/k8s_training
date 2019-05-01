@@ -1,0 +1,43 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: collector
+  namespace: default
+  labels:
+    app: collector
+spec:
+  selector:
+    matchLabels:
+      app: collector
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: collector
+    spec:
+      containers:
+      - name: collector
+        image: ibmicpcoc/collector:latest
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: collector
+  namespace: default
+  labels:
+    app: collector
+spec:
+  type: NodePort
+  selector:
+    app: collector
+  ports:
+    - port: 80
+      targetPort: 3000
+      protocol: TCP
+      name: collector

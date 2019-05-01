@@ -1,0 +1,104 @@
+{    
+    "uiLabels" : {
+        "collectorName": "Coleccionista",
+        "softwareVersion": "1.0.0",
+        "markComplete": "Presione para marcar completado",
+        "completeMsg": "Marcado completo",
+        "student": "Student",
+        "instructor": "Instructor",
+
+        "time_msg": "Tiempo restante",
+        "time_hour": "h ",
+        "time_min": "m ",
+        "time_sec": "s",
+        "time_stop": "Detener",
+
+        "menu00": "Sobre coleccionista",
+        "menu01": "Temporizador de inicio",
+        "menu02": "Temporizador claro",
+        "menu03": "Borrar estadísticas",
+        "menu04": "Subir curso",
+        "menu05": "Curso de validación",
+        "menu06": "Imprimir curso a PDF",
+        "menu07": "Equipos",
+
+        "tab00": "Los cursos",
+        "tab01": "Estadística",
+        "tab02": "Trabajo de clase",
+        "tab03": "Realimentación",
+        "tab04": "Información",
+        "tab05": "Visión",
+
+        "tab00_hdr": "Catalogo de cursos",
+        "tab00_list": "seleccionar curso",
+        "tab00_btn": "Comenzar el curso",
+
+        "tab01_hdr": "Trabajo completo",
+        "tab01_ns": "espacio de nombres",
+        "tab01_wait": "Esperando datos",
+
+        "tab02_hdr": "Seleccione el elemento de la lista desplegable para comenzar",
+        "tab02_begin": "Comenzar el curso para poblar",
+        "tab02_list": "seleccionar trabajo",
+
+        "tab03_hdr": "Realimentación",
+        "tab03_inst": "Ingrese los comentarios en la siguiente sección y presione Enviar cuando haya terminado",
+        "tab03_btn": "Enviar",
+        "tab03_nothing": "Nada enviado, comentarios son en blanco",
+        "tab03_ok": "La retroalimentación fue recibida con éxito, gracias.",
+
+        "tab04_hdr": "Información suplementaria. Los enlaces de documentos pueden abrir una nueva pestaña.",
+    
+        "tab05_hdr": "Curso Insight",
+
+        "modal_del_hdr1": "Confirmar estadísticas claras",
+        "modal_del_hdr2": "Estás a punto de borrar las estadísticas de finalización.",
+        "modal_del_confirm": "Quieres proceder?",
+        "modal_del_btn1": "Borrar",
+        "modal_del_btn2": "Cancelar",
+
+        "modal_time_hdr1": "minutero - Establecer y empezar",
+        "modal_time_lbl": "Minutos para contar",
+        "modal_time_btn1": "Temporizador de inicio",
+        "modal_time_btn2": "Cerrar",
+
+        "modal_ful_hdr": "Carga del curso",
+        "modal_ful_msg": "Coloque los archivos del curso aquí o haga clic para subir.<br />",
+        "modal_ful_btn1": "Cursos de validacion",
+        "modal_ful_btn2": "Cerrar",
+
+        "modal_valid_hdr": "Resultados de la validación del curso",
+        "modal_valid_btn": "Cerrar",
+
+        "modal_about_hdr": "Coleccionista",
+        "modal_about_ver": "Versión",
+        "modal_about_lbl": "Esta aplicación está destinada a ayudar con la formación y cursos de habilitación.",
+        "modal_about_mid": "Tecnología de servidor",
+        "modal_about_ui": "Tecnología de interfaz de usuario",
+
+        "modal_print_hdr1": "Imprimir curso a PDF",
+        "modal_print_lbl": "Minutos para contar",
+        "modal_print_btn1": "Impresión",
+        "modal_print_btn2": "Cerrar",
+        "modal_print_list": " seleccione Archivo",
+        "modal_print_preview": "Vista previa de PDF generado",
+        "modal_print_fail": "Error al generar PDF", 
+
+        "modal_team_hdr": "Nombre y color del equipo.",
+        "modal_team_lbl": "Equipo",
+        "modal_team_btn": "Cerrar",   
+
+        "pmsg_001": "Curso de procesamiento",
+        "pmsg_002": "Contenido añadido para el segmento",
+        "pmsg_003": "Parámetro de curso no válido",
+        "pmsg_004": "Parámetro",
+        "pmsg_005": "------ Empezar nuevo tema ------",
+        "pmsg_006": "Insertando el botón completo",
+        "pmsg_007": "Error construyendo enlaces auto curso, mensaje",
+        
+        "graph_01_title": "Tiempo para completar el trabajo",
+        "graph_01_yTitle": "Trabajo de curso",
+        "graph_01_xTitle": "Segundos"
+
+    }
+}
