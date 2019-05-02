@@ -1,3 +1,23 @@
+
+docker tag ibmicpcoc/collector:latest niklaushirt/collector:course0.3
+docker push niklaushirt/collector:course0.3
+
+
+ibmcloud login -a https://cloud.ibm.com --sso
+ibmcloud ks region-set eu-central
+ibmcloud ks cluster-config mycluster
+export KUBECONFIG=/Users/$USER/.bluemix/plugins/container-service/clusters/mycluster/kube-config-fra02-mycluster.yml
+
+
+kubectl delete -f k8s_deployment_course/
+
+kubectl apply -f k8s_deployment_course/
+
+
+
+
+
+
 # Collector
 
 
@@ -17,23 +37,6 @@ ibmcloud cr image-list
 
 
 
-docker tag ibmicpcoc/collector:latest niklaushirt/collector:course0.3
-docker push niklaushirt/collector:course0.3
-ibmcloud cr image-list
-
-
-
-
-
-ibmcloud login -a https://cloud.ibm.com --sso
-ibmcloud ks region-set eu-central
-ibmcloud ks cluster-config mycluster
-export KUBECONFIG=/Users/$USER/.bluemix/plugins/container-service/clusters/mycluster/kube-config-fra02-mycluster.yml
-
-
-kubectl delete -f k8s_deployment_course/
-
-kubectl apply -f k8s_deployment_course/
 ---
 
 Collector is an application developed to assist with enablement and training.  One or more courses can be taught or presented via the user interface. The user interface is browser based and provides two personas, instructor and student.  A series of tabs categorize the actions the user is able to perform.  The student and instructor personas are provided with a core set of common capabilties.  While the instructor persona is provided with additional capabilties that assist with course creation, validation, printing, and usage insights of student interaction. 
