@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
       - name: maroon-student-ui
-        image: uk.icr.io/niklaushirt/collector:course0.3
+        image: uk.icr.io/niklaushirt/collector:courselatest
         imagePullPolicy: Always
         ports:
         - containerPort: 3000

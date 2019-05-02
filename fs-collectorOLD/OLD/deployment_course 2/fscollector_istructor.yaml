@@ -27,7 +27,7 @@ spec:
     spec:
       containers:
       - name: dashboard
-        image: registry.eu-gb.bluemix.net/niklaushirt/collector:course0.3
+        image: registry.eu-gb.bluemix.net/niklaushirt/collector:courselatest
         imagePullPolicy: Always
         env:
           - name: APP_NAMESPACE

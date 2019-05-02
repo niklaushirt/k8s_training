@@ -1,6 +1,6 @@
 
-docker tag ibmicpcoc/collector:latest niklaushirt/collector:course0.3
-docker push niklaushirt/collector:course0.3
+docker tag ibmicpcoc/collector:latest niklaushirt/collector:courselatest
+docker push niklaushirt/collector:courselatest
 
 
 ibmcloud login -a https://cloud.ibm.com --sso
@@ -14,6 +14,7 @@ kubectl delete -f k8s_deployment_course/
 kubectl apply -f k8s_deployment_course/
 
 
+sadffdsa
 
 
 

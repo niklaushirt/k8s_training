@@ -27,7 +27,7 @@ spec:
     spec:
       containers:
       - name: dashboard
-        image: niklaushirt/collector:course0.3
+        image: niklaushirt/collector:courselatest
         imagePullPolicy: Always
         env:
           - name: APP_NAMESPACE
