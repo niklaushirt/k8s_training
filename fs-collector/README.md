@@ -17,8 +17,8 @@ ibmcloud cr image-list
 
 
 
-docker tag ibmicpcoc/collector:latest niklaushirt/collector:course0.2
-docker push niklaushirt/collector:course0.2
+docker tag ibmicpcoc/collector:latest niklaushirt/collector:course0.3
+docker push niklaushirt/collector:course0.3
 ibmcloud cr image-list
 
 

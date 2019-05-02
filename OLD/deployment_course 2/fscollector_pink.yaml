@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
       - name: pink-student-ui
-        image: uk.icr.io/niklaushirt/collector:course0.2
+        image: uk.icr.io/niklaushirt/collector:course0.3
         imagePullPolicy: Always
         ports:
         - containerPort: 3000
