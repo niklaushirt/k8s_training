@@ -1,0 +1,1055 @@
+
+:course_title: K8s_101_01 Kubernetes Labs
+
+:course_desc: This course introduces the student to more advanced topics of Istio.  
+
+:course_max: 12
+
+:course_auto: no
+
+:button1_label: Task
+
+:button2_label: Hint
+
+:button2_delay: 999999
+
+:button3_label: Complete
+
+:button3_delay: 300
+
+
+
+
+----
+
+#### Task Kubernetes_Lab_0
+
+----
+
+### Download the Workshop Source Code
+Repo `guestbook` has the application that we'll be deploying.
+While we're not going to build it we will use the deployment configuration files from that repo.
+Guestbook application has two versions v1 and v2 which we will use to demonstrate some rollout
+functionality later. All the configuration files we use are under the directory guestbook/v1.
+
+Repo `kube101` contains the step by step instructions to run the workshop.
+
+```
+$ git clone https://github.com/IBM/guestbook.git
+$ git clone https://github.com/niklaushirt/kube101.git
+```
+
+
+
+
+#### Hint Kubernetes_Lab_0
+
+No hint available
+
+
+#### Complete Kubernetes_Lab_0
+
+> Confirm Kubernetes_Lab_0 complete
+
+
+
+
+
+
+#### Task Kubernetes_Lab_1
+
+----
+
+## Lab 1. Set up and deploy your first application
+
+Learn how to deploy an application to a Kubernetes cluster hosted within
+the IBM Container Service.
+
+### 0. Install Prerequisite CLIs and Provision a Kubernetes Cluster
+
+If you haven't already:
+1. Install the IBM Cloud CLIs and login, as described in Lab 0.
+2. Provision a cluster:
+
+  ```$ ibmcloud cs cluster-create --name <name-of-cluster>```
+
+Once the cluster is provisioned, the kubernetes client CLI `kubectl` needs to be
+configured to talk to the provisioned cluster.
+
+1. Run `$ ibmcloud cs cluster-config <name-of-cluster>`, and set the `KUBECONFIG`
+   environment variable based on the output of the command. This will
+   make your `kubectl` client point to your new Kubernetes cluster.
+
+Once your client is configured, you are ready to deploy your first application, `guestbook`.
+
+### 1. Deploy your application
+
+In this part of the lab we will deploy an application called `guestbook`
+that has already been built and uploaded to DockerHub under the name
+`ibmcom/guestbook:v1`.
+
+1. Start by running `guestbook`:
+
+  ```$ kubectl run guestbook --image=ibmcom/guestbook:v1```
+
+   This action will take a bit of time. To check the status of the running application,
+   you can use `$ kubectl get pods`.
+
+   You should see output similar to the following:
+
+  ```
+   $ kubectl get pods
+   NAME                          READY     STATUS              RESTARTS   AGE
+   guestbook-59bd679fdc-bxdg7    0/1       ContainerCreating   0          1m
+  ```
+   Eventually, the status should show up as `Running`.
+   
+  ```
+   $ kubectl get pods
+   NAME                          READY     STATUS              RESTARTS   AGE
+   guestbook-59bd679fdc-bxdg7    1/1       Running             0          1m
+  ```
+   
+   The end result of the run command is not just the pod containing our application containers, but a Deployment resource that manages the lifecycle of those pods.
+ 
+   
+3. Once the status reads `Running`, we need to expose that deployment as a service so we can access it through the IP of the worker nodes.
+   The `guestbook` application listens on port 3000.  Run:
+
+  ```
+   $ kubectl expose deployment guestbook --type="NodePort" --port=3000
+   service "guestbook" exposed
+  ```
+
+4. To find the port used on that worker node, examine your new service:
+
+  ```
+   $ kubectl get service guestbook
+   NAME        TYPE       CLUSTER-IP     EXTERNAL-IP   PORT(S)          AGE
+   guestbook   NodePort   10.10.10.253   <none>        3000:31208/TCP   1m
+  ```
+   
+   We can see that our `<nodeport>` is `31208`. We can see in the output the port mapping from 3000 inside 
+   the pod exposed to the cluster on port 31208. This port in the 31000 range is automatically chosen, 
+   and could be different for you.
+
+5. `guestbook` is now running on your cluster, and exposed to the internet. We need to find out where it is accessible.
+   The worker nodes running in the container service get external IP addresses.
+   Run `$ ibmcloud cs workers <name-of-cluster>`, and note the public IP listed on the `<public-IP>` line.
+   
+  ```
+   $ ibmcloud cs workers osscluster
+   OK
+   ID                                                 Public IP        Private IP     Machine Type   State    Status   Zone    Version  
+   kube-hou02-pa1e3ee39f549640aebea69a444f51fe55-w1   173.193.99.136   10.76.194.30   free           normal   Ready    hou02   1.5.6_1500*
+  ```
+   
+   We can see that our `<public-IP>` is `173.193.99.136`.
+   
+6. Now that you have both the address and the port, you can now access the application in the web browser
+   at `<public-IP>:<nodeport>`. In the example case this is `173.193.99.136:31208`.
+   
+Congratulations, you've now deployed an application to Kubernetes!
+
+We will be using this deployment in the next lab of this course (Lab2).
+
+You should now go back up to the root of the repository in preparation
+for the next lab: `$ cd ..`.
+
+
+
+
+
+#### Hint Kubernetes_Lab_1
+
+No hint available
+
+
+#### Complete Kubernetes_Lab_1
+
+> Confirm Kubernetes_Lab_1 complete
+
+
+
+
+
+#### Task Kubernetes_Lab_2_Scale
+
+----
+
+## Lab 2: Scale and Update Deployments
+
+In this lab, you'll learn how to update the number of instances
+a deployment has and how to safely roll out an update of your application
+on Kubernetes. 
+
+For this lab, you need a running deployment of the `guestbook` application
+from the previous lab. If you deleted it, recreate it using:
+
+```
+$ kubectl run guestbook --image=ibmcom/guestbook:v1
+```
+    
+### Scale apps with replicas
+
+A *replica* is a copy of a pod that contains a running service. By having
+multiple replicas of a pod, you can ensure your deployment has the available
+resources to handle increasing load on your application.
+
+1. `kubectl` provides a `scale` subcommand to change the size of an
+   existing deployment. Let's increase our capacity from a single running instance of
+   `guestbook` up to 10 instances:
+
+  ```
+   $ kubectl scale --replicas=10 deployment guestbook
+   deployment "guestbook" scaled
+  ```
+
+   Kubernetes will now try to make reality match the desired state of
+   10 replicas by starting 9 new pods with the same configuration as
+   the first.
+
+4. To see your changes being rolled out, you can run:
+   `kubectl rollout status deployment guestbook`.
+
+   The rollout might occur so quickly that the following messages might
+   _not_ display:
+
+  ```
+   $ kubectl rollout status deployment guestbook
+   Waiting for rollout to finish: 1 of 10 updated replicas are available...
+   Waiting for rollout to finish: 2 of 10 updated replicas are available...
+   Waiting for rollout to finish: 3 of 10 updated replicas are available...
+   Waiting for rollout to finish: 4 of 10 updated replicas are available...
+   Waiting for rollout to finish: 5 of 10 updated replicas are available...
+   Waiting for rollout to finish: 6 of 10 updated replicas are available...
+   Waiting for rollout to finish: 7 of 10 updated replicas are available...
+   Waiting for rollout to finish: 8 of 10 updated replicas are available...
+   Waiting for rollout to finish: 9 of 10 updated replicas are available...
+   deployment "guestbook" successfully rolled out
+  ```
+
+5. Once the rollout has finished, ensure your pods are running by using:
+   `kubectl get pods`.
+
+   You should see output listing 10 replicas of your deployment:
+
+  ```
+   $ kubectl get pods
+   NAME                        READY     STATUS    RESTARTS   AGE
+   guestbook-562211614-1tqm7   1/1       Running   0          1d
+   guestbook-562211614-1zqn4   1/1       Running   0          2m
+   guestbook-562211614-5htdz   1/1       Running   0          2m
+   guestbook-562211614-6h04h   1/1       Running   0          2m
+   guestbook-562211614-ds9hb   1/1       Running   0          2m
+   guestbook-562211614-nb5qp   1/1       Running   0          2m
+   guestbook-562211614-vtfp2   1/1       Running   0          2m
+   guestbook-562211614-vz5qw   1/1       Running   0          2m
+   guestbook-562211614-zksw3   1/1       Running   0          2m
+   guestbook-562211614-zsp0j   1/1       Running   0          2m
+  ```
+
+**Tip:** Another way to improve availability is to 
+ [add clusters and regions](https://console.bluemix.net/docs/containers/cs_planning.html#cs_planning_cluster_config)
+to your deployment, as shown in the following diagram:
+
+![HA with more clusters and regions](https://raw.githubusercontent.com/niklaushirt/kube101/master/workshop/images/cluster_ha_roadmap.png)
+
+#### Hint Kubernetes_Lab_2_Scale
+
+No hint available
+
+
+#### Complete Kubernetes_Lab_2_Scale
+
+> Confirm Kubernetes_Lab_2_Scale complete
+
+
+
+#### Task Kubernetes_Lab_2_Update
+
+----
+
+
+### Update and roll back apps
+
+Kubernetes allows you to do rolling upgrade of your application to a new
+container image. This allows you to easily update the running image and also allows you to
+easily undo a rollout if a problem is discovered during or after deployment.
+
+In the previous lab, we used an image with a `v1` tag. For our upgrade
+we'll use the image with the `v2` tag.
+
+To update and roll back:
+1. Using `kubectl`, you can now update your deployment to use the
+   `v2` image. `kubectl` allows you to change details about existing
+   resources with the `set` subcommand. We can use it to change the
+   image being used.
+
+   ```$ kubectl set image deployment/guestbook guestbook=ibmcom/guestbook:v2```
+
+   Note that a pod could have multiple containers, each with its own name.
+   Each image can be changed individually or all at once by referring to the name.
+   In the case of our `guestbook` Deployment, the container name is also `guestbook`.
+    Multiple containers can be updated at the same time.
+   ([More information](https://kubernetes.io/docs/user-guide/kubectl/kubectl_set_image/).)
+
+3. Run `kubectl rollout status deployment/guestbook` to check the status of
+   the rollout. The rollout might occur so quickly that the following messages
+   might _not_ display:
+
+  ```
+   $ kubectl rollout status deployment/guestbook
+   Waiting for rollout to finish: 2 out of 10 new replicas have been updated...
+   Waiting for rollout to finish: 3 out of 10 new replicas have been updated...
+   Waiting for rollout to finish: 3 out of 10 new replicas have been updated...
+   Waiting for rollout to finish: 3 out of 10 new replicas have been updated...
+   Waiting for rollout to finish: 4 out of 10 new replicas have been updated...
+   Waiting for rollout to finish: 4 out of 10 new replicas have been updated...
+   Waiting for rollout to finish: 4 out of 10 new replicas have been updated...
+   Waiting for rollout to finish: 4 out of 10 new replicas have been updated...
+   Waiting for rollout to finish: 4 out of 10 new replicas have been updated...
+   Waiting for rollout to finish: 5 out of 10 new replicas have been updated...
+   Waiting for rollout to finish: 5 out of 10 new replicas have been updated...
+   Waiting for rollout to finish: 5 out of 10 new replicas have been updated...
+   Waiting for rollout to finish: 6 out of 10 new replicas have been updated...
+   Waiting for rollout to finish: 6 out of 10 new replicas have been updated...
+   Waiting for rollout to finish: 6 out of 10 new replicas have been updated...
+   Waiting for rollout to finish: 7 out of 10 new replicas have been updated...
+   Waiting for rollout to finish: 7 out of 10 new replicas have been updated...
+   Waiting for rollout to finish: 7 out of 10 new replicas have been updated...
+   Waiting for rollout to finish: 7 out of 10 new replicas have been updated...
+   Waiting for rollout to finish: 8 out of 10 new replicas have been updated...
+   Waiting for rollout to finish: 8 out of 10 new replicas have been updated...
+   Waiting for rollout to finish: 8 out of 10 new replicas have been updated...
+   Waiting for rollout to finish: 8 out of 10 new replicas have been updated...
+   Waiting for rollout to finish: 9 out of 10 new replicas have been updated...
+   Waiting for rollout to finish: 9 out of 10 new replicas have been updated...
+   Waiting for rollout to finish: 9 out of 10 new replicas have been updated...
+   Waiting for rollout to finish: 1 old replicas are pending termination...
+   Waiting for rollout to finish: 1 old replicas are pending termination...
+   Waiting for rollout to finish: 1 old replicas are pending termination...
+   Waiting for rollout to finish: 9 of 10 updated replicas are available...
+   Waiting for rollout to finish: 9 of 10 updated replicas are available...
+   Waiting for rollout to finish: 9 of 10 updated replicas are available...
+   deployment "guestbook" successfully rolled out
+  ```
+
+4. Test the application as before, by accessing `<public-IP>:<nodeport>` 
+   in the browser to confirm your new code is active.
+
+   Remember, to get the "nodeport" and "public-ip" use:
+
+   `$ kubectl describe service guestbook`
+   and
+   `$ ibmcloud cs workers <name-of-cluster>`
+
+   To verify that you're running "v2" of guestbook, look at the title of the page,
+   it should now be `Guestbook - v2`
+
+5. If you want to undo your latest rollout, use:
+  ```
+   $ kubectl rollout undo deployment guestbook
+   deployment "guestbook"
+  ```
+
+   You can then use `kubectl rollout status deployment/guestbook` to see
+   the status.
+   
+6. When doing a rollout, you see references to *old* replicas and *new* replicas.
+   The *old* replicas are the original 10 pods deployed when we scaled the application.
+   The *new* replicas come from the newly created pods with the different image.
+   All of these pods are owned by the Deployment.
+   The deployment manages these two sets of pods with a resource called a ReplicaSet.
+   We can see the guestbook ReplicaSets with:
+   
+  ```
+   $ kubectl get replicasets -l run=guestbook
+   NAME                   DESIRED   CURRENT   READY     AGE
+   guestbook-5f5548d4f    10        10        10        21m
+   guestbook-768cc55c78   0         0         0         3h
+  ```
+
+Before we continue, let's delete the application so we can learn about
+a different way to achieve the same results:
+
+ To remove the deployment, use `kubectl delete deployment guestbook`.
+
+ To remove the service, use `kubectl delete service guestbook`.
+
+Congratulations! You deployed the second version of the app. 
+Lab 2 is now complete.
+
+
+
+#### Hint Kubernetes_Lab_2_Update
+
+No hint available
+
+
+#### Complete Kubernetes_Lab_2_Update
+
+> Confirm Kubernetes_Lab_2_Update complete
+
+
+
+
+
+#### Task Kubernetes_Lab_3_Scale_1
+
+----
+
+## Lab 3: Scale and update apps natively, building multi-tier applications.
+
+In this lab you'll learn how to deploy the same guestbook application we
+deployed in the previous labs, however, instead of using the `kubectl`
+command line helper functions we'll be deploying the application using
+configuration files. The configuration file mechanism allows you to have more
+fine-grained control over all of resources being created within the
+Kubernetes cluster.
+
+Before we work with the application we need to clone a github repo:
+
+```
+$ git clone https://github.com/IBM/guestbook.git
+```
+
+This repo contains multiple versions of the guestbook application
+as well as the configuration files we'll use to deploy the pieces of the application.
+
+Change directory by running the command `cd guestbook`. You will find all the
+configurations files for this exercise under the directory `v1`.
+
+
+
+#### Hint Kubernetes_Lab_3_Scale_1
+
+No hint available
+
+
+#### Complete Kubernetes_Lab_3_Scale_1
+
+> Confirm Kubernetes_Lab_3_Scale_1 complete
+
+
+
+
+
+#### Task Kubernetes_Lab_3_Scale_2
+
+----
+
+### Scale apps natively
+
+Kubernetes can deploy an individual pod to run an application but when you
+need to scale it to handle a large number of requests a `Deployment` is the
+resource you want to use.
+A Deployment manages a collection of similar pods. When you ask for a specific number of replicas
+the Kubernetes Deployment Controller will attempt to maintain that number of replicas at all times.
+
+Every Kubernetes object we create should provide two nested object fields
+that govern the object’s configuration: the object `spec` and the object
+`status`. Object `spec` defines the desired state, and object `status`
+contains Kubernetes system provided information about the actual state of the
+resource. As described before, Kubernetes will attempt to reconcile
+your desired state with the actual state of the system.
+
+For Object that we create we need to provide the `apiVersion` you are using
+to create the object, `kind` of the object we are creating and the `metadata`
+about the object such as a `name`, set of `labels` and optionally `namespace`
+that this object should belong.
+
+Consider the following deployment configuration for guestbook application
+
+**guestbook-deployment.yaml**
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: guestbook
+  labels:
+    app: guestbook
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: guestbook
+  template:
+    metadata:
+      labels:
+        app: guestbook
+    spec:
+      containers:
+      - name: guestbook
+        image: ibmcom/guestbook:v1
+        ports:
+        - name: http-server
+          containerPort: 3000
+```
+
+The above configuration file create a deployment object named 'guestbook'
+with a pod containing a single container running the image
+`ibmcom/guestbook:v1`.  Also the configuration specifies replicas set to 3
+and Kubernetes tries to make sure that at least three active pods are running at
+all times.
+
+- Create guestbook deployment
+
+   To create a Deployment using this configuration file we use the
+   following command:
+
+  ``` console
+   $ kubectl create -f guestbook-deployment.yaml
+   deployment "guestbook" created
+  ```
+
+- List the pod with label app=guestbook
+
+  We can then list the pods it created by listing all pods that
+  have a label of "app" with a value of "guestbook". This matches
+  the labels defined above in the yaml file in the
+  `spec.template.metadata.labels` section.
+
+  ``` 
+   $ kubectl get pods -l app=guestbook
+  ```
+
+When you change the number of replicas in the configuration, Kubernetes will
+try to add, or remove, pods from the system to match your request. To can
+make these modifications by using the following command:
+
+  ```
+   $ kubectl edit deployment guestbook-v1
+  ```
+
+This will retrieve the latest configuration for the Deployment from the
+Kubernetes server and then load it into an editor for you. You'll notice
+that there are a lot more fields in this version than the original yaml
+file we used. This is because it contains all of the properties about the
+Deployment that Kubernetes knows about, not just the ones we chose to
+specify when we create it. Also notice that it now contains the `status`
+section mentioned previously.
+
+You can also edit the deployment file we used to create the Deployment
+to make changes. You should use the following command to make the change
+effective when you edit the deployment locally.
+
+  ```
+   $ kubectl apply -f guestbook-deployment.yaml
+  ```
+
+This will ask Kubernetes to "diff" our yaml file with the current state
+of the Deployment and apply just those changes.
+
+
+#### Hint Kubernetes_Lab_3_Scale_2
+
+No hint available
+
+
+#### Complete Kubernetes_Lab_3_Scale_2
+
+> Confirm Kubernetes_Lab_3_Scale_2 complete
+
+
+
+
+
+#### Task Kubernetes_Lab_3_Scale_3
+
+----
+
+We can now define a Service object to expose the deployment to external
+clients.
+
+**guestbook-service.yaml**
+
+```
+apiVersion: v1
+kind: Service
+metadata:
+  name: guestbook
+  labels:
+    app: guestbook
+spec:
+  ports:
+  - port: 3000
+    targetPort: http-server
+  selector:
+    app: guestbook
+  type: LoadBalancer
+```
+
+The above configuration creates a Service resource named guestbook. A Service
+can be used to create a network path for incoming traffic to your running
+application.  In this case, we are setting up a route from port 3000 on the
+cluster to the "http-server" port on our app, which is port 3000 per the
+Deployment container spec.
+
+- Let us now create the guestbook service using the same type of command
+  we used when we created the Deployment:
+
+  ` $ kubectl create -f guestbook-service.yaml `
+
+- Test guestbook app using a browser of your choice using the url
+  `<your-cluster-ip>:<node-port>`
+
+  Remember, to get the `nodeport` and `public-ip` use:
+
+  `$ kubectl describe service guestbook`
+  and
+  `$ ibmcloud cs workers <name-of-cluster>`
+
+
+
+#### Hint Kubernetes_Lab_3_Scale_3
+
+No hint available
+
+
+#### Complete Kubernetes_Lab_3_Scale_3
+
+> Confirm Kubernetes_Lab_3_Scale_3 complete
+
+
+
+
+
+#### Task Kubernetes_Lab_3_Backend_1
+
+----
+
+
+### Connect to a back-end service
+
+If you look at the guestbook source code, under the `guestbook/v1/guestbook`
+directory, you'll notice that it is written to support a variety of data
+stores. By default it will keep the log of guestbook entries in memory.
+That's ok for testing purposes, but as you get into a more "real" environment
+where you scale your application that model will not work because
+based on which instance of the application the user is routed to they'll see
+very different results.
+
+To solve this we need to have all instances of our app share the same data
+store - in this case we're going to use a redis database that we deploy to our
+cluster. This instance of redis will be defined in a similar manner to the guestbook.
+
+### Deploy Redis Master 
+
+**redis-master-deployment.yaml**
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-master
+  labels:
+    app: redis
+    role: master
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+      role: master
+  template:
+    metadata:
+      labels:
+        app: redis
+        role: master
+    spec:
+      containers:
+      - name: redis-master
+        image: redis:2.8.23
+        ports:
+        - name: redis-server
+          containerPort: 6379
+```
+
+This yaml creates a redis database in a Deployment named 'redis-master'.
+It will create a single instance, with replicas set to 1, and the guestbook app instances
+will connect to it to persist data, as well as read the persisted data back.
+The image running in the container is 'redis:2.8.23' and exposes the standard redis port 6379.
+
+- Create a redis Deployment, like we did for guestbook:
+
+   ```
+    $ kubectl create -f redis-master-deployment.yaml
+   ```
+
+- Check to see that redis server pod is running:
+
+   ```
+    $ kubectl get pods -l app=redis,role=master
+    NAME                 READY     STATUS    RESTARTS   AGE
+    redis-master-q9zg7   1/1       Running   0          2d
+   ```
+
+- Let us test the redis standalone:
+
+    ` $ kubectl exec -it redis-master-q9zg7 redis-cli `
+
+    The kubectl exec command will start a secondary process in the specified
+    container. In this case we're asking for the "redis-cli" command to be
+    executed in the container named "redis-master-q9zg7".  When this process
+    ends the "kubectl exec" command will also exit but the other processes in
+    the container will not be impacted.
+
+    Once in the container we can use the "redis-cli" command to make sure the
+    redis database is running properly, or to configure it if needed.
+
+   ```
+    redis-cli> ping
+    PONG
+    redis-cli> exit
+   ```
+
+
+#### Hint Kubernetes_Lab_3_Backend_1
+
+No hint available
+
+
+#### Complete Kubernetes_Lab_3_Backend_1
+
+> Confirm Kubernetes_Lab_3_Backend_1 complete
+
+
+
+
+
+#### Task Kubernetes_Lab_3_Backend_2
+
+----
+
+### Expose Redis Master 
+
+Now we need to expose the `redis-master` Deployment as a Service so that the
+guestbook application can connect to it through DNS lookup. 
+
+**redis-master-service.yaml**
+
+```
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-master
+  labels:
+    app: redis
+    role: master
+spec:
+  ports:
+  - port: 6379
+    targetPort: redis-server
+  selector:
+    app: redis
+    role: master
+```
+
+This creates a Service object named 'redis-master' and configures it to target
+port 6379 on the pods selected by the selectors "app=redis" and "role=master".
+
+- Create the service to access redis master:
+
+   ``` $ kubectl create -f redis-master-service.yaml```
+
+- Restart guestbook so that it will find the redis service to use database:
+
+   ```
+    $ kubectl delete deploy guestbook-v1
+    $ kubectl create -f guestbook-deployment.yaml
+   ```
+
+- Test guestbook app using a browser of your choice using the url:
+  `<your-cluster-ip>:<node-port>`
+  
+You can see now that if you open up multiple browsers and refresh the page
+to access the different copies of guestbook that they all have a consistent state.
+All instances write to the same backing persistent storage, and all instances
+read from that storage to display the guestbook entries that have been stored.
+
+We have our simple 3-tier application running but we need to scale the
+application if traffic increases. Our main bottleneck is that we only have
+one database server to process each request coming though guestbook. One
+simple solution is to separate the reads and write such that they go to
+different databases that are replicated properly to achieve data consistency.
+
+![rw_to_master](https://raw.githubusercontent.com/niklaushirt/kube101/master/workshop/images/Master.png)
+
+
+
+
+#### Hint Kubernetes_Lab_3_Backend_2
+
+No hint available
+
+
+#### Complete Kubernetes_Lab_3_Backend_2
+
+> Confirm Kubernetes_Lab_3_Backend_2 complete
+
+
+
+
+
+#### Task Kubernetes_Lab_3_Backend_3
+
+----
+### Deploy Redis Slave 
+
+Create a deployment named 'redis-slave' that can talk to redis database to
+manage data reads. In order to scale the database we use the pattern where
+we can scale the reads using redis slave deployment which can run several
+instances to read. Redis slave deployments is configured to run two replicas.
+
+![w_to_master-r_to_slave](https://raw.githubusercontent.com/niklaushirt/kube101/master/workshop/images/Master-Slave.png)
+
+**redis-slave-deployment.yaml**
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-slave
+  labels:
+    app: redis
+    role: slave
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: redis
+      role: slave
+  template:
+    metadata:
+      labels:
+        app: redis
+        role: slave
+    spec:
+      containers:
+      - name: redis-slave
+        image: kubernetes/redis-slave:v2
+        ports:
+        - name: redis-server
+          containerPort: 6379
+```
+
+- Create the pod  running redis slave deployment.
+``` $ kubectl create -f redis-slave-deployment.yaml```
+
+ - Check if all the slave replicas are running
+ 
+```
+$ kubectl get pods -l app=redis,role=slave
+NAME                READY     STATUS    RESTARTS   AGE
+redis-slave-kd7vx   1/1       Running   0          2d
+redis-slave-wwcxw   1/1       Running   0          2d
+```
+
+- And then go into one of those pods and look at the database to see
+  that everything looks right:
+
+```
+$ kubectl exec -it redis-slave-kd7vx  redis-cli
+
+127.0.0.1:6379> keys *
+1) "guestbook"
+127.0.0.1:6379> lrange guestbook 0 10
+1) "hello world"
+2) "welcome to the Kube workshop"
+127.0.0.1:6379> exit
+
+```
+
+
+
+#### Hint Kubernetes_Lab_3_Backend_3
+
+No hint available
+
+
+#### Complete Kubernetes_Lab_3_Backend_3
+
+> Confirm Kubernetes_Lab_3_Backend_3 complete
+
+
+
+
+
+#### Task Kubernetes_Lab_3_Backend_4
+
+----
+
+### Expose Redis Slave 
+
+Deploy redis slave service so we can access it by DNS name. Once redeployed,
+the application will send "read" operations to the `redis-slave` pods while
+"write" operations will go to the `redis-master` pods.
+
+
+**redis-slave-service.yaml**
+
+```
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-slave
+  labels:
+    app: redis
+    role: slave
+spec:
+  ports:
+  - port: 6379
+    targetPort: redis-server
+  selector:
+    app: redis
+    role: slave
+```
+
+- Create the service to access redis slaves.
+   ``` $ kubectl create -f redis-slave-service.yaml```
+
+- Restart guestbook so that it will find the slave service to read from.
+   ```
+    $ kubectl delete deploy guestbook-v1
+    $ kubectl create -f guestbook-deployment.yaml
+   ```
+    
+- Test guestbook app using a browser of your choice using the url `<your-cluster-ip>:<node-port>`.
+
+That's the end of the lab. Now let's clean-up our environment:
+
+```
+$ kubectl delete -f guestbook-deployment.yaml
+$ kubectl delete -f guestbook-service.yaml
+$ kubectl delete -f redis-slave-service.yaml
+$ kubectl delete -f redis-slave-deployment.yaml 
+$ kubectl delete -f redis-master-service.yaml 
+$ kubectl delete -f redis-master-deployment.yaml
+```
+
+
+
+
+
+#### Hint Kubernetes_Lab_3_Backend_4
+
+No hint available
+
+
+#### Complete Kubernetes_Lab_3_Backend_4
+
+> Confirm Kubernetes_Lab_3_Backend_4 complete
+
+
+
+
+
+#### Task Kubernetes_Lab_4
+
+----
+
+# *** UNDER CONSTRUCTION ***
+
+## 1. Check the health of apps
+
+Kubernetes uses availability checks (liveness probes) to know when to restart a container. For example, liveness probes could catch a deadlock, where an application is running, but unable to make progress. Restarting a container in such a state can help to make the application more available despite bugs.
+
+Also, Kubernetes uses readiness checks to know when a container is ready to start accepting traffic. A pod is considered ready when all of its containers are ready. One use of this check is to control which pods are used as backends for services. When a pod is not ready, it is removed from load balancers.
+
+In this example, we have defined a HTTP liveness probe to check health of the container every five seconds. For the first 10-15 seconds the `/healthz` returns a `200` response and will fail afterward. Kubernetes will automatically restart the service.  
+
+1. Open the `healthcheck.yml` file with a text editor. This configuration script combines a few steps from the previous lesson to create a deployment and a service at the same time. App developers can use these scripts when updates are made or to troubleshoot issues by re-creating the pods:
+
+   1. Update the details for the image in your private registry namespace:
+
+     ```
+      image: "ibmcom/guestbook:v2"
+     ```
+
+   2. Note the HTTP liveness probe that checks the health of the container every five seconds.
+
+     ```
+      livenessProbe:
+                  httpGet:
+                    path: /healthz
+                    port: 3000
+                  initialDelaySeconds: 5
+                  periodSeconds: 5
+     ```
+
+   3. In the **Service** section, note the `NodePort`. Rather than generating a random NodePort like you did in the previous lesson, you can specify a port in the 30000 - 32767 range. This example uses 30072.
+
+2. Run the configuration script in the cluster. When the deployment and the service are created, the app is available for anyone to see:
+
+  ```
+   kubectl apply -f healthcheck.yml
+  ```
+   
+   Now that all the deployment work is done, check how everything turned out. You might notice that because more instances are running, things might run a bit slower.
+
+3. Open a browser and check out the app. To form the URL, combine the IP with the NodePort that was specified in the configuration script. To get the public IP address for the worker node:
+
+  ```
+   ibmcloud cs workers <cluster-name>
+  ```
+
+   In a browser, you'll see a success message. If you do not see this text, don't worry. This app is designed to go up and down.
+
+   For the first 10 - 15 seconds, a 200 message is returned, so you know that the app is running successfully. After those 15 seconds, a timeout message is displayed, as is designed in the app.
+
+4. Launch your Kubernetes dashboard:
+
+   1. Get your credentials for Kubernetes.
+      
+     ```
+      kubectl config view -o jsonpath='{.users[0].user.auth-provider.config.id-token}'
+     ```
+
+   2. Copy the **id-token** value that is shown in the output.     
+   
+   3. Set the proxy with the default port number.
+
+     ```
+      kubectl proxy
+     ```
+
+      Output:
+
+     ```
+      Starting to serve on 127.0.0.1:8001
+     ```
+   
+   4. Sign in to the dashboard.
+      
+      1. Open the following URL in a web browser.
+         
+        ```
+         http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/
+        ```
+      
+      2. In the sign-on page, select the **Token** authentication method.
+ 
+      3. Then, paste the **id-token** value that you previously copied into the **Token** field and click **SIGN IN**.
+  
+   In the **Workloads** tab, you can see the resources that you created. From this tab, you can continually refresh and see that the health check is working. In the **Pods** section, you can see how many times the pods are restarted when the containers in them are re-created. You might happen to catch errors in the dashboard, indicating that the health check caught a problem. Give it a few minutes and refresh again. You see the number of restarts changes for each pod.
+
+5. Ready to delete what you created before you continue? This time, you can use the same configuration script to delete both of the resources you created.
+
+  ```kubectl delete -f healthcheck.yml```
+
+6. When you are done exploring the Kubernetes dashboard, in your CLI, enter `CTRL+C` to exit the `proxy` command.
+
+
+
+#### Hint Kubernetes_Lab_4
+
+No hint available
+
+
+#### Complete Kubernetes_Lab_4
+
+> Confirm Kubernetes_Lab_4 complete
+
+
