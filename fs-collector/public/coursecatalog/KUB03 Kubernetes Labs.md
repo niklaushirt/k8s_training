@@ -15,8 +15,48 @@
 
 :button3_label: Complete
 
-:button3_delay: 300
+:button3_delay: 10000
 
+
+:infotab: <h1 id="toc_0">Tips and Tricks for getting around in the labs</h1>
+:infotab: <p>Advanced debugging techniques to reach your pods.</p>
+:infotab: <h2 id="toc_1">Pod Logs</h2>
+:infotab: <p>You can look at the logs of any of the pods running under your deployments as follows</p>
+:infotab: <div><pre><code class="language-console">$ kubectl logs &lt;podname&gt;</code></pre></div>
+:infotab: <p>Remember that if you have multiple containers running in your pod, you have to specify the specific container you want to see logs from.</p>
+:infotab: <div><pre><code class="language-console">$ kubectl logs &lt;pod-name&gt; &lt;container-name&gt;</code></pre></div>
+:infotab: <p>This subcommand operates like <code>tail</code>. Including the <code>-f</code> flag will
+:infotab: continue to stream the logs live once the current time is reached.</p>
+:infotab: <h2 id="toc_2">kubectl edit and vi</h2>
+:infotab: <p>By default, on many Linux and macOS systems, you will be dropped into the editor <code>vi</code>.
+:infotab: If you end up in vi you can quit by typing <code>ESC :q!</code></p>
+:infotab: <p>IF you prefer using nano as an editor, execute </p>
+:infotab: <div><pre><code class="language-none">export EDITOR=nano</code></pre></div>
+:infotab: <p>On Windows, a copy of <code>notepad.exe</code> will be opened with the contents of the file.</p>
+:infotab: <h2 id="toc_3">nano basic commands</h2>
+:infotab: <div><pre><code class="language-none">Ctrl-O      To save your work (WriteOut)
+:infotab: <BR>Ctrl-X      To exit nano
+:infotab: <BR>Ctrl-W      To search for text in a document
+:infotab: <BR>Ctrl-K      To cut a line of text</code></pre></div>
+:infotab: <h2 id="toc_4">busybox pod</h2>
+:infotab: <p>For debugging live, this command frequently helps me:</p>
+:infotab: <div><pre><code class="language-console">kubectl run bb --image busybox --restart=Never -it --rm</code></pre></div>
+:infotab: <p>In the busybox image is a basic shell that contains useful utilities.</p>
+:infotab: <p>Utils I often use are <code>nslookup</code> and <code>wget</code>. </p>
+:infotab: <p><code>nslookup</code> is useful for testing DNS resolution in a pod.</p>
+:infotab: <p><code>wget</code> is useful for trying to do network requests.</p>
+:infotab: <h2 id="toc_5">Service Endpoints</h2>
+:infotab: <p>Endpoint resource can be used to see all the service endpoints.</p>
+:infotab: <div><pre><code class="language-console">$ kubectl get endpoints &lt;service&gt;</code></pre></div>
+:infotab: <h2 id="toc_6">ImagePullPolicy</h2>
+:infotab: <p>By default Kubernetes will only pull the image on first use. This can be confusing during development when you expect changes to show up.</p>
+:infotab: <p>You should be aware of the three <code>ImagePullPolicy</code>:</p>
+:infotab: <ul>
+:infotab: <li>IfNotPresent - the default, only request the image if not present.</li>
+:infotab: <li>Always - always request the image.</li>
+:infotab: <li>Never</li>
+:infotab: </ul>
+:infotab: <p>More details on image management may be <a href="https://kubernetes.io/docs/concepts/containers/images/">found here</a>.</p>
 
 
 
@@ -29,18 +69,12 @@
 
 # Lab information
 
-IBM Cloud provides the capability to run applications in containers on Kubernetes. The IBM Cloud Container Service runs Kubernetes clusters which deliver the following:
-
-* Powerful tools
-* Intuitive user experience
-* Built-in security and isolation to enable rapid delivery of secure applications
-* Cloud services including cognitive capabilities from Watson
-* Capability to manage dedicated cluster resources for both stateless applications and stateful workloads
+Minikube provides a simple way to run applications in containers on Kubernetes. 
 
 
 #  Lab overview
 
-* Lab 0: (Optional): Provides a walkthrough for installing IBM Cloud command-line tools and the Kubernetes CLI. You can skip this lab if you have the IBM Cloud CLI, the container-service plugin, the containers-registry plugin, and the kubectl CLI already installed on your machine.
+* Lab 0: Provides a walkthrough for getting to know command-line tools and check if minikube is running.
 
 * Lab 1: This lab walks through creating and deploying a simple "guestbook" app written in Go as a net/http Server and accessing it.
 
