@@ -3,7 +3,7 @@
 
 :course_desc: This course provides the student with the necessary steps to get a basic understanding of Helm.  
 
-:course_max: 7
+:course_max: 9
 
 :course_auto: no
 
@@ -68,7 +68,6 @@ Helm terms :
 * Repository - Place where charts reside and can be shared with others.
 * Tiller - Helm server. It interacts directly with the [Kubernetes API](https://kubernetes.io/docs/concepts/overview/kubernetes-api/) server to install, upgrade, query, and remove Kubernetes resources.
 
-To get started, head on over to [Lab 1](Lab1/README.md). 
 
 
 ### Workshop
@@ -80,7 +79,7 @@ To get started, head on over to [Lab 1](Lab1/README.md).
 * Lab 5 - I need to change but want none of the hassle
 * Lab 6 - Keeping track of the deployed application
 * Lab 7 - I like sharing
-* Lab 8 - Create Charts
+* Lab 8 - What about my own Apps?
 
 
 ----
@@ -96,6 +95,32 @@ No hint available
 > Confirm Introduction complete
 
 
+----
+#### Task Get Source Code
+
+----
+
+# Lab 1 - Download the Workshop Source Code
+Repo `guestbook` has the application that we'll be deploying.
+While we're not going to build it we will use the deployment configuration files from that repo.
+Guestbook application has two versions v1 and v2 which we will use to demonstrate some rollout
+functionality later. All the configuration files we use are under the directory guestbook/v1.
+
+
+```
+$ git clone https://github.com/niklaushirt/helm101.git
+```
+
+#### Hint Get Source Code 
+
+No hint available
+
+
+#### Complete Get Source Code 
+
+> Confirm Check Minikube complete
+
+
 
 
 
@@ -105,7 +130,7 @@ No hint available
 
 ----
 
-# Lab 1 - Make sure minikube is running
+# Lab 2 - Make sure minikube is running
 
 
 * Verify that minikube is running
@@ -156,40 +181,13 @@ No hint available
 > Confirm Check Minikube complete
 
 
-#### Task Get Source Code 
-
-----
-
-
-# Download the Workshop Source Code
-Repo `guestbook` has the application that we'll be deploying.
-While we're not going to build it we will use the deployment configuration files from that repo.
-Guestbook application has two versions v1 and v2 which we will use to demonstrate some rollout
-functionality later. All the configuration files we use are under the directory guestbook/v1.
-
-
-```
-$ git clone https://github.com/niklaushirt/helm101.git
-```
-
-#### Hint Get Source Code 
-
-No hint available
-
-
-#### Complete Get Source Code 
-
-> Confirm Check Minikube complete
-
-
-
 
 
 #### Task Installing Helm
 
 ----
 
-# Lab 0. Installing Helm
+# Lab 3 - Installing Helm
 
 There are two parts to installing Helm: the client (helm) and the server (Tiller). Helm can be installed from source or pre-built binary releases. In this lab, we are going to use the pre-built binary release (Linux amd64) from the Helm community. Refer to the [Helm install docs](https://docs.helm.sh/using_helm/#install-helm) for more details. 
 
@@ -237,7 +235,7 @@ No hint available
 ----
 
 
-# Lab 1. I just want to deploy!
+# Lab 4 - I just want to deploy!
 
 Let's investigate how Helm can help us focus on other things by letting a chart do the work for us. We'll first deploy an application to a Kubernetes cluster by using `kubectl` and then show how we can offload the work to a chart by deploying the same app with Helm.
 
@@ -245,8 +243,8 @@ The application is the [Guestbook App](https://github.com/niklaushirt/guestbook)
 
 # Deploy the application using `kubectl`
 
-In this part of the lab, we will deploy the application using the Kubernetes client `kubectl`. We will use [Version 1](https://github.com/IBM/guestbook/tree/master/v1) of the app for deploying here. Clone the [Guestbook App](https://github.com/IBM/guestbook) repo to get the files: 
-```$ git clone https://github.com/IBM/guestbook.git``` .
+In this part of the lab, we will deploy the application using the Kubernetes client `kubectl`. We will use [Version 1](https://github.com/v/guestbook/tree/master/v1) of the app for deploying here. If not yet done, clone the [Guestbook App](https://github.com/niklaushirt/guestbook) repo to get the files: 
+```$ git clone https://github.com/niklaushirt/guestbook.git``` .
 
 1. Use the configuration files in the cloned Git repository to deploy the containers and create services for them by using the following commands:
 
@@ -271,49 +269,42 @@ In this part of the lab, we will deploy the application using the Kubernetes cli
    $ kubectl create -f guestbook-service.yaml
    service/guestbook created
    ```
-   Refer to the [guestbook README](https://github.com/IBM/guestbook) for more details.
+   Refer to the [guestbook README](https://github.com/niklaushirt/guestbook) for more details.
  
 2. View the guestbook:
 
    You can now play with the guestbook that you just created by opening it in a browser (it might take a few moments for the guestbook to come up).
 
- * **Local Host:**
-  If you are running Kubernetes locally, view the guestbook by navigating to `http://localhost:3000` in your browser.
 
- * **Remote Host:**
-    1. To view the guestbook on a remote host, locate the external IP and port of the load balancer in the **EXTERNAL-IP** and **PORTS** columns of the `$ kubectl get services` output. 
 
-       ```
-       $ kubectl get services
-       NAME           TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
-       guestbook      LoadBalancer   172.21.252.107   50.23.5.136   3000:31838/TCP   14m
-       redis-master   ClusterIP      172.21.97.222    <none>        6379/TCP         14m
-       redis-slave    ClusterIP      172.21.43.70     <none>        6379/TCP         14m
-       .........
-       ```
-
-       In this scenario the URL is `http://50.23.5.136:31838`.
-       
-       Note: If no external IP is assigned, then you can get the external IP with the following command:
-
-       ```
-       $ kubectl get nodes -o wide
-       NAME           STATUS    ROLES     AGE       VERSION        EXTERNAL-IP      OS-IMAGE             KERNEL-VERSION      CONTAINER-RUNTIME  
-       10.47.122.98   Ready     <none>    1h        v1.10.11+IKS   173.193.92.112   Ubuntu 16.04.5 LTS   4.4.0-141-generic   docker://18.6.1
-       ```
-
-       In this scenario the URL is `http://173.193.92.112:31838`.
-
-    2. Navigate to the output given (for example `http://50.23.5.136:31838`) in your browser. You should see the guestbook now displaying in your browser:
+	To view the guestbook on a remote host, locate the external port of the load balancer in the **PORTS** columns of the `$ kubectl get services` output. 
+	
+	       ```
+	       $ kubectl get services
+	       NAME           TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+	       guestbook      LoadBalancer   172.21.252.107   50.23.5.136   3000:31838/TCP   14m
+	       redis-master   ClusterIP      172.21.97.222    <none>        6379/TCP         14m
+	       redis-slave    ClusterIP      172.21.43.70     <none>        6379/TCP         14m
+	       .........
+	       ```
+	
+	You can open the demo app by navigating to http://192.168.99.100: 31838
+	
+	* replace 192.168.99.100 with the address of your cluster
+	* replace the port number with the one from the Service created (here it is 31838)
+	
+	You should see the guestbook now displaying in your browser:
 
        ![Guestbook](../images/guestbook-page.png)
 
 # Deploy the application using Helm
 
-In this part of the lab, we will deploy the application by using Helm. We will set a release name of `guestbook-demo` to distinguish it from the previous deployment. The Helm chart is available [here](../../charts/guestbook). Clone the [Helm 101](https://github.com/IBM/helm101) repo to get the files:
-```$ git clone https://github.com/IBM/helm101``` .
+In this part of the lab, we will deploy the application by using Helm. We will set a release name of `guestbook-demo` to distinguish it from the previous deployment. 
 
-A chart is defined as a collection of files that describe a related set of Kubernetes resources. We probably then should take a look at the the files before we go and install the chart. The files for the `guestbook` chart are as follows:
+A chart is defined as a collection of files that describe a related set of Kubernetes resources. 
+
+We probably then should take a look at the the files before we go and install the chart. The files for the `guestbook` chart are as follows:
+
 * Chart.yaml: A YAML file containing information about the chart.
 * LICENSE: A plain text file containing the license for the chart.
 * README.md: A README providing information about the chart usage, configuration, installation etc.
@@ -367,16 +358,18 @@ Let's go ahead and install the chart now.
     redis-slave-586b4c847c-nrzwj     0/1    ContainerCreating  0         0s
 
     NOTES:
-    1. Get the application URL by running these commands:
-      NOTE: It may take a few minutes for the LoadBalancer IP to be available.
-            You can watch the status of by running 'kubectl get svc -w guestbook-demo --namespace helm-demo'
-      export SERVICE_IP=$(kubectl get svc --namespace helm-demo guestbook-demo -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
-      echo http://$SERVICE_IP:3000
+	    1. Get the application URL by running these commands:
+	      NOTE: It may take a few minutes for the LoadBalancer IP to be available.
+	            You can watch the status of by running 'kubectl get svc -w guestbook-demo --namespace helm-demo'
+	      export SERVICE_IP=$(kubectl get svc --namespace helm-demo guestbook-demo -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+	      echo http://$SERVICE_IP:3000
     ```
     
     The chart install performs the Kubernetes deployments and service creations of the redis master and slaves, and the guestbook app, as one. This is because the chart is a collection of files that describe a related set of Kubernetes resources and Helm manages the creation of these resources via the Kubernetes API.    
     
-    To check the deployment, you can use `$ kubectl get deployment guestbook-demo --namespace helm-demo`.
+    To check the deployment, you can use 
+    
+    `$ kubectl get deployment guestbook-demo --namespace helm-demo`
     
     You should see output similar to the following:
     
@@ -385,7 +378,9 @@ Let's go ahead and install the chart now.
     guestbook-demo   2         2         2            2           51m
     ```
     
-    To check the status of the running application, you can use `$ kubectl get pods --namespace helm-demo`.
+    To check the status of the running application, you can use 
+    
+    `$ kubectl get pods --namespace helm-demo`.
     
     ```
     NAME                            READY     STATUS    RESTARTS   AGE
@@ -396,7 +391,9 @@ Let's go ahead and install the chart now.
     redis-slave-586b4c847c-q7rq5    1/1       Running   0          52m
     ```
    
-    To check the services, you can run `$ kubectl get services --namespace helm-demo`.
+    To check the services, you can run 
+    
+    `$ kubectl get services --namespace helm-demo`.
     
     ```
     NAME             TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
@@ -409,39 +406,30 @@ Let's go ahead and install the chart now.
 
    You can now play with the guestbook that you just created by opening it in a browser (it might take a few moments for the guestbook to come up).
 
- * **Local Host:**
-    If you are running Kubernetes locally, view the guestbook by navigating to `http://localhost:3000` in your browser.
+To view the guestbook on a remote host, locate the external port of the load balancer in the **PORTS** columns of the `$ kubectl get services` output. 
+	
+	       ```
+	       $ kubectl get services
+	       NAME           TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+	       guestbook      LoadBalancer   172.21.252.107   50.23.5.136   3000:31838/TCP   14m
+	       redis-master   ClusterIP      172.21.97.222    <none>        6379/TCP         14m
+	       redis-slave    ClusterIP      172.21.43.70     <none>        6379/TCP         14m
+	       .........
+	       ```
+	
+You can open the demo app by navigating to http://192.168.99.100: 31838
+	
+* replace 192.168.99.100 with the address of your cluster
+* replace the port number with the one from the Service created (here it is 31838)
+	
+You should see the guestbook now displaying in your browser:
 
- * **Remote Host:**
-    1. To view the guestbook on a remote host, locate the external IP and the port of the load balancer by following the "NOTES" section in the install output. The commands will be similar to the following:
-    
-       ```
-       $ export SERVICE_IP=$(kubectl get svc --namespace helm-demo guestbook-demo -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
-       $ echo http://$SERVICE_IP:331367
-       http://50.23.5.136:31367
-       ```
-
-       In this scenario the URL is `http://50.23.5.136:31367`.
-       
-       Note: If no external IP is assigned, then you can get the external IP with the following command:
-
-       ```
-       $ kubectl get nodes -o wide
-       NAME           STATUS    ROLES     AGE       VERSION        EXTERNAL-IP      OS-IMAGE             KERNEL-VERSION      CONTAINER-RUNTIME  
-       10.47.122.98   Ready     <none>    1h        v1.10.11+IKS   173.193.92.112   Ubuntu 16.04.5 LTS   4.4.0-141-generic   docker://18.6.1
-       ```
-
-       In this scenario the URL is `http://173.193.92.112:31838`.
- 
-    2. Navigate to the output given (for example `http://50.23.5.136:31367`) in your browser. You should see the guestbook now displaying in your browser:
-
-       ![Guestbook](../images/guestbook-page.png)
+   ![Guestbook](../images/guestbook-page.png)
 
 # Conclusion
 
 Congratulations, you have now deployed an application by using two different methods to Kubernetes! From this lab, you can see that using Helm required less commands and less to think about (by giving it the chart path and not the individual files) versus using `kubectl`. Helm's application management provides the user with this simplicity.
 
-Move on to the next lab, [Lab2](../Lab2/README.md), to learn how to update our running app when the chart has been changed.
 
 
 #### Hint JustDeploy
@@ -458,9 +446,9 @@ No hint available
 ----
 
 
-# Lab 2. I need to change but want none of the hassle
+# Lab 5 - I need to change but want none of the hassle
 
-In [Lab 1](../Lab1/README.md), we installed the guestbook sample app by using Helm and saw the benefits over using `kubectl`. You probably think that you're done and know enough to use Helm. But what about updates or improvements to the chart? How do you update your running app to pick up these changes? 
+In Lab 4, we installed the guestbook sample app by using Helm and saw the benefits over using `kubectl`. You probably think that you're done and know enough to use Helm. But what about updates or improvements to the chart? How do you update your running app to pick up these changes? 
 
 In this lab, we're going to look at how to update our running app when the chart has been changed. To demonstrate this, we're going to make changes to the original `guestbook` chart by:
 * Removing the Redis slaves and using just the in-membory DB
@@ -470,7 +458,7 @@ It seems contrived but the goal of this lab is to show you how to update your ap
 
 # Update the application using `kubectl`
 
-In this part of the lab we will update the previously deployed application [Guestbook](https://github.com/IBM/guestbook), using Kubernetes directly.
+In this part of the lab we will update the previously deployed application [Guestbook](https://github.com/niklaushirt/guestbook), using Kubernetes directly.
 
 1. This is an optional step, that it is not necessary to update your running app. The reason for doing this step is "house keeping" - you want to have the correct files for the current configuration that you have deployed. This avoids making mistakes if you have future updates or even rollbacks. In this updated configuration, we remove the Redis slaves. That is why you should move/archive or remove the Redis slave files to keep abreast of the update:
 
@@ -533,7 +521,7 @@ In this part of the lab we will update the previously deployed application [Gues
     Note: The service type has changed (to `NodePort`) and a new port has been allocated (`31989` in this output case) to the guestbook 
     service. All `redis-slave` resources have been removed.
 
-5. View the guestbook as per [Lab1](../Lab1/README.md), using the updated port for the guestbook service.
+5. View the guestbook as per Lab4, using the updated port for the guestbook service.
    
 # Update the application using Helm
 
@@ -627,13 +615,11 @@ Enough talking about the theory. Now let's give it a go!
     ```
     Note: The service type has changed (to `NodePort`) and a new port has been allocated (`31202` in this output case) to the guestbook service. All `redis-slave` resources have been removed.
     
-2. View the guestbook as per [Lab1](../Lab1/README.md), using the updated port for the guestbook service.
+2. View the guestbook as per Lab4, using the updated port for the guestbook service.
 
 # Conclusion
 
 Congratulations, you have now updated the applications! Helm does not require any manual changing of resources and is therefore so much easier to upgrade! All configurations can be set on the fly on the command line or by using override files. This is made possible from when the logic was added to the template files, which enables or disables the capability, depending on the flag set.
-
-Check out [Lab 3](../Lab3/README.md) to get an insight into revision management.
 
 
 #### Hint JustChange
@@ -651,7 +637,7 @@ No hint available
 ----
 
 
-# Lab 3. Keeping track of the deployed application
+# Lab 6 - Keeping track of the deployed application
 
 Let's say you deployed different release versions of your application (i.e., you upgraded the running application). How do you keep track of the versions and how can you do a rollback?
 
@@ -673,7 +659,7 @@ Let's see how this works in practice.
     $ helm history guestbook-demo
     ```
     
-    You should see output similar to the following because we did an upgrade in [Lab 2](../Lab2/README.md) after the initial install in [Lab 1](../Lab1/README.md):
+    You should see output similar to the following because we did an upgrade in Lab 5 after the initial install in Lab 4:
     
     ```
     REVISION	UPDATED                 	STATUS    	CHART          	DESCRIPTION
@@ -685,12 +671,16 @@ Let's see how this works in practice.
 
     In this rollback, Helm checks the changes that occured when upgrading from the revision 1 to revision 2. This information enables it to makes the calls to the Kubernetes API server, to update the deployed application as per the initial deployment - in other words with Redis slaves and using a load balancer.
 
-    Rollback with this command, ```$ helm rollback guestbook-demo 1```
+    Rollback with this command
+    
+    ```$ helm rollback guestbook-demo 1```
     
     ```
     Rollback was a success! Happy Helming!
     ```
-    Check the history again, `$ helm history guestbook-demo`
+    Check the history again, 
+    
+    `$ helm history guestbook-demo`
     
     You should see output similar to the following:
     
@@ -701,7 +691,9 @@ Let's see how this works in practice.
     3       	Mon Sep 24 11:59:18 2018	DEPLOYED  	guestbook-0.1.0	Rollback to 1
     ```
     
-    To check the rollback, you can run `$ kubectl get all --namespace helm-demo`:
+    To check the rollback, you can run 
+    
+    `$ kubectl get all --namespace helm-demo`:
     
     ```
     NAME                                READY     STATUS    RESTARTS   AGE
@@ -727,14 +719,13 @@ Let's see how this works in practice.
     replicaset.apps/redis-slave-586b4c847c    2         2         2         2m
     ```
    
-    You can see from the output that the app service is the service type of `LoadBalancer` again and the Redis master/slave deployment has returned. 
-    This shows a complete rollback from the upgrade in [Lab 2](../Lab2/README.md) 
+    You can see from the output that the Redis master/slave deployment has returned. 
+    This shows a complete rollback from the upgrade in Lab 5.
 
 # Conclusion
 
 From this lab, we can say that Helm does revision management well and Kubernetes does not have the capability built in! You might be wondering why we need `helm rollback` when you could just re-run the `helm upgrade` from a previous version. And that's a good question. Technically, you should end up with the same resources (with same parameters) deployed. However, the advantage of using `helm rollback` is that helm manages (ie. remembers) all of the variations/parameters of the previous `helm install\upgrade` for you. Doing the rollback via a `helm upgrade` requires you (and your entire team) to manually track how the command was previously executed. That's not only tedious but very error prone. It is much easier, safer and reliable to let Helm manage all of that for you and all you need to do it tell it which previous version to go back to, and it does the rest.
 
-[Lab 4](../Lab4/README.md) awaits.
 
 
 
@@ -754,7 +745,7 @@ No hint available
 ----
 
 
-# Lab 4. I like sharing
+# Lab 7 - I like sharing
 
 A key aspect of providing an application means sharing with others. Sharing can be direct counsumption (by users or in CI/CD pipelines) or as a dependency for other charts. If people can't find your app then they can't use it.
 
@@ -764,7 +755,7 @@ A means of sharing is a chart repository, which is a location where packaged cha
 
 Helm charts can be available on a remote repository or in a local environment/repository. The remote repositories can be public like [Helm Charts](https://github.com/helm/charts) or [IBM Helm Charts](https://github.com/IBM/charts), or hosted repositories like on Google Cloud Storage or GitHub. Refer to [Helm Chart Repository Guide](https://github.com/helm/helm/blob/master/docs/chart_repository.md) for more details. 
 
-In this part of the lab, we show you how to install the `guestbook` chart from the [Helm101 repo](https://ibm.github.io/helm101/).
+In this part of the lab, we show you how to install the `guestbook` chart from the [Helm101 repo](https://github.com/niklaushirt/helm101/).
 
 1. Check the repositories configured on your system:
 
@@ -782,7 +773,7 @@ In this part of the lab, we show you how to install the `guestbook` chart from t
 
 2. Add `helm101` repo:
 
-   ```$ helm repo add helm101 https://ibm.github.io/helm101/```
+   ```$ helm repo add helm101 https://raw.githubusercontent.com/niklaushirt/helm101/master/```
    
    Should generate an output as follows:
    
@@ -797,7 +788,7 @@ In this part of the lab, we show you how to install the `guestbook` chart from t
       
 3. Install the chart
 
-   As mentioned we are going to install the `guestbook` chart from the [Helm101 repo](https://ibm.github.io/helm101/). As the repo is installed in our local respoitory we can reference the chart using the `repo name/chart name`, in other words `helm101/guestbook`. This means we can install the chart like we did previously with the command:
+   As mentioned we are going to install the `guestbook` chart from the [Helm101 repo](https://github.com/niklaushirt/helm101). As the repo is installed in our local respoitory we can reference the chart using the `repo name/chart name`, in other words `helm101/guestbook`. This means we can install the chart like we did previously with the command:
 
    ```$ helm install helm101/guestbook --name guestbook-demo --namespace repo-demo```
    
@@ -835,7 +826,13 @@ In this part of the lab, we show you how to install the `guestbook` chart from t
    Get the application URL by running these commands:
    export NODE_PORT=$(kubectl get --namespace repo-demo -o jsonpath="{.spec.ports[0].nodePort}" services guestbook-demo-guestbook)
    export NODE_IP=$(kubectl get nodes -o jsonpath={.items[*].status.addresses[?\(@.type==\"ExternalIP\"\)].address})
-   echo http://$NODE_IP:$NODE_PORT```
+   echo http://$NODE_IP:$NODE_PORT
+   
+   ```
+   
+   
+
+   
    
 # Conclusion
 
@@ -868,122 +865,241 @@ No hint available
 #### Task Create Charts
 
 ----
+# Lab 8 - What about my own Apps?
 
-In this tutorial, you learn how to transform your web app to a Helm chart, which can be deployed on IBM Cloud Private or on a [private cluster](https://cloud.ibm.com/docs/containers/cs_dedicated.html#dedicated).
+In this tutorial, you learn how to transform your web app to a Helm chart, which can be deployed on Kubernetes.
 
-**Note:** This tutorial does not bind any Watson services, because it is a private cloud, which is hosted on premises and not on a public IBM cluster. Therefore, if you want to integrate any IBM Cloud service, you need to do that by using the conventional API call mechanism. For reference, you can look at [my GitHub repo](https://github.com/arprasto/IBMPublicClusterHelmChart). Alternatively, you can bind the services to your cluster by [using these steps](https://cloud.ibm.com/docs/containers/cs_integrations.html#integrations) and updating the [deployment.yaml](https://github.com/arprasto/icp_helmchart/blob/master/icphelmchart/templates/deployment.yaml) accordingly.
+
+
 
 ## Prerequisites
 
-  1. Install [Docker](https://developer.ibm.com/tutorials/convert-sample-web-app-to-helmchart/docker.com) in your development environment and create an account in Docker.
-  2. You must have a [private cluster](https://cloud.ibm.com/docs/containers/cs_clusters.html#clusters), either through IBM Cloud Private or on a Public IBM Cluster. If you are new to IBM Cloud Private, then you need to first complete [this short exercise to get familiar with IBM Cloud Private](https://www.ibm.com/cloud/garage/dte/tutorial/deploy-cloud-native-microservices-application-ibm-cloud-private). Or you can navigate to your **[IBM Cloud dashboard > Containers > Create cluster](https://cloud.ibm.com/containers-kubernetes/catalog/cluster/create)**.
-  3. Go through [this tutorial to set up your CLI and to create a private cluster](https://cloud.ibm.com/docs/containers/cs_tutorials.html#cs_cluster_tutorial). After this step, you will have `kubectl` and `bx` commands configured.
-  4. (Note: This step is only for IBM Cloud Private users) Log in to your IBM Cloud Private dashboard and navigate to **Command Line Tools > Cloud Private CLI**. Download and install `bx pr command`.
+ 
+  1. You must have access to a Kubernetes Cluster.
 
 ## Estimated time
 
 Completing this tutorial should take about 20-30 minutes.
 
-## Steps
 
-### Build the Docker image
+## Prepare the Helm chart
 
-  1. First create your web-app and create the Docker file in the same directory. _For example, check the [icp_helmchart directory in my GitHub repo](https://github.com/arprasto/icp_helmchart), which contains the Dockerfile and application-dependent contents._  
-![Check for Dockerfile and app in the same directory](https://developer.ibm.com/developer/tutorials/convert-sample-web-app-to-helmchart/images/web-app_and_docker_same_dir.png)  
-Here, `app.py` runs a simple Flask-based web-app with the port as `6111`.
-  2. Build the Docker image and push it to your public or private Docker repository; it should be pulled without any issues. To build the Docker image, check out my [GitHub repo](https://github.com/arprasto/icp_helmchart). Then execute the command: `docker image build -t <docker_username>/<docker-image-name>:<docker-image-tag>`. In this case, I named my app `arprasto/userinfoicphelmchart:v1`.
-  3. Next, push your locally built Docker image to the cloud by using `docker push <docker_username>/<docker-image-name>:<tag>`.
+``` 
+$ helm create demo                                                   
 
-### Prepare the Helm chart
+Creating demo
 
-  1. Update the below properties in the [values.yaml](https://github.com/arprasto/icp_helmchart/blob/master/icphelmchart/values.yaml) file:
+$ cd demo
 
-    * `image.repository: <docker_username>/<docker-image-name>`
-    * `image.tag: <docker-image-tag>`
-    * `service.internalPort: 6111`
-    * `service.externalPort: 6111`
-    * `service.nodeport: 31000` This port will be exposed to `svc` to navigate your app home page through a web browser.
+$ ls                                                    
 
-**Note:** `service.internalPort` and `service.externalPort` should be similar to the port specified in `app.py`. See how they are [related and co-dependent here](https://kubernetes.io/docs/concepts/services-networking/connect-applications-service/)!
+-rw-r--r--  1 nhirt  staff   100 May  3 17:26 Chart.yaml
+drwxr-xr-x  2 nhirt  staff    64 May  3 17:26 charts
+drwxr-xr-x  7 nhirt  staff   224 May  3 17:26 templates
+-rw-r--r--  1 nhirt  staff  1019 May  3 17:26 values.yaml
+``` 
 
-  2. Next, open the [icp_helmchart directory](https://github.com/arprasto/icp_helmchart) and run: `helm --debug install icphelmchart --dry-run`. You can check that all values appeared properly by referencing the Kubernetes document, [“Connecting Applications with Services”](https://developer.ibm.com/tutorials/convert-sample-web-app-to-helmchart/Connecting Applications with Services). After running the above command, you should see output similar to the one below:
-    
-    [debug] Created tunnel using local port: '52521' [debug] SERVER: "127.ø.e.1:52521" [debug] Original chart version: "" [debug] CHART PATH: Users/arpitrastogi/scrap/icp/icp_helmchart/icphelmchart NAME: full—quoll REVISION: 1 RELEASED: Mon Dec 17 19:53:41 2018 CHART: icphelmchart—0.1.0 USER-SUPPLIED VALUES: {} COMPUTED VALUES: image: pullPo1icy: Always repository: arprasto/userinfoicphelmchart tag: v2 replicaCount: 1 resources: limits: memory : 512Mi requests : memory: 128Mi service : externalPort: 6111 internalPort: 6111 name: icphelmchart nodeport: 31000 tier: frontend type: NodePort HOOKS: MANIFEST: 
-    
-    # Source: icphelmchart/templates/service.yaml apiVersion: v1 kind: Service metadata: name: icphelmchartsvc labels: run: icphelmchart spec: type: NodePort ports: — port: 6111 nodePort: 31000 protocol: TCP targetPort: 6111 selector: run: icphelmchart 
-    
-    # Source: icphelmchart/templates/deployment.yaml apiVersion: extensions/vlbetal kind: Deployment metadata : name: icphelmchart spec : replicas: 1 template: metadata: name: icphelmchart labels: run: icphelmchart spec : containers : — name: icphelmchart image: "arprasto/userinfoicphelmchart: v2" imagePuIIPolicy: Always 
 
-### Deploy helmchart into an IBM private cluster
+Find more details in the [Helm Documentation](https://helm.sh/docs/developing_charts/).
 
-  1. Navigate to **Resource List > Kubernetes Clusters** and click on your newly created cluster**.
-  2. You will see a tab, called **Access**:  
-![Access your new cluster](https://developer.ibm.com/developer/tutorials/convert-sample-web-app-to-helmchart/images/created-cluster.png) There will be instructions on this Access page, such as downloading CLI tools and other items that you need to follow and execute.
-  3. Run `ibmcloud regions` to check its API endpoints:
-    
-    Listing regions... Name Display name au—syd Sydney jp-tok Tokyo eu—de Frankfurt eu—gb London us-south Dallas us—east Washington DC 
 
-* * Run `ibmcloud login -a https://api.<your_cluster_region_name>.bluemix.net`
+### Chart.yaml
 
-* Run `ibmcloud cs clusters` to make sure that you have successfully connected to your private cluster. Make sure to keep note of your `<cluster-name>`.
-* Open the [icp_helmchart directory](https://github.com/arprasto/icp_helmchart) and run `helm install icphelmchart`. This will install your helmchart into your cluster.
-* To check the running status of your helmchart, run `kubectl get all|grep icphelmchart`.
-    
-    NAME READY STATUS RESTARTS AGE pod/icphelmchart-7b8dcd9685-p628p 1/1 Running 0 2m NAME TYPE CLUSTER-IP EXTERNAL-IP PORT(S) AGE service/icphelmchartsvc NodePort 172.21.222.134 <none> 6111:31000/TCP 2m service/kubernetes ClusterIP 172.21.0.1 <none> 443/TCP 2h NAME DESIRED CURRENT UP-TO-DATE AVAILABLE AGE deployment.apps/icphelmchart 1 1 1 1 2m NAME DESIRED CURRENT READY AGE replicaset.apps/icphelmchart-7b8dcd9685 1 1 1 2m 
+A YAML file containing information about the chart
 
-* If your pod is not in a running state, check the root cause of it by running `kubectl --tail=1000 logs <pod-id>`. For example, in the above screenshot we can see the logs by running `kubectl --tail=1000 logs icphelmchart-7b8dcd9685-p628p`.
+``` 
+apiVersion: v1
+appVersion: "1.0"
+description: A Helm chart for Kubernetes
+name: demo
+version: 0.1.0
+``` 
+Every chart must have a version number. Packages in repositories are identified by name plus version.
+For example, an nginx chart whose version field is set to version: 1.2.3 will be named:
+`nginx-1.2.3.tgz`.
 
-* Run `ibmcloud cs workers <cluster-name>` to check the public and private IP addresses of your cluster.
-    
-    ibmcloud cs workers <cluster-name> ID Public IP Private IP Machine Type State Status Zone Version Your-cluster-id x.x.x.x x.x.x.x free normal Ready me101 1.10.11_1536 
 
-  1.   2. Now go to your web browser and navigate to your web-app home page: http://: **Note: If you have not changed the nodeport, than you can use `31000` as the nodeport.**
 
-### Deploy helmchart into IBM Cloud Private through the dashboard
+### values.yaml
 
-  1. Go to your parent directory above the helming directory. For example, in my case here’s my parent directory:  
-![Parent directory helm](https://developer.ibm.com/developer/tutorials/convert-sample-web-app-to-helmchart/images/parent-dir-before-helming.png)  
+The default configuration values for this chart.
 
-  2. `cd icp_helmchart` and then `helm package icphelmchart`. This builds a `<helm-name>.tgz` file.
-  3. `mv .tgz` to `helmrepo/`
-  4. Before the next step, publish your GitHub repo where you want to push your helm chart. [Publish your git repository by using this guide](https://helm.sh/docs/developing_charts/#github-pages-example). In my case, the published directory is `https://arprasto.github.io/icp_helmchart/helmrepo/`. This will generate an index.yaml file inside your helmrepo/ directory.
-  5. Push your above changes to GitHub.
-  6. Now to add your own helm dir to IBM Cloud Private, log in to the IBM Cloud Private dashboard. Navigate to _Manage > Helm Repositories > Add Repository_. Then give a name to your directory and the published repo URL and add it.
-  7. Sync your repositories.
-  8. Navigate to _Catalog > helm chart_. This is where you’ll see your helm chart published.
+Values that are supplied via a values.yaml file (or via the --set flag) are accessible from the .Values object in a template. But there are other pre-defined pieces of data you can access in your templates.
 
-### Deploy helm chart into IBM Cloud Private through a shell prompt
+``` 
+# Default values for demo.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
 
-Complete the following steps to deploy your new helm chart into IBM Cloud Private through shell prompts.
+replicaCount: 1
 
-  1. `bx pr init`  
-![Deploy new helm chart 1](https://developer.ibm.com/developer/tutorials/convert-sample-web-app-to-helmchart/images/shell-prompt-1.png)
-  2. `bx pr login`  
-![Deploy new helm chart 2](https://developer.ibm.com/developer/tutorials/convert-sample-web-app-to-helmchart/images/shell-prompt-2.png)
-  3. `bx pr clusters`, which shows the .  
-![Deploy new helm chart 3](https://developer.ibm.com/developer/tutorials/convert-sample-web-app-to-helmchart/images/shell-prompt-3.png)
-  4. `bx pr cluster-config <cluster-name>`  
-![Deploy new helm chart 4](https://developer.ibm.com/developer/tutorials/convert-sample-web-app-to-helmchart/images/shell-prompt-4.png)
-  5. Add your helm repository by using `helm repo add <alias-name> <published-repo-url>`  
-![Deploy new helm chart 5](https://developer.ibm.com/developer/tutorials/convert-sample-web-app-to-helmchart/images/shell-prompt-5.png)
-  6. Update your helm repo to sync it with your IBM Cloud Private account by using `helm repo update`.  
-![Deploy new helm chart 6](https://developer.ibm.com/developer/tutorials/convert-sample-web-app-to-helmchart/images/shell-prompt-6.png)
-  7. Now search to check if you can see your helm chart in the local helm repo by using `helm search <helm-chart-name>`.  
-![Deploy new helm chart 7](https://developer.ibm.com/developer/tutorials/convert-sample-web-app-to-helmchart/images/shell-prompt-7.png)  
-At this point you should be able to see your helmchart listed. If not, please resync or check if your changes checked into Git.
-  8. You can now install your helm chart into your IBM Cloud Private cluster by using `helm install <helm-chart-name>`.
+image:
+  repository: nginx
+  tag: stable
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  path: /
+  hosts:
+    - chart-example.local
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # requests:
+  #  cpu: 100m
+  #  memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+``` 
+
+
+The following values are pre-defined, are available to every template, and cannot be overridden. As with all values, the names are _case sensitive_.
+
+  * `Release.Name`: The name of the release (not the chart)
+  * `Release.Time`: The time the chart release was last updated. This will match the `Last Released` time on a Release object.
+  * `Release.Namespace`: The namespace the chart was released to.
+  * `Release.Service`: The service that conducted the release. Usually this is `Tiller`.
+  * `Release.IsUpgrade`: This is set to true if the current operation is an upgrade or rollback.
+  * `Release.IsInstall`: This is set to true if the current operation is an install.
+  * `Release.Revision`: The revision number. It begins at 1, and increments with each `helm upgrade`.
+  * `Chart`: The contents of the `Chart.yaml`. Thus, the chart version is obtainable as `Chart.Version` and the maintainers are in `Chart.Maintainers`.
+  * `Files`: A map-like object containing all non-special files in the chart. This will not give you access to templates, but will give you access to additional files that are present (unless they are excluded using `.helmignore`). Files can be accessed using `{{index .Files "file.name"}}` or using the `{{.Files.Get name}}` or `{{.Files.GetString name}}` functions. You can also access the contents of the file as `[]byte` using `{{.Files.GetBytes}}`
+  * `Capabilities`: A map-like object that contains information about the versions of Kubernetes (`{{.Capabilities.KubeVersion}}`, Tiller (`{{.Capabilities.TillerVersion}}`, and the supported Kubernetes API versions (`{{.Capabilities.APIVersions.Has "batch/v1"`)
+
+
+
+### templates directory          
+
+A directory of templates that, when combined with values, will generate valid Kubernetes manifest files.
+All template files are stored in a chart’s templates/ folder. When Helm renders the charts, it will pass every file in that directory through the template engine.
+
+Values for the templates are supplied two ways:
+
+  * Chart developers may supply a file called `values.yaml` inside of a chart. This file can contain default values.
+  * Chart users may supply a YAML file that contains values. This can be provided on the command line with `helm install`.
+
+
+* Values: An object that provides access to the values passed into the chart. An example of this is in `guestbook-service`, which contains the line `type: {{ .Values.service.type }}`. This line provides the capability to set the service type during an upgrade or install.
+
+
+**deployment.yaml**
+```
+apiVersion: v1
+kind: Deployment
+...
+spec:
+   template:
+    spec:
+      containers:
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+```   
+For example the value `{{ .Values.image.repository }}` will resolve to `nginx` coming out of the `values.yaml` file.
+
+## Adapting the files
+
+You can now add your own files and adapt the existing ones as needed.
+
+As an example, open the `values.yaml `file and 
+* change the `image.tag` from `stable` to `1.16`
+* change the `service.type` from `ClusterIP` to `NodePort`
+Then open the templates/service.yaml file
+
+## Packaging charts
+   
+Helm charts can be packaged easily 
+1. Check the repositories configured on your system:
+
+   ```
+   $ helm package demo
+   Successfully packaged chart and saved it to: /Users/nhirt/TEMP/tmp/istio/demo-0.1.0.tgz
+   ```
+   
+
+
+### Deploy helmchart 
+
+You can now install your helm chart into your Kubernetes cluster by using 
+
+```
+$ helm install demo-0.1.0.tgz                                         master ?
+
+NAME:   open-salamander
+LAST DEPLOYED: Fri May  3 20:01:37 2019
+NAMESPACE: default
+STATUS: DEPLOYED
+
+RESOURCES:
+==> v1/Service
+NAME                  TYPE      CLUSTER-IP    EXTERNAL-IP  PORT(S)       AGE
+open-salamander-demo  NodePort  10.101.8.186  <none>       80:32093/TCP  0s
+
+==> v1beta2/Deployment
+NAME                  DESIRED  CURRENT  UP-TO-DATE  AVAILABLE  AGE
+open-salamander-demo  1        1        1           0          0s
+
+==> v1/Pod(related)
+NAME                                   READY  STATUS             RESTARTS  AGE
+open-salamander-demo-676f4dcd49-dv575  0/1    ContainerCreating  0         0s
+
+
+NOTES:
+1. Get the application URL by running these commands:
+  export NODE_PORT=$(kubectl get --namespace default -o jsonpath="{.spec.ports[0].nodePort}" services open-salamander-demo)
+  export NODE_IP=$(kubectl get nodes --namespace default -o jsonpath="{.items[0].status.addresses[0].address}")
+  echo http://$NODE_IP:$NODE_PORT
+```
+
+You can open the demo app by navigating to http://192.168.99.100:32093
+* replace 192.168.99.100 with the address of your cluster
+* replace the port number with the one from the Service created (here it is 32093)
+
+You should see the welcome page for the nginx server you just created.
+
+
+### Delete helmchart
+ 
+```
+$ helm list                                                      ✘   master ?
+NAME            	REVISION	UPDATED                 	STATUS  	CHART     NAMESPACE
+open-salamander 	1       	Fri May  3 20:01:37 2019	DEPLOYED	demo-0.1.0default
+``` 
+ 
+You can now delete your helm chart by using 
+
+```
+$ helm delete open-salamander --purge
+
+release "open-salamander" deleted
+```
+
+ 
+ 
 
 ## Summary
 
-In this tutorial, you saw how to convert your web-app to helm chart and how to deploy it in a public or private cloud. This approach is also another way to convert your conventional web app to a microservice. I encourage you to continue experimenting with Helm charts and building on [IBM Cloud for free](https://www.ibm.com/cloud/free/).
-
-## Suggested further reading
-
-  * [Helm 101: Labs designed to help you achieve an understanding of the application package manager](https://developer.ibm.com/tutorials/helm-101-labs/)
-  * [Kubernetes at the Helm, containers in the engine room](https://developer.ibm.com/articles/cl-kubernetes-at-helm-containers-in-engine-room/)
-  * [Learning Path: Kubernetes](https://developer.ibm.com/series/kubernetes-learning-path/)
-
-Compo
+In this tutorial, you saw how to create a basic helm chart and how to deploy it in a Kubernetes cluster. This approach is also another way to convert your conventional web app to a microservice. 
 
 
 
@@ -1006,46 +1122,4 @@ No hint available
 
 
 
-
-
-#### Task aaa
-
-----
-
-#### Hint aaa
-
-No hint available
-
-
-#### Complete aaa
-
-> Confirm aaa complete
-
-#### Task aaa
-
-----
-
-#### Hint aaa
-
-No hint available
-
-
-#### Complete aaa
-
-> Confirm aaa complete
-
-
-
-#### Task aaa
-
-----
-
-#### Hint aaa
-
-No hint available
-
-
-#### Complete aaa
-
-> Confirm aaa complete
 
