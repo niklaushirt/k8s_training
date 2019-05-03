@@ -96,7 +96,7 @@ The following Knative components are available:
 
 Knative is designed for different personas:
 
-![](https://knative.dev/docs/images/knative-audience.svg)
+![](./images/knative-audience.svg)
 
 ### Developers 
 Knative components offer developers Kubernetes-native APIs for deploying serverless-style functions, applications, and containers to an auto-scaling runtime.

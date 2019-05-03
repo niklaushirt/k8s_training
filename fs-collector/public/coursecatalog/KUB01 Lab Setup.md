@@ -286,7 +286,7 @@ For Windows:
 http://git-scm.com/download/win
 
 At some point during the installation, change to the **"Use Windows default console"** and continue the installation.
-![Git for Windows](https://raw.githubusercontent.com/niklaushirt/ContainerOrchestration/master/images/git2.png)
+![Git for Windows](./images/git2.png)
 
 #### Hint SetUpGIT
 

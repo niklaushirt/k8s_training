@@ -93,7 +93,7 @@ Also since Istio tightly controls traffic routing to provide above mentioned ben
 
 In the [second part](#part-b-modify-sample-application-to-use-an-external-datasource-deploy-the-application-and-istio-envoys-with-egress-traffic-enabled) of the journey we focus on how Istio can be configured to allow applications to connect to external services. For that we modify the sample BookInfo application to use an external database and then use it as a base to show Istio configuration for enabling egress traffic.
 
-![istio-architecture](https://raw.githubusercontent.com/niklaushirt/k8s_training/master/fs-collector/public/images/istio-architecture.png)
+![istio-architecture](./images/istio-architecture.png)
 
 ## Included Components
 - [Istio](https://istio.io/)
@@ -338,7 +338,7 @@ No hint available
 
 In this part, we will be using the sample BookInfo Application that comes as default with Istio code base. As mentioned above, the application that is composed of four microservices, written in different languages for each of its microservices namely Python, Java, Ruby, and Node.js. The default application doesn't use a database and all the microservices store their data in the local file system.
 
-![kiali](https://raw.githubusercontent.com/niklaushirt/k8s_training/master/fs-collector/public/images/bookinfo.png)
+![kiali](./images/bookinfo.png)
 
 Envoys are deployed as sidecars on each microservice. Injecting Envoy into your microservice means that the Envoy sidecar would manage the ingoing and outgoing calls for the service. To inject an Envoy sidecar to an existing microservice configuration, do:
 
@@ -383,13 +383,13 @@ Now you can access your application via: [`http://192.168.99.100:31380/productpa
 If you refresh the page multiple times, you'll see that the _reviews_ section of the page changes. That's because there are 3 versions of **reviews**_(reviews-v1, reviews-v2, reviews-v3)_ deployment for our **reviews** service. Istio’s load-balancer is using a round-robin algorithm to iterate through the 3 instances of this service
 
 ##### V1 - No ratings
-![productpage](https://raw.githubusercontent.com/niklaushirt/k8s_training/master/fs-collector/public/images/none.png)
+![productpage](./images/none.png)
 
 ##### V2 - Ratings with black stars
-![productpage](https://raw.githubusercontent.com/niklaushirt/k8s_training/master/fs-collector/public/images/black.png)
+![productpage](./images/black.png)
 
 ##### V3- Ratings with red stars
-![productpage](https://raw.githubusercontent.com/niklaushirt/k8s_training/master/fs-collector/public/images/red.png)
+![productpage](./images/red.png)
 
 
 ## Sidecar injection
@@ -429,6 +429,16 @@ No hint available
 $ for i in `seq 1 200000`; do curl http://192.168.99.100:31380/productpage; done
 ```
 
+**Note**
+
+```
+If you get this:
+
+	for i in `seq 1 200000`; do curl http://192.168.99.100:31380/productpage\; done
+	for>
+
+Just delete the backslash (\) after productpage.
+```
 
 You can open Kiali via [`http://192.168.99.100:31552/kiali/`](http://192.168.99.100:31552/kiali/) (replace 192.168.99.100 with the address of your cluster)
 
@@ -437,7 +447,7 @@ Login is:
 	User: admin
 	Password: admin
 
-![kiali](https://raw.githubusercontent.com/niklaushirt/k8s_training/master/fs-collector/public/images/kiali_3.png)
+![kiali](./images/kiali_3.png)
 
 
 
@@ -450,7 +460,7 @@ Login is:
 
 You can then observe traffic flowing through your mesh network.
 
-![kiali](https://raw.githubusercontent.com/niklaushirt/k8s_training/master/fs-collector/public/images/kiali_0.png)
+![kiali](./images/kiali_0.png)
 
 
 
@@ -503,7 +513,7 @@ A [ServiceEntry](https://istio.io/docs/reference/config/istio.networking.v1alpha
 
 In this section, Istio will be configured to dynamically modify the network traffic between some of the components of our application. In this case we have 2 versions of the “reviews” component (v1 and v2) but we don’t want to replace review-v1 with review-v2 immediately. In most cases, when components are upgraded it’s useful to deploy the new version but only have a small subset of network traffic routed to it so that it can be tested before the old version is removed. This is often referred to as “canary testing”.
 
-![kiali](https://raw.githubusercontent.com/niklaushirt/k8s_training/master/fs-collector/public/images/bookinfo.png)
+![kiali](./images/bookinfo.png)
 
 There are multiple ways in which we can control this routing. It can be based on which user or type of device that is accessing it, or a certain percentage of the traffic can be configured to flow to one version.
 
@@ -516,7 +526,7 @@ This step shows you how to configure where you want your service requests to go 
 Before moving on, we have to define the destination rules. The destination rules tell Istio what versions (subsets in Istio terminology) are available for routing. This step is required before fine-grained traffic shaping is possible.
 
 ```
-$ kubectl apply -f ./samples/bookinfo/networking/destination-rule-all.yaml -n default
+$ kubectl apply -f ./samples/bookinfo/networking/destination-rule-all.yaml
 
 
 destinationrule.networking.istio.io/productpage created
@@ -537,7 +547,7 @@ Set Default Routes to `reviews-v1` for all microservices
 This would set all incoming routes on the services (indicated in the line `destination: <service>`) to the deployment with a tag `version: v1`. To set the default routes, run:
 
   ```
-  $ kubectl apply -f ./samples/bookinfo/networking/virtual-service-all-v1.yaml -n default
+  $ kubectl apply -f ./samples/bookinfo/networking/virtual-service-all-v1.yaml
   ```
 
 **After a theoretical deployment of v2:**
@@ -547,7 +557,7 @@ Route 100% of the traffic to the `version: v2` of the **reviews microservices**
 This will direct/switch all incoming traffic to version v2 of the reviews microservice. Run:
 
   ```
-  $ kubectl apply -f ./samples/bookinfo/networking/virtual-service-reviews-v2.yaml -n default
+  $ kubectl apply -f ./samples/bookinfo/networking/virtual-service-reviews-v2.yaml
   ```
   
 ---
@@ -564,7 +574,7 @@ This is indicated by the `weight: 80 and 20` in the yaml file.
   > Using `replace` should allow you to edit existing route-rules.
 
   ```
-  $ kubectl apply -f ./samples/bookinfo/networking/virtual-service-reviews-80-20.yaml -n default
+  $ kubectl apply -f ./samples/bookinfo/networking/virtual-service-reviews-80-20.yaml
   ```
 
 ---
@@ -574,11 +584,22 @@ Define certain conditions (Username, type of phone, ...) that will be using the 
 
 Set Route to `reviews-v2` of **reviews microservice** for a specific user  
 
-This would set the route for the user `jason` (You can login as _jason_ with any password in your deploy web application) to see the `version: v3` of the reviews microservice. Run:
+This would set the route for the user `jason` (You can login as _jason_ with any password in your deploy web application) to see the `version: v3` of the reviews microservice. 
+
+
+Run:
 
   ```
-  $ kubectl apply -f ./samples/bookinfo/networking/virtual-service-reviews-test-v2.yaml -n default
+  $ kubectl apply -f ./samples/bookinfo/networking/virtual-service-reviews-test-v3.yaml
   ```
+  
+ Go to the Bookinfo Application: [`http://192.168.99.100:31380/productpage`](http://192.168.99.100:31380/productpage) (replace 192.168.99.100 with the address of your cluster).
+ 
+**Refresh several times** - You should see only black stars, meaning that you are using V2. 
+ 
+And login to the Web Application as user jason with password jason and **refresh several times**. You should see only red stars, meaning that you are using V3.
+
+Observe in the Kiali Dashboard. After a short wile you should see traffic going to V3
 
 
 #### Hint Traffic flow management
@@ -606,8 +627,8 @@ No hint available
 This step shows you how to control access to your services. It helps to reset the routing rules to ensure that we are starting with a known configuration. The following commands will first set all review requests to v1, and then apply a rule to route requests from user _jason_ to v2, while all others go to v3:
 
 ```
-   $ kubectl apply -f ./samples/bookinfo/networking/virtual-service-all-v1.yaml -n default
-   $ kubectl apply -f ./samples/bookinfo/networking/virtual-service-reviews-jason-v2-v3.yaml -n default
+   $ kubectl apply -f ./samples/bookinfo/networking/virtual-service-all-v1.yaml
+   $ kubectl apply -f ./samples/bookinfo/networking/virtual-service-reviews-jason-v2-v3.yaml
 ```
 
 You'll now see that your `productpage` always red stars on the reviews section if not logged in, and always shows black stars when logged in as _jason_.
@@ -615,17 +636,17 @@ You'll now see that your `productpage` always red stars on the reviews section i
 * To deny access to the ratings service for all traffic coming from `reviews-v3`, you will use apply these rules:
 
   ```
-   $ kubectl apply -f ./samples/bookinfo/policy/mixer-rule-deny-label.yaml -n default
+   $ kubectl apply -f ./samples/bookinfo/policy/mixer-rule-deny-label.yaml
    $ kubectl apply -f ./samples/bookinfo/policy/mixer-rule-ratings-denial.yaml
   ```
 
 * To verify if your rule has been enforced, point your browser to your BookInfo Application. You'll notice you see no stars from the reviews section unless you are logged in as _jason_, in which case you'll see black stars.
 
-![access-control](https://raw.githubusercontent.com/niklaushirt/k8s_training/master/fs-collector/public/images/access.png)
+![access-control](./images/access.png)
 
 And in Kiali you should see the following:
 
-![access-control](https://raw.githubusercontent.com/niklaushirt/k8s_training/master/fs-collector/public/images/kiali_2.png)
+![access-control](./images/kiali_2.png)
 
 
 ## Cleanup 
@@ -633,11 +654,11 @@ And in Kiali you should see the following:
 Now let's clean up the mess and get back to a nice simple state.
 
 ```
-$ kubectl delete -f ./samples/bookinfo/policy/mixer-rule-deny-label.yaml -n default
+$ kubectl delete -f ./samples/bookinfo/policy/mixer-rule-deny-label.yaml
 kubectl delete -f ./samples/bookinfo/policy/mixer-rule-ratings-denial.yaml
-kubectl delete -f ./samples/bookinfo/networking/virtual-service-all-v1.yaml -n default
-kubectl delete -f ./samples/bookinfo/networking/virtual-service-reviews-jason-v2-v3.yaml -n default
-kubectl apply -f ./samples/bookinfo/networking/destination-rule-all.yaml -n default
+kubectl delete -f ./samples/bookinfo/networking/virtual-service-all-v1.yaml
+kubectl delete -f ./samples/bookinfo/networking/virtual-service-reviews-jason-v2-v3.yaml
+kubectl apply -f ./samples/bookinfo/networking/destination-rule-all.yaml
 ```
 
 
@@ -703,7 +724,7 @@ This step shows you how to configure [Istio Mixer](https://istio.io/docs/concept
 
 
   Your dashboard should look like this:  
-  ![Grafana-Dashboard](https://raw.githubusercontent.com/niklaushirt/k8s_training/master/fs-collector/public/images/grafana_1.png)
+  ![Grafana-Dashboard](./images/grafana_1.png)
  
 Play around and observer the different metrics being collected.
 
@@ -719,7 +740,7 @@ Jaeger is a distributed tracing tool that is available with Istio.
 
   Your dashboard should look something like this:
   
-  ![jaeger](https://raw.githubusercontent.com/niklaushirt/k8s_training/master/fs-collector/public/images/jaeger1.png)
+  ![jaeger](./images/jaeger1.png)
 
 * Make sure you still send traffic to that service. You can renew the `for` loop from earlier.
 
@@ -729,11 +750,11 @@ Jaeger is a distributed tracing tool that is available with Istio.
 
 * Go to your Jeger Dashboard again and you will see a number of traces done. Click on Find Traces button to see the recent traces (previous hour by default.)
 
-![jaeger](https://raw.githubusercontent.com/niklaushirt/k8s_training/master/fs-collector/public/images/jaeger2.png)
+![jaeger](./images/jaeger2.png)
 
 * Click on one of those traces and you will see the details of the traffic you sent to your BookInfo App. It shows how much time it took for the request on `productpage` to finish. It also shows how much time it took for the requests on the `details`,`reviews`, and `ratings` services.
 
-![jaeger](https://raw.githubusercontent.com/niklaushirt/k8s_training/master/fs-collector/public/images/jaeger3.png)
+![jaeger](./images/jaeger3.png)
 
 [Jaeger Tracing on Istio](https://istio.io/docs/tasks/telemetry/distributed-tracing/)
 
