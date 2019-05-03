@@ -1,3 +1,8 @@
+docker build -t ibmicpcoc/collector:latest .
+docker run --rm -p 3000:3000 -e APP_NAMESPACE=test ibmicpcoc/collector:latest
+
+
+docker build -t ibmicpcoc/collector:latest .
 
 docker tag ibmicpcoc/collector:latest niklaushirt/collector:courselatest
 docker push niklaushirt/collector:courselatest
@@ -12,9 +17,8 @@ export KUBECONFIG=/Users/$USER/.bluemix/plugins/container-service/clusters/myclu
 kubectl delete -f k8s_deployment_course/
 
 kubectl apply -f k8s_deployment_course/
+kubectl get pods,services
 
-
-sadffdsa
 
 
 

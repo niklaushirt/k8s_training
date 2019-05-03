@@ -437,14 +437,19 @@ Login is:
 	User: admin
 	Password: admin
 
+![kiali](https://raw.githubusercontent.com/niklaushirt/k8s_training/master/fs-collector/public/images/kiali_3.png)
+
+
+
 1. Select `Graph` in the left hand menu.
 1. Then select `default` from the Namespaces drop-down menu
 1. Make sure that you check all types from the `Display` drop-down menu
 1. And `Requests percent of total` from the `Edge Labels` drop-down menu
 2. If you see no objects, there might be no traffic flowing through your mesh network yet (you chan change the seeting to display inactive objects too)
-3. You might want to change the refresh rate to 5s to more easily observe the changes in traffic
+3. You might want to change the refresh rate to 10s to more easily observe the changes in traffic
 
 You can then observe traffic flowing through your mesh network.
+
 ![kiali](https://raw.githubusercontent.com/niklaushirt/k8s_training/master/fs-collector/public/images/kiali_0.png)
 
 
@@ -765,7 +770,9 @@ No hint available
 * To delete Istio from your cluster
 
 ```
-$  kubectl delete -f https://raw.githubusercontent.com/niklaushirt/microservices-traffic-management-using-istio/master/istio.yaml
+$  kubectl delete -f ./samples/bookinfo/platform/kube/bookinfo.yaml
+kubectl delete -f  ./samples/bookinfo/networking/bookinfo-gateway.yaml
+kubectl delete -f https://raw.githubusercontent.com/niklaushirt/microservices-traffic-management-using-istio/master/istio.yaml
 kubectl delete -f ~/istio/install/kubernetes/helm/istio/templates/crds.yaml
 kubectl delete ns istio-system
 
