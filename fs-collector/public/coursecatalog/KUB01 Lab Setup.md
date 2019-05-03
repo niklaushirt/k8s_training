@@ -220,7 +220,6 @@ To view a local version of the Kubernetes dashboard and to deploy apps into your
 
 * [Windows](https://storage.googleapis.com/kubernetes-release/release/v1.10.8/bin/windows/amd64/kubectl.exe)
 
-Install the Kubernetes CLI in the same directory as the IBM Cloud CLI. This setup saves you some filepath changes when you run commands later.
 
 **For OS X and Linux users:**
 

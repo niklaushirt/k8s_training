@@ -101,7 +101,7 @@ In the [second part](#part-b-modify-sample-application-to-use-an-external-dataso
 - [Grafana](http://docs.grafana.org/guides/getting_started)
 - [Jaeger](https://www.jaegertracing.io/)
 - [Prometheus](https://prometheus.io/)
-- [IBM Cloud Kubernetes Service](https://console.ng.bluemix.net/docs/containers/cs_ov.html#cs_ov)
+
 
 ---
 
@@ -550,6 +550,10 @@ This would set all incoming routes on the services (indicated in the line `desti
   $ kubectl apply -f ./samples/bookinfo/networking/virtual-service-all-v1.yaml
   ```
 
+Observe in the Kiali Dashboard. After a short wile you should see that all traffic is going to V1.
+
+![](./images/traffic1.png)
+
 **After a theoretical deployment of v2:**
 
 Route 100% of the traffic to the `version: v2` of the **reviews microservices**  
@@ -560,6 +564,12 @@ This will direct/switch all incoming traffic to version v2 of the reviews micros
   $ kubectl apply -f ./samples/bookinfo/networking/virtual-service-reviews-v2.yaml
   ```
   
+Observe in the [Kiali Dashboard](http://192.168.99.100:31552/kiali/). After a short wile you should see that all traffic is going to V2.
+
+![](./images/traffic2.png)
+
+
+
 ---
 
   
@@ -577,7 +587,58 @@ This is indicated by the `weight: 80 and 20` in the yaml file.
   $ kubectl apply -f ./samples/bookinfo/networking/virtual-service-reviews-80-20.yaml
   ```
 
+Observe in the [Kiali Dashboard](http://192.168.99.100:31552/kiali/). After a short wile you should see that about 80% of the traffic is going to V1 and 80% of the traffic is going to V2.
+
+![](./images/traffic3.png)
+
 ---
+
+
+## Navigating Kiali
+Open [Kiali Dashboard](http://192.168.99.100:31552/kiali/) and select the `reviews` service in the graph.
+
+![](./images/traffic31.png)
+
+To the right you can observe specific metrics for this service.
+Then open the `reviews` service overview:
+
+![](./images/traffic32.png)
+
+In this view you can get details about the service, like averall Health, assigned `Workloads` and much more.
+
+![](./images/traffic33.png)
+
+**Feel free to browse some more to get familiar with the interface.**
+
+Now open the `reviews` service details by selecting the `Virtual Services` tab and selecting `reviews`.
+
+![](./images/traffic34.png)
+
+Here you get more detailed information about the service, like the weight distribution:
+
+![](./images/traffic35.png)
+
+
+---
+
+## Gradual Rollout
+
+In order to gradually roll out a new release we have to change the weight distribution.
+
+* Click on the `YAML` tab
+* Modify the weight to 20%/80% 
+* Click `Save`
+
+![](./images/traffic36.png)
+
+Observe in the [Kiali Dashboard](http://192.168.99.100:31552/kiali/). After a short wile you should see that about 20% of the traffic is going to V1 and 90% of the traffic is going to V2.
+
+![](./images/traffic37.png)
+
+**Note:** The sum of the weights must be equal to 100%
+
+---
+
 
 ## Traffic Steering / Dark Launch
 Define certain conditions (Username, type of phone, ...) that will be using the new service.
@@ -590,17 +651,22 @@ This would set the route for the user `jason` (You can login as _jason_ with any
 Run:
 
   ```
-  $ kubectl apply -f ./samples/bookinfo/networking/virtual-service-reviews-test-v3.yaml
+  $ kubectl apply -f ./samples/bookinfo/networking/virtual-service-reviews-jason-v2v3
   ```
   
  Go to the Bookinfo Application: [`http://192.168.99.100:31380/productpage`](http://192.168.99.100:31380/productpage) (replace 192.168.99.100 with the address of your cluster).
  
 **Refresh several times** - You should see only black stars, meaning that you are using V2. 
  
-And login to the Web Application as user jason with password jason and **refresh several times**. You should see only red stars, meaning that you are using V3.
 
-Observe in the Kiali Dashboard. After a short wile you should see traffic going to V3
 
+![](./images/traffic4.png)
+
+Now login to the Web Application as user jason with password jason and **refresh several times**. You should see only red stars, meaning that you are using V3.
+
+Observe in the [Kiali Dashboard](http://192.168.99.100:31552/kiali/). After a short wile you should see that a small percentage of traffic is going to V3, which corresponds to your page refreshes.
+
+![](./images/traffic5.png)
 
 #### Hint Traffic flow management
 
@@ -631,7 +697,9 @@ This step shows you how to control access to your services. It helps to reset th
    $ kubectl apply -f ./samples/bookinfo/networking/virtual-service-reviews-jason-v2-v3.yaml
 ```
 
-You'll now see that your `productpage` always red stars on the reviews section if not logged in, and always shows black stars when logged in as _jason_.
+Go to the Bookinfo Application: [`http://192.168.99.100:31380/productpage`](http://192.168.99.100:31380/productpage) (replace 192.168.99.100 with the address of your cluster).
+
+You'll now see that your `productpage` always shows red stars on the reviews section if not logged in, and always shows black stars when logged in as _jason_.
 
 * To deny access to the ratings service for all traffic coming from `reviews-v3`, you will use apply these rules:
 
@@ -640,7 +708,7 @@ You'll now see that your `productpage` always red stars on the reviews section i
    $ kubectl apply -f ./samples/bookinfo/policy/mixer-rule-ratings-denial.yaml
   ```
 
-* To verify if your rule has been enforced, point your browser to your BookInfo Application. You'll notice you see no stars from the reviews section unless you are logged in as _jason_, in which case you'll see black stars.
+* To verify if your rule has been enforced, point your browser to your BookInfo Application. You'll notice you see no stars (Ratings service is currently unavailable) from the reviews section unless you are logged in as _jason_, in which case you'll see black stars.
 
 ![access-control](./images/access.png)
 
@@ -704,16 +772,6 @@ You can read more about how [Istio mixer enables telemetry reporting](https://is
 This step shows you how to configure [Istio Mixer](https://istio.io/docs/concepts/policy-and-control/mixer.html) to gather telemetry for services in your cluster.
 
 
-* Verify that the required Istio addons (Prometheus and Grafana) are available in your cluster:
-
-  ```
-  $ kubectl get pods -n istio-system | grep -E 'prometheus|grafana'
-  
-  grafana-6cbdcfb45-bwmtm                     1/1       Running     0          4d
-  istio-grafana-post-install-h2dgz            0/1       Completed   1          4d
-  prometheus-84bd4b9796-vnb58                 1/1       Running     0          4d
-  ```
-
 * Make sure you still send traffic to that service. You can renew the `for` loop from earlier.
 
 	```
@@ -721,12 +779,14 @@ This step shows you how to configure [Istio Mixer](https://istio.io/docs/concept
 	```
 
 * Point your browser to [`http://192.168.99.100:31551/`](http://192.168.99.100:31551) (replace 192.168.99.100 with the address of your cluster)
+* Click on the `Home` button in the upper left hand corner
+* Select `Istio Service Dashboard`
 
 
   Your dashboard should look like this:  
   ![Grafana-Dashboard](./images/grafana_1.png)
  
-Play around and observer the different metrics being collected.
+Play around and observe the different metrics being collected.
 
 [Collecting Metrics on Istio](https://istio.io/docs/tasks/telemetry/metrics/)
 
@@ -736,7 +796,9 @@ Play around and observer the different metrics being collected.
 
 Jaeger is a distributed tracing tool that is available with Istio.
 
-  Access the Jaeger dashboard at [`http://192.168.99.100:31553/`](http://192.168.99.100:31553) (replace 192.168.99.100 with the address of your cluster)
+  * Access the Jaeger dashboard at [`http://192.168.99.100:31553/`](http://192.168.99.100:31553) (replace 192.168.99.100 with the address of your cluster)
+  * Select `productpage.default` in the left hand `Service` dropdown
+  * Click `Find Traces`
 
   Your dashboard should look something like this:
   
@@ -747,10 +809,6 @@ Jaeger is a distributed tracing tool that is available with Istio.
 	```
 	$ for i in `seq 1 200000`; do curl http://192.168.99.100:31380/productpage; done
 	```
-
-* Go to your Jeger Dashboard again and you will see a number of traces done. Click on Find Traces button to see the recent traces (previous hour by default.)
-
-![jaeger](./images/jaeger2.png)
 
 * Click on one of those traces and you will see the details of the traffic you sent to your BookInfo App. It shows how much time it took for the request on `productpage` to finish. It also shows how much time it took for the requests on the `details`,`reviews`, and `ratings` services.
 

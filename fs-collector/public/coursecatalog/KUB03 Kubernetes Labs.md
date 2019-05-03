@@ -78,7 +78,7 @@ Minikube provides a simple way to run applications in containers on Kubernetes.
 
 * Lab 1: This lab walks through creating and deploying a simple "guestbook" app written in Go as a net/http Server and accessing it.
 
-* Lab 2: Builds on lab 1 to expand to a more resilient setup which can survive having containers fail and recover. Lab 2 will also walk through basic services you need to get started with Kubernetes and the IBM Cloud Container Service
+* Lab 2: Builds on lab 1 to expand to a more resilient setup which can survive having containers fail and recover. Lab 2 will also walk through basic services you need to get started with Kubernetes
 
 * Lab 3: Builds on lab 2 by increasing the capabilities of the deployed Guestbook application. This lab covers basic distributed application design and how kubernetes helps you use standard design practices.
 
@@ -316,8 +316,7 @@ No hint available
 
 ## Lab 1. Set up and deploy your first application
 
-Learn how to deploy an application to a Kubernetes cluster hosted within
-the IBM Container Service.
+Learn how to deploy an application to a Kubernetes cluster.
 
 Once your client is configured, you are ready to deploy your first application, `guestbook`.
 

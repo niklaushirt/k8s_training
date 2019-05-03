@@ -3,7 +3,7 @@
 
 :course_desc: This course contains a refresh of the Container and Kubernetes topics. 
 
-:course_max: 5
+:course_max: 4
 
 :course_auto: no
 
@@ -58,46 +58,6 @@
 :infotab: <li>Never</li>
 :infotab: </ul>
 :infotab: <p>More details on image management may be <a href="https://kubernetes.io/docs/concepts/containers/images/">found here</a>.</p>
-
-
-
-#### Task Intro
-
-----
-
-
-
-
-
-<img src="https://kubernetes.io/images/favicon.png" width="200">
-
-
-# Welcome to the IBM Kubernetes Labs
-
-
-
-### Objectives
-
-This lab is an introduction to using Docker containers on Kubernetes in the IBM Cloud Container Service. By the end of the course, you'll achieve these objectives:
-
-* Understand core concepts of Kubernetes
-* Deploy an application on Kubernetes in the IBM Cloud Container Service 
-* Control application deployments, while minimizing your time with infrastructure management
-* Add AI services to extend your app 
-* Secure and monitor your cluster and app
-
-
----
-
-
-#### Hint Intro
-
-No hint available
-
-
-#### Complete Intro
-
-> Confirm Intro complete
 
 
 
@@ -161,6 +121,8 @@ Traditional applications are run on native hardware. A single application does n
 
 Containers allow you to share the host OS. This reduces duplication while still providing the isolation. Containers also allow you to drop unneeded files such as system libraries and binaries to save space and reduce your attack surface. If SSHD or LIBC are not installed, they cannot be exploited.
 
+
+![Containers versus VMs](./images/kub1.png)
 
 ## Docker Terminoloy
 
