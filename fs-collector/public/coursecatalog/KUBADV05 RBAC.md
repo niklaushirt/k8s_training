@@ -77,12 +77,35 @@ No hint available
 
 #### Complete Introduction
 
-> Confirm Introduction complete
+$ Confirm Introduction complete
 
 
 
 
 
+
+
+#### Task Get Source Code 
+
+----
+
+
+## Lab 2 - Download the Sample Application
+The application used in this lab is a simple guestbook website where users can post messages.
+You should clone it to your workstation since you will be using some of the configuration files.
+
+```
+	$ git clone https://github.com/niklaushirt/guestbook.git
+```
+
+#### Hint Get Source Code 
+
+No hint available
+
+
+#### Complete Get Source Code 
+
+$ Confirm Check Minikube complete
 
 
 
@@ -138,32 +161,9 @@ No hint available
 
 #### Complete Check Minikube
 
-> Confirm Check Minikube complete
+$ Confirm Check Minikube complete
 
 
-
-
-#### Task Get Source Code 
-
-----
-
-
-## Lab 2 - Download the Sample Application
-The application used in this lab is a simple guestbook website where users can post messages.
-You should clone it to your workstation since you will be using some of the configuration files.
-
-```
-	$ git clone https://github.com/niklaushirt/guestbook.git
-```
-
-#### Hint Get Source Code 
-
-No hint available
-
-
-#### Complete Get Source Code 
-
-> Confirm Check Minikube complete
 
 
 
@@ -177,32 +177,19 @@ No hint available
 
 
 
-
-## Steps
-
-# Lab 1 - Build application images
-
-Let’s build some images for our application and get them up and running. These are modified versions of the images used in the [ny-power](http://ny-power.org/) application. They include the `kubectl` tool to make it easy to access the Kubernetes API.
-
-First off, we need to create a container registry namespace to store our images:
-    
-    > ibmcloud cr namespace-add rbac-tutorial Adding namespace 'rbac-tutorial'... Successfully added namespace 'rbac-tutorial' OK 
-
-Then we’ll build these example images:
-    
-    > ibmcloud cr build --tag registry.ng.bluemix.net/rbac-tutorial/mqtt-img:1 deploy/mqtt-img Sending build context to Docker daemon 6.656kB Step 1/13 : FROM ubuntu:xenial ... 1: digest: sha256:ea1afeb4e5754f8defcae039f9a43aff8b81ecc24ef9ed2d907381a9a99d0b2b size: 2821 OK 
-    
-    > ibmcloud cr build --tag registry.ng.bluemix.net/rbac-tutorial/tools-img:1 deploy/tools-img Sending build context to Docker daemon 4.096kB Step 1/9 : FROM ubuntu:xenial ... 1: digest: sha256:78b0639d6c77af5b6fda4d690273a702c43c55cb386f5ab24e78a693a6664f2a size: 2200 OK 
-
-### 2. Start our sample application and our tools pod
+## Start our sample application and our tools pod
 
 We’re going to start up two deployments based on the built images from step 1:
-    
-    > kubectl apply -f deploy/mqtt.yaml -f deploy/tools.yaml secret "mqtt-secret" created persistentvolumeclaim "mqtt-nfs" created deployment.apps "mqtt" created service "mqtt" created deployment.apps "tools-no-rbac" created 
+
+```    
+$ kubectl apply -f deploy/mqtt.yaml -f deploy/tools.yaml secret "mqtt-secret" created persistentvolumeclaim "mqtt-nfs" created deployment.apps "mqtt" created service "mqtt" created deployment.apps "tools-no-rbac" created 
+```
 
 This is going to take a 2 – 3 minutes to provision. `kubectl get all` will display the current status. When both pods are in the `Running` state you can proceed to the next steps.
-    
-    > kubectl get all NAME READY STATUS RESTARTS AGE pod/mqtt-5ccf8b68b6-m8hfl 1/1 Running 0 2m pod/tools-no-rbac-7dc96f489b-d9gcl 1/1 Running 0 2m NAME TYPE CLUSTER-IP EXTERNAL-IP PORT(S) AGE service/kubernetes ClusterIP 172.21.0.1 <none> 443/TCP 16d service/mqtt LoadBalancer 172.21.173.243 169.60.93.179 1883:31532/TCP,80:31517/TCP 2m NAME DESIRED CURRENT UP-TO-DATE AVAILABLE AGE deployment.extensions/mqtt 1 1 1 1 2m deployment.extensions/tools-no-rbac 1 1 1 1 2m NAME DESIRED CURRENT READY AGE replicaset.extensions/mqtt-5ccf8b68b6 1 1 1 2m replicaset.extensions/tools-no-rbac-7dc96f489b 1 1 1 2m NAME DESIRED CURRENT UP-TO-DATE AVAILABLE AGE deployment.apps/mqtt 1 1 1 1 2m deployment.apps/tools-no-rbac 1 1 1 1 2m NAME DESIRED CURRENT READY AGE replicaset.apps/mqtt-5ccf8b68b6 1 1 1 2m replicaset.apps/tools-no-rbac-7dc96f489b 1 1 1 2m 
+ 
+```   
+    $ kubectl get all NAME READY STATUS RESTARTS AGE pod/mqtt-5ccf8b68b6-m8hfl 1/1 Running 0 2m pod/tools-no-rbac-7dc96f489b-d9gcl 1/1 Running 0 2m NAME TYPE CLUSTER-IP EXTERNAL-IP PORT(S) AGE service/kubernetes ClusterIP 172.21.0.1 <none$ 443/TCP 16d service/mqtt LoadBalancer 172.21.173.243 169.60.93.179 1883:31532/TCP,80:31517/TCP 2m NAME DESIRED CURRENT UP-TO-DATE AVAILABLE AGE deployment.extensions/mqtt 1 1 1 1 2m deployment.extensions/tools-no-rbac 1 1 1 1 2m NAME DESIRED CURRENT READY AGE replicaset.extensions/mqtt-5ccf8b68b6 1 1 1 2m replicaset.extensions/tools-no-rbac-7dc96f489b 1 1 1 2m NAME DESIRED CURRENT UP-TO-DATE AVAILABLE AGE deployment.apps/mqtt 1 1 1 1 2m deployment.apps/tools-no-rbac 1 1 1 1 2m NAME DESIRED CURRENT READY AGE replicaset.apps/mqtt-5ccf8b68b6 1 1 1 2m replicaset.apps/tools-no-rbac-7dc96f489b 1 1 1 2m 
+```
 
 ### 3. Attempt to access the Kubernetes API
 
@@ -211,16 +198,22 @@ One of the powerful parts of Kubernetes is the ability to interact with the Kube
 We’ll demonstrate that by connecting to our tools app and using `kubectl`.
 
 Run the following command to get the name of the tools pod that we launched in the environment.
-    
-    > kubectl get pods -l rbac=none NAME READY STATUS RESTARTS AGE tools-no-rbac-7dc96f489b-ph7h9 1/1 Running 0 1h 
+
+```    
+    $ kubectl get pods -l rbac=none NAME READY STATUS RESTARTS AGE tools-no-rbac-7dc96f489b-ph7h9 1/1 Running 0 1h 
+```
 
 Now we can create a bash session on that pod by using the following command:
-    
-    > kubectl exec -it tools-no-rbac-7dc96f489b-ph7h9 bash root@tools-no-rbac-7dc96f489b-ph7h9:/# 
+ 
+ ```   
+    $ kubectl exec -it tools-no-rbac-7dc96f489b-ph7h9 bash root@tools-no-rbac-7dc96f489b-ph7h9:/# 
+```
 
 We’re in! The next step is to run `kubectl get all` to see what resources we can see from there.
-    
+ 
+ ```   
     root@tools-no-rbac-7dc96f489b-ph7h9:/# kubectl get all Error from server (Forbidden): pods is forbidden: User "system:serviceaccount:default:default" cannot list pods in the namespace "default" Error from server (Forbidden): replicationcontrollers is forbidden: User "system:serviceaccount:default:default" cannot list replicationcontrollers in the namespace "default" Error from server (Forbidden): services is forbidden: User "system:serviceaccount:default:default" cannot list services in the namespace "default" Error from server (Forbidden): daemonsets.extensions is forbidden: User "system:serviceaccount:default:default" cannot list daemonsets.extensions in the namespace "default" Error from server (Forbidden): deployments.extensions is forbidden: User "system:serviceaccount:default:default" cannot list deployments.extensions in the namespace "default" Error from server (Forbidden): replicasets.extensions is forbidden: User "system:serviceaccount:default:default" cannot list replicasets.extensions in the namespace "default" Error from server (Forbidden): daemonsets.apps is forbidden: User "system:serviceaccount:default:default" cannot list daemonsets.apps in the namespace "default" Error from server (Forbidden): deployments.apps is forbidden: User "system:serviceaccount:default:default" cannot list deployments.apps in the namespace "default" Error from server (Forbidden): replicasets.apps is forbidden: User "system:serviceaccount:default:default" cannot list replicasets.apps in the namespace "default" Error from server (Forbidden): statefulsets.apps is forbidden: User "system:serviceaccount:default:default" cannot list statefulsets.apps in the namespace "default" Error from server (Forbidden): horizontalpodautoscalers.autoscaling is forbidden: User "system:serviceaccount:default:default" cannot list horizontalpodautoscalers.autoscaling in the namespace "default" Error from server (Forbidden): jobs.batch is forbidden: User "system:serviceaccount:default:default" cannot list jobs.batch in the namespace "default" Error from server (Forbidden): cronjobs.batch is forbidden: User "system:serviceaccount:default:default" cannot list cronjobs.batch in the namespace "default" 
+```
 
 Okay that didn’t work. So what happened?
 
@@ -251,13 +244,13 @@ A RoleBinding links a Role to Subjects. There are many different ways to handle 
 
 This can be applied with the yaml file in the repository:
     
-    > kubectl apply -f deploy/role.yaml -f deploy/global-role-assign.yaml role.rbac.authorization.k8s.io "api-role" created rolebinding.rbac.authorization.k8s.io "global-rolebinding" created 
+    $ kubectl apply -f deploy/role.yaml -f deploy/global-role-assign.yaml role.rbac.authorization.k8s.io "api-role" created rolebinding.rbac.authorization.k8s.io "global-rolebinding" created 
 
 ### 5. Test our new Access
 
 Let’s connect to our tools pod and see what happens now:
     
-    > kubectl exec -it tools-no-rbac-7dc96f489b-ph7h9 bash root@tools-no-rbac-7dc96f489b-ph7h9:/# kubectl get all NAME TYPE CLUSTER-IP EXTERNAL-IP PORT(S) AGE kubernetes ClusterIP 172.21.0.1 <none> 443/TCP 15d mqtt LoadBalancer 172.21.91.88 169.60.93.179 1883:32145/TCP,80:31639/TCP 22h Error from server (Forbidden): pods is forbidden: User "system:serviceaccount:default:default" cannot list pods in the namespace "default" Error from server (Forbidden): replicationcontrollers is forbidden: User "system:serviceaccount:default:default" cannot list replicationcontrollers in the namespace "default" Error from server (Forbidden): daemonsets.extensions is forbidden: User "system:serviceaccount:default:default" cannot list daemonsets.extensions in the namespace "default" Error from server (Forbidden): deployments.extensions is forbidden: User "system:serviceaccount:default:default" cannot list deployments.extensions in the namespace "default" Error from server (Forbidden): replicasets.extensions is forbidden: User "system:serviceaccount:default:default" cannot list replicasets.extensions in the namespace "default" Error from server (Forbidden): daemonsets.apps is forbidden: User "system:serviceaccount:default:default" cannot list daemonsets.apps in the namespace "default" Error from server (Forbidden): deployments.apps is forbidden: User "system:serviceaccount:default:default" cannot list deployments.apps in the namespace "default" Error from server (Forbidden): replicasets.apps is forbidden: User "system:serviceaccount:default:default" cannot list replicasets.apps in the namespace "default" Error from server (Forbidden): statefulsets.apps is forbidden: User "system:serviceaccount:default:default" cannot list statefulsets.apps in the namespace "default" Error from server (Forbidden): horizontalpodautoscalers.autoscaling is forbidden: User "system:serviceaccount:default:default" cannot list horizontalpodautoscalers.autoscaling in the namespace "default" Error from server (Forbidden): jobs.batch is forbidden: User "system:serviceaccount:default:default" cannot list jobs.batch in the namespace "default" Error from server (Forbidden): cronjobs.batch is forbidden: User "system:serviceaccount:default:default" cannot list cronjobs.batch in the namespace "default" root@tools-no-rbac-7dc96f489b-ph7h9:/# kubectl get services NAME TYPE CLUSTER-IP EXTERNAL-IP PORT(S) AGE kubernetes ClusterIP 172.21.0.1 <none> 443/TCP 15d mqtt LoadBalancer 172.21.91.88 169.60.93.179 1883:32145/TCP,80:31639/TCP 22h 
+    $ kubectl exec -it tools-no-rbac-7dc96f489b-ph7h9 bash root@tools-no-rbac-7dc96f489b-ph7h9:/# kubectl get all NAME TYPE CLUSTER-IP EXTERNAL-IP PORT(S) AGE kubernetes ClusterIP 172.21.0.1 <none$ 443/TCP 15d mqtt LoadBalancer 172.21.91.88 169.60.93.179 1883:32145/TCP,80:31639/TCP 22h Error from server (Forbidden): pods is forbidden: User "system:serviceaccount:default:default" cannot list pods in the namespace "default" Error from server (Forbidden): replicationcontrollers is forbidden: User "system:serviceaccount:default:default" cannot list replicationcontrollers in the namespace "default" Error from server (Forbidden): daemonsets.extensions is forbidden: User "system:serviceaccount:default:default" cannot list daemonsets.extensions in the namespace "default" Error from server (Forbidden): deployments.extensions is forbidden: User "system:serviceaccount:default:default" cannot list deployments.extensions in the namespace "default" Error from server (Forbidden): replicasets.extensions is forbidden: User "system:serviceaccount:default:default" cannot list replicasets.extensions in the namespace "default" Error from server (Forbidden): daemonsets.apps is forbidden: User "system:serviceaccount:default:default" cannot list daemonsets.apps in the namespace "default" Error from server (Forbidden): deployments.apps is forbidden: User "system:serviceaccount:default:default" cannot list deployments.apps in the namespace "default" Error from server (Forbidden): replicasets.apps is forbidden: User "system:serviceaccount:default:default" cannot list replicasets.apps in the namespace "default" Error from server (Forbidden): statefulsets.apps is forbidden: User "system:serviceaccount:default:default" cannot list statefulsets.apps in the namespace "default" Error from server (Forbidden): horizontalpodautoscalers.autoscaling is forbidden: User "system:serviceaccount:default:default" cannot list horizontalpodautoscalers.autoscaling in the namespace "default" Error from server (Forbidden): jobs.batch is forbidden: User "system:serviceaccount:default:default" cannot list jobs.batch in the namespace "default" Error from server (Forbidden): cronjobs.batch is forbidden: User "system:serviceaccount:default:default" cannot list cronjobs.batch in the namespace "default" root@tools-no-rbac-7dc96f489b-ph7h9:/# kubectl get services NAME TYPE CLUSTER-IP EXTERNAL-IP PORT(S) AGE kubernetes ClusterIP 172.21.0.1 <none$ 443/TCP 15d mqtt LoadBalancer 172.21.91.88 169.60.93.179 1883:32145/TCP,80:31639/TCP 22h 
 
 We can see that we now have access to services in the cluster.
 
@@ -271,17 +264,17 @@ After it’s created from within the pod we can’t get it (because we didn’t 
 
 If we look instead at this from our computer where we have all the permissions, we can see the contents of that `configmap`.
     
-    > kubectl get configmap/mqtt-pub-address -o yaml apiVersion: v1 data: host: 169.60.93.179 kind: ConfigMap metadata: creationTimestamp: 2018-07-12T14:45:13Z name: mqtt-pub-address namespace: default resourceVersion: "418889" selfLink: /api/v1/namespaces/default/configmaps/mqtt-pub-address uid: 2eee2331-85e2-11e8-857f-06cd14ab6bce 
+    $ kubectl get configmap/mqtt-pub-address -o yaml apiVersion: v1 data: host: 169.60.93.179 kind: ConfigMap metadata: creationTimestamp: 2018-07-12T14:45:13Z name: mqtt-pub-address namespace: default resourceVersion: "418889" selfLink: /api/v1/namespaces/default/configmaps/mqtt-pub-address uid: 2eee2331-85e2-11e8-857f-06cd14ab6bce 
 
 We can also see that we gave this access to **every** pod in our environment. If we connect to our mqtt pod we can run the same command:
     
-    > kubectl get pod -l app=mqtt NAME READY STATUS RESTARTS AGE mqtt-5ccf8b68b6-bkdf9 1/1 Running 0 2m > kubectl exec -it mqtt-5ccf8b68b6-bkdf9 bash root@mqtt-5ccf8b68b6-bkdf9:/# kubectl get services NAME TYPE CLUSTER-IP EXTERNAL-IP PORT(S) AGE kubernetes ClusterIP 172.21.0.1 <none> 443/TCP 15d mqtt LoadBalancer 172.21.91.88 169.60.93.179 1883:32145/TCP,80:31639/TCP 23h 
+    $ kubectl get pod -l app=mqtt NAME READY STATUS RESTARTS AGE mqtt-5ccf8b68b6-bkdf9 1/1 Running 0 2m $ kubectl exec -it mqtt-5ccf8b68b6-bkdf9 bash root@mqtt-5ccf8b68b6-bkdf9:/# kubectl get services NAME TYPE CLUSTER-IP EXTERNAL-IP PORT(S) AGE kubernetes ClusterIP 172.21.0.1 <none$ 443/TCP 15d mqtt LoadBalancer 172.21.91.88 169.60.93.179 1883:32145/TCP,80:31639/TCP 23h 
 
 That is **way more** access than we wanted to grant. Let’s see what we can do about granting more specific access to just the tools pod.
 
 Before we do that, we’ll need to remove the `global-role-binding` so that it doesn’t get in the way of future examples.
     
-    > kubectl delete -f deploy/global-role-assign.yaml rolebinding.rbac.authorization.k8s.io "global-rolebinding" deleted 
+    $ kubectl delete -f deploy/global-role-assign.yaml rolebinding.rbac.authorization.k8s.io "global-rolebinding" deleted 
 
 And we can see that our access has been revoked for the tools pod:
     
@@ -314,27 +307,27 @@ In the pod spec you can see `serviceAccountName: service-account-1`. The pod wil
 
 Run the following to start this pod with the service account in question:
     
-    > kubectl apply -f deploy/tools-service-account.yaml serviceaccount "service-account-1" configured deployment.apps "tools-service-account" configured 
+    $ kubectl apply -f deploy/tools-service-account.yaml serviceaccount "service-account-1" configured deployment.apps "tools-service-account" configured 
 
 Great, now lets see how our pod is doing:
     
-    > kubectl get pods NAME READY STATUS RESTARTS AGE mqtt-5ccf8b68b6-bkdf9 1/1 Running 0 51m tools-no-rbac-7dc96f489b-ph7h9 1/1 Running 22 22h tools-service-account-6664bdf7f-jzpcg 0/1 ErrImagePull 0 36s 
+    $ kubectl get pods NAME READY STATUS RESTARTS AGE mqtt-5ccf8b68b6-bkdf9 1/1 Running 0 51m tools-no-rbac-7dc96f489b-ph7h9 1/1 Running 22 22h tools-service-account-6664bdf7f-jzpcg 0/1 ErrImagePull 0 36s 
 
 Hmmm… that’s no good, why didn’t our pod start?
     
-    > kubectl describe pod/tools-service-account-6664bdf7f-jzpcg ... Events: Type Reason Age From Message ‑‑‑‑ ‑‑‑‑‑‑ ‑‑‑‑ ‑‑‑‑ ‑‑‑‑‑‑‑ Normal Scheduled 2m default-scheduler Successfully assigned tools-service-account-6664bdf7f-jzpcg to 10.188.103.254 Normal SuccessfulMountVolume 2m kubelet, 10.188.103.254 MountVolume.SetUp succeeded for volume "service-account-1-token-kcbfz" Normal Pulling 1m (x4 over 2m) kubelet, 10.188.103.254 pulling image "registry.ng.bluemix.net/rbac-tutorial/tools-img:1" Warning Failed 1m (x4 over 2m) kubelet, 10.188.103.254 Failed to pull image "registry.ng.bluemix.net/rbac-tutorial/tools-img:1": rpc error: code = Unknown desc = Error response from daemon: Get https://registry.ng.bluemix.net/v2/rbac-tutorial/tools-img/manifests/1: unauthorized: authentication required Warning Failed 1m (x4 over 2m) kubelet, 10.188.103.254 Error: ErrImagePull Normal BackOff 48s (x6 over 2m) kubelet, 10.188.103.254 Back-off pulling image "registry.ng.bluemix.net/rbac-tutorial/tools-img:1" Warning Failed 48s (x6 over 2m) kubelet, 10.188.103.254 Error: ImagePullBackOff 
+    $ kubectl describe pod/tools-service-account-6664bdf7f-jzpcg ... Events: Type Reason Age From Message ‑‑‑‑ ‑‑‑‑‑‑ ‑‑‑‑ ‑‑‑‑ ‑‑‑‑‑‑‑ Normal Scheduled 2m default-scheduler Successfully assigned tools-service-account-6664bdf7f-jzpcg to 10.188.103.254 Normal SuccessfulMountVolume 2m kubelet, 10.188.103.254 MountVolume.SetUp succeeded for volume "service-account-1-token-kcbfz" Normal Pulling 1m (x4 over 2m) kubelet, 10.188.103.254 pulling image "registry.ng.bluemix.net/rbac-tutorial/tools-img:1" Warning Failed 1m (x4 over 2m) kubelet, 10.188.103.254 Failed to pull image "registry.ng.bluemix.net/rbac-tutorial/tools-img:1": rpc error: code = Unknown desc = Error response from daemon: Get https://registry.ng.bluemix.net/v2/rbac-tutorial/tools-img/manifests/1: unauthorized: authentication required Warning Failed 1m (x4 over 2m) kubelet, 10.188.103.254 Error: ErrImagePull Normal BackOff 48s (x6 over 2m) kubelet, 10.188.103.254 Back-off pulling image "registry.ng.bluemix.net/rbac-tutorial/tools-img:1" Warning Failed 48s (x6 over 2m) kubelet, 10.188.103.254 Error: ImagePullBackOff 
 
 It appears that our new service account doesn’t have access to our image registry. If we do a `get` on both the `default` service account and `service-account-1` we can see a critical difference.
     
-    > kubectl get sa default -o yaml apiVersion: v1 imagePullSecrets: - name: bluemix-default-secret - name: bluemix-default-secret-regional - name: bluemix-default-secret-international kind: ServiceAccount metadata: creationTimestamp: 2018-06-26T20:33:40Z name: default namespace: default resourceVersion: "241" selfLink: /api/v1/namespaces/default/serviceaccounts/default uid: 360775a5-7980-11e8-857f-06cd14ab6bce secrets: - name: default-token-x5gbt > kubectl get sa service-account-1 -o yaml apiVersion: v1 kind: ServiceAccount metadata: annotations: kubectl.kubernetes.io/last-applied-configuration: | {"apiVersion":"v1","kind":"ServiceAccount","metadata":{"annotations":{},"labels":{"app":"tools-rbac"},"name":"service-account-1","namespace":"default"}} creationTimestamp: 2018-07-11T18:05:35Z labels: app: tools-rbac name: service-account-1 namespace: default resourceVersion: "420289" selfLink: /api/v1/namespaces/default/serviceaccounts/service-account-1 uid: 02a91878-8535-11e8-857f-06cd14ab6bce secrets: - name: service-account-1-token-kcbfz 
+    $ kubectl get sa default -o yaml apiVersion: v1 imagePullSecrets: - name: bluemix-default-secret - name: bluemix-default-secret-regional - name: bluemix-default-secret-international kind: ServiceAccount metadata: creationTimestamp: 2018-06-26T20:33:40Z name: default namespace: default resourceVersion: "241" selfLink: /api/v1/namespaces/default/serviceaccounts/default uid: 360775a5-7980-11e8-857f-06cd14ab6bce secrets: - name: default-token-x5gbt $ kubectl get sa service-account-1 -o yaml apiVersion: v1 kind: ServiceAccount metadata: annotations: kubectl.kubernetes.io/last-applied-configuration: | {"apiVersion":"v1","kind":"ServiceAccount","metadata":{"annotations":{},"labels":{"app":"tools-rbac"},"name":"service-account-1","namespace":"default"}} creationTimestamp: 2018-07-11T18:05:35Z labels: app: tools-rbac name: service-account-1 namespace: default resourceVersion: "420289" selfLink: /api/v1/namespaces/default/serviceaccounts/service-account-1 uid: 02a91878-8535-11e8-857f-06cd14ab6bce secrets: - name: service-account-1-token-kcbfz 
 
 The `default` service account has this additional set of attributes under `imagePullSecrets`. These are what enable the service accounts access to the image registry. If we update our service account definition to include these our image should come up.
     
-    > kubectl apply -f deploy/fix-service-account-1.yaml serviceaccount "service-account-1" configured > kubectl delete pod/tools-service-account-6664bdf7f-jzpcg pod "tools-service-account-6664bdf7f-jzpcg" deleted 
+    $ kubectl apply -f deploy/fix-service-account-1.yaml serviceaccount "service-account-1" configured $ kubectl delete pod/tools-service-account-6664bdf7f-jzpcg pod "tools-service-account-6664bdf7f-jzpcg" deleted 
 
 We delete the old pod that was in a failed state because in this error condition, Kubernetes will not automatically retry launching it. After a delete of the pod, the deployment will try to start the pod again and this time it will succeed.
     
-    > kubectl get pods NAME READY STATUS RESTARTS AGE mqtt-5ccf8b68b6-bkdf9 1/1 Running 0 1h tools-no-rbac-7dc96f489b-ph7h9 1/1 Running 22 22h tools-service-account-6664bdf7f-rv5n2 1/1 Running 0 1m 
+    $ kubectl get pods NAME READY STATUS RESTARTS AGE mqtt-5ccf8b68b6-bkdf9 1/1 Running 0 1h tools-no-rbac-7dc96f489b-ph7h9 1/1 Running 22 22h tools-service-account-6664bdf7f-rv5n2 1/1 Running 0 1m 
 
 ### 8. Add Role and RoleBinding for Service Account
 
@@ -346,13 +339,13 @@ The difference from our global assignment is that our subject is now of `kind: S
 
 We can apply these changes with:
     
-    > kubectl apply -f deploy/service-account-role-assign.yaml rolebinding.rbac.authorization.k8s.io "service-account-rolebinding" configured 
+    $ kubectl apply -f deploy/service-account-role-assign.yaml rolebinding.rbac.authorization.k8s.io "service-account-rolebinding" configured 
 
 ### 9. Test access
 
 Let’s see the impact of these changes in our pods. We’ll just `exec` the commands directly in all running pods.
     
-    > kubectl get pods NAME READY STATUS RESTARTS AGE mqtt-5ccf8b68b6-bkdf9 1/1 Running 0 5h tools-no-rbac-7dc96f489b-ph7h9 1/1 Running 26 1d tools-service-account-6664bdf7f-rv5n2 1/1 Running 3 3h > kubectl exec mqtt-5ccf8b68b6-bkdf9 kubectl get services Error from server (Forbidden): services is forbidden: User "system:serviceaccount:default:default" cannot list services in the namespace "default" command terminated with exit code 1 > kubectl exec tools-no-rbac-7dc96f489b-ph7h9 kubectl get services Error from server (Forbidden): services is forbidden: User "system:serviceaccount:default:default" cannot list services in the namespace "default" command terminated with exit code 1 > kubectl exec tools-service-account-6664bdf7f-rv5n2 kubectl get services NAME TYPE CLUSTER-IP EXTERNAL-IP PORT(S) AGE kubernetes ClusterIP 172.21.0.1 <none> 443/TCP 15d mqtt LoadBalancer 172.21.91.88 169.60.93.179 1883:32145/TCP,80:31639/TCP 1d 
+    $ kubectl get pods NAME READY STATUS RESTARTS AGE mqtt-5ccf8b68b6-bkdf9 1/1 Running 0 5h tools-no-rbac-7dc96f489b-ph7h9 1/1 Running 26 1d tools-service-account-6664bdf7f-rv5n2 1/1 Running 3 3h $ kubectl exec mqtt-5ccf8b68b6-bkdf9 kubectl get services Error from server (Forbidden): services is forbidden: User "system:serviceaccount:default:default" cannot list services in the namespace "default" command terminated with exit code 1 $ kubectl exec tools-no-rbac-7dc96f489b-ph7h9 kubectl get services Error from server (Forbidden): services is forbidden: User "system:serviceaccount:default:default" cannot list services in the namespace "default" command terminated with exit code 1 $ kubectl exec tools-service-account-6664bdf7f-rv5n2 kubectl get services NAME TYPE CLUSTER-IP EXTERNAL-IP PORT(S) AGE kubernetes ClusterIP 172.21.0.1 <none$ 443/TCP 15d mqtt LoadBalancer 172.21.91.88 169.60.93.179 1883:32145/TCP,80:31639/TCP 1d 
 
 This is much better. As expected, the only pod that has access to make these API calls is the one that is running as `service-account-1`. The others haven’t been granted any access.
 
@@ -374,15 +367,15 @@ This looks very similar to the namespace specific version, but one major differe
 
 We can apply this with:
     
-    > kubectl apply -f deploy/service-account-cluster-role.yaml clusterrole.rbac.authorization.k8s.io "node-cluster-role" configured clusterrolebinding.rbac.authorization.k8s.io "service-account-clusterrolebinding" created 
+    $ kubectl apply -f deploy/service-account-cluster-role.yaml clusterrole.rbac.authorization.k8s.io "node-cluster-role" configured clusterrolebinding.rbac.authorization.k8s.io "service-account-clusterrolebinding" created 
 
 Now the following commands work:
     
-    > kubectl exec tools-service-account-6664bdf7f-rv5n2 kubectl get nodes NAME STATUS ROLES AGE VERSION 10.188.103.209 Ready <none> 15d v1.9.8-2+af27ab4b096122 10.188.103.229 Ready <none> 15d v1.9.8-2+af27ab4b096122 10.188.103.254 Ready <none> 15d v1.9.8-2+af27ab4b096122 
+    $ kubectl exec tools-service-account-6664bdf7f-rv5n2 kubectl get nodes NAME STATUS ROLES AGE VERSION 10.188.103.209 Ready <none$ 15d v1.9.8-2+af27ab4b096122 10.188.103.229 Ready <none$ 15d v1.9.8-2+af27ab4b096122 10.188.103.254 Ready <none$ 15d v1.9.8-2+af27ab4b096122 
 
 But as expected, they will fail from every other pod in the cluster, as we assigned it to a single ServiceAccount:
     
-    > kubectl exec tools-no-rbac-7dc96f489b-ph7h9 kubectl get nodes Error from server (Forbidden): nodes is forbidden: User "system:serviceaccount:default:default" cannot list nodes at the cluster scope command terminated with exit code 1 
+    $ kubectl exec tools-no-rbac-7dc96f489b-ph7h9 kubectl get nodes Error from server (Forbidden): nodes is forbidden: User "system:serviceaccount:default:default" cannot list nodes at the cluster scope command terminated with exit code 1 
 
 ## A Real World Example – ny-power
 
@@ -467,7 +460,7 @@ No hint available
 
 #### Complete Next Steps
 
-> Confirm Next Steps complete
+$ Confirm Next Steps complete
 
 #### Task aaa
 
@@ -480,7 +473,7 @@ No hint available
 
 #### Complete aaa
 
-> Confirm aaa complete
+$ Confirm aaa complete
 
 
 
@@ -495,5 +488,5 @@ No hint available
 
 #### Complete aaa
 
-> Confirm aaa complete
+$ Confirm aaa complete
 

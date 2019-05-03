@@ -3,7 +3,7 @@
 
 :course_desc: This course provides the student with the necessary steps to get a basic understanding of Networking.  
 
-:course_max: 7
+:course_max: 10
 
 :course_auto: no
 
@@ -35,6 +35,7 @@ In this lab we'll demonstrate basic networking concepts in Kubernetes using the 
 ## Objectives
 
 In this lab you'll learn:
+
 * How pods communicate with each other
 * How pods are exposed to the internet
 * How traffic between pods can be restricted
@@ -46,6 +47,7 @@ This lab assumes that the reader is familiar with basic Kubernetes concepts.
 
 Before you begin, you need to install the required CLIs to manage your Kubernetes clusters.
 There are instructions for how to obtain the tools manually if desired.  The following tools are used in this lab:
+
 * kubectl CLI
    * `kubectl` is a command line interface for running commands against Kubernetes clusters.
 
@@ -55,11 +57,13 @@ There are instructions for how to obtain the tools manually if desired.  The fol
 
 * Lab 1 - Download the Sample Application
 * Lab 2 - Make sure minikube is running
-* Lab 3 - aaa
-* Lab 4 - aaa
-* Lab 5 - aaa
-* Lab 6 - aaa
-* Lab 7 - aaa
+* Lab 3 - Deploy the guestbook application
+* Lab 4 - Pod network
+* Lab 5 - ClusterIP Services
+* Lab 6 - Service discovery
+* Lab 7 - NodePort and LoadBalancer
+* Lab 8 - Ingress
+* Lab 9 - Network Policies
 
 ----
 
@@ -77,6 +81,30 @@ No hint available
 
 
 
+#### Task Get Source Code 
+
+----
+
+
+# Lab 1 - Download the Sample Application
+The application used in this lab is a simple guestbook website where users can post messages.
+You should clone it to your workstation since you will be using some of the configuration files.
+
+```
+	$ git clone https://github.com/niklaushirt/guestbook.git
+```
+
+#### Hint Get Source Code 
+
+No hint available
+
+
+#### Complete Get Source Code 
+
+> Confirm Check Minikube complete
+
+
+
 
 
 
@@ -84,7 +112,7 @@ No hint available
 
 ----
 
-# Lab 1 - Make sure minikube is running
+# Lab 2 - Make sure minikube is running
 
 
 * Verify that minikube is running
@@ -133,30 +161,6 @@ No hint available
 #### Complete Check Minikube
 
 > Confirm Check Minikube complete
-
-
-#### Task Get Source Code 
-
-----
-
-
-## Lab 2 - Download the Sample Application
-The application used in this lab is a simple guestbook website where users can post messages.
-You should clone it to your workstation since you will be using some of the configuration files.
-
-```
-	$ git clone https://github.com/niklaushirt/guestbook.git
-```
-
-#### Hint Get Source Code 
-
-No hint available
-
-
-#### Complete Get Source Code 
-
-> Confirm Check Minikube complete
-
 
 
 
@@ -483,6 +487,7 @@ If there is a pod running on the node which you address, it is not always the ca
 on other nodes as well.  The connection might be routed to one of those other pods.
 
 The NodePort service typically would be used only in the following cases:
+
 * in cloud environments which don't support a LoadBalancer service (such as in a trial account on IBM Cloud or in a local environmment such as `minikube`);
 * in development environments where you don't need a LoadBalancer service.
 
@@ -544,10 +549,6 @@ metadata:
   annotations:
     ingress.bluemix.net/rewrite-path: "serviceName=guestbook rewrite=/"
 spec:
-  tls:
-  - hosts:
-    - <ingress-subdomain>
-    secretName: <ingress-secret>
   rules:
   - host: <ingress-subdomain>
     http:
@@ -561,41 +562,10 @@ spec:
 You can find this yaml [here](resources/guestbook-ingress.yaml).  Download it and open it in a text editor.
 
 There are a couple of updates that need to be made to the yaml before we can give it to Kubernetes.
-Run the following command:
-
-```
-$ ibmcloud ks cluster-get myStandardCluster
-Retrieving cluster myStandardCluster...
-OK
 
 
-Name:                   myStandardCluster
-ID:                     fc5514ef25ac44da9924ff2309020bb3
-State:                  normal
-Created:                2018-09-18T13:58:23+0000
-Location:               dal10
-Master URL:             https://169.60.128.2:24627
-Master Location:        Dallas
-Ingress Subdomain:      mystandardcluster.us-south.containers.appdomain.cloud
-Ingress Secret:         mystandardcluster
-Workers:                2
-Worker Zones:           dal10
-Version:                1.10.7_1520
-Owner Email:
-Monitoring Dashboard:   -
-```
-
-There are two values of interest in the output (the values in your output may be different):
-
-* Ingress Subdomain:  IBM provides this domain name which you can use to access your application from the internet.
-
-* Ingress Secret:  IBM provides certificates for the IBM-provided domain name.  The certificates and private key are
-  stored in this Kubernetes secret.
-
-There are ways to use your own domain name and certificates but for this lab we'll use the ones provided by IBM.
-
-Update your copy of the yaml file to use the values you obtained.
-Replace `<ingress-subdomain>` with the Ingress Subdomain and replace `<ingress-secret>` with the Ingress Secret.
+Update your copy of the yaml file to use values you chose.
+Replace `<ingress-subdomain>` with the Ingress Subdomain.
 Save the file and then tell Kubernetes to create the resources defined by your copy of the yaml file.
 
 ```
@@ -604,8 +574,8 @@ service/guestbook created
 ingress.extensions/guestbook created
 ```
 
-Let's walk through what happens with the Ingress resource.  Behind the scenes your cluster contains an application
-load balancer which in the IBM Cloud is provided by `nginx`.  A Kubernetes component called an Ingress controller takes
+Let's walk through what happens with the Ingress resource.  
+A Kubernetes component called an Ingress controller takes
 your Ingress resource and translates it to a corresponding application load balancer configuration.
 
 The Ingress resource needs to tell the load balancer which services to expose and how to identify which request should
@@ -653,6 +623,7 @@ Default network policies are set up by the IBM Kubernetes service to secure your
 If you have unique security requirements, you can create your own network policies.
 
 The following network traffic is allowed by default:
+
 * A pod accepts external traffic from any IP address to its NodePort or LoadBalancer service or its Ingress resource.
 * A pod accepts internal traffic from any other pod in the same cluster.
 * A pod is allowed outbound traffic to any IP address.
@@ -750,53 +721,4 @@ No hint available
 
 
 
-
-
-
-#### Task Next Steps
-
-----
-
-## Next Steps
-
-Continue your learning by visiting the [Istio workshop](https://github.com/IBM/istio101/tree/master/workshop).
-With Istio, you can manage network traffic, load balance across microservices, enforce access policies, verify service identity, and more.
-
-
-#### Hint Next Steps
-
-No hint available
-
-
-#### Complete Next Steps
-
-> Confirm Next Steps complete
-
-#### Task aaa
-
-----
-
-#### Hint aaa
-
-No hint available
-
-
-#### Complete aaa
-
-> Confirm aaa complete
-
-
-
-#### Task aaa
-
-----
-
-#### Hint aaa
-
-No hint available
-
-
-#### Complete aaa
-
-> Confirm aaa complete
 

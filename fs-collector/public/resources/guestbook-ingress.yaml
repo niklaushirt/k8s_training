@@ -18,10 +18,6 @@ metadata:
   annotations:
     ingress.bluemix.net/rewrite-path: "serviceName=guestbook rewrite=/"
 spec:
-  tls:
-  - hosts:
-    - <ingress-subdomain>
-    secretName: <ingress-secret>
   rules:
   - host: <ingress-subdomain>
     http:

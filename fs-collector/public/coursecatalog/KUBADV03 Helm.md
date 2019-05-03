@@ -34,6 +34,7 @@
 # Objectives
 
 These labs provide an insight on the advantages of using Helm over using Kubernetes directly through `kubectl`. When you complete all the labs, you'll:
+
 * Understand the core concepts of Helm
 * Understand the advantages of deployment using Helm over Kubernetes directly, looking at:
   * Application management
@@ -61,6 +62,7 @@ The chart repository is a location where packaged charts can be stored and share
 # Helm Abstractions
 
 Helm terms :
+
 * Chart - It contains all of the resource definitions necessary to run an application, tool, or service inside of a Kubernetes cluster. A chart is basically a package of pre-configured Kubernetes resources.
 * Config - Contains configuration information that can be merged into a packaged chart to create a releasable object.
 * helm - Helm client. Communicates to Tiller through the Helm API - [HAPI](https://docs.helm.sh/developers/#the-helm-api-hapi) which uses [gRPC](https://grpc.io/).
@@ -157,7 +159,7 @@ No hint available
 
 * Enable Kubernetes Dashboard
 
-	```
+		```
 	$ minikube dashboard                                                                                              
 	
 	🔌  Enabling dashboard ...
@@ -451,6 +453,7 @@ No hint available
 In Lab 4, we installed the guestbook sample app by using Helm and saw the benefits over using `kubectl`. You probably think that you're done and know enough to use Helm. But what about updates or improvements to the chart? How do you update your running app to pick up these changes? 
 
 In this lab, we're going to look at how to update our running app when the chart has been changed. To demonstrate this, we're going to make changes to the original `guestbook` chart by:
+
 * Removing the Redis slaves and using just the in-membory DB
 * Changing the type from `LoadBalancer` to `NodePort`.
 
@@ -528,6 +531,7 @@ In this part of the lab we will update the previously deployed application [Gues
 In this section, we'll update the previously deployed `guestbook-demo` application by using Helm.
 
 Before we start, let's take a few minutes to see how Helm simplifies the process compared to using Kubernetes directly. Helm's use of a [template language](https://docs.helm.sh/chart_template_guide/) provides great flexibility and power to chart authors, which removes the complexity to the chart user. In the guestbook example, we'll use the following capabilities of templating:
+
 * Values: An object that provides access to the values passed into the chart. An example of this is in `guestbook-service`, which contains the line `type: {{ .Values.service.type }}`. This line provides the capability to set the service type during an upgrade or install.
 * Control structures: Also called “actions” in template parlance, control structures provide the template author with the ability to control the flow of a template’s generation. An example of this is in `redis-slave-service`, which contains the line `{{- if .Values.redis.slaveEnabled -}}`. This line allows us to enable/disable the REDIS master/slave during an upgrade or install.
 
@@ -974,6 +978,7 @@ tolerations: []
 affinity: {}
 ``` 
 
+**Predefined values**
 
 The following values are pre-defined, are available to every template, and cannot be overridden. As with all values, the names are _case sensitive_.
 
@@ -1022,6 +1027,7 @@ For example the value `{{ .Values.image.repository }}` will resolve to `nginx` c
 You can now add your own files and adapt the existing ones as needed.
 
 As an example, open the `values.yaml `file and 
+
 * change the `image.tag` from `stable` to `1.16`
 * change the `service.type` from `ClusterIP` to `NodePort`
 Then open the templates/service.yaml file
@@ -1072,6 +1078,7 @@ NOTES:
 ```
 
 You can open the demo app by navigating to http://192.168.99.100:32093
+
 * replace 192.168.99.100 with the address of your cluster
 * replace the port number with the one from the Service created (here it is 32093)
 
