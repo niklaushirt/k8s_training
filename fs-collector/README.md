@@ -1,5 +1,5 @@
 docker build -t ibmicpcoc/collector:latest .
-docker run --rm -p 3000:3000 -e APP_NAMESPACE=test ibmicpcoc/collector:latest
+docker run --rm -d -p 3000:3000 -e APP_NAMESPACE=test ibmicpcoc/collector:latest
 
 
 

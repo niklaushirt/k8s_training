@@ -3,7 +3,7 @@
 
 :course_desc: This course contains a refresh of the Container and Kubernetes topics. 
 
-:course_max: 4
+:course_max: 5
 
 :course_auto: no
 
@@ -306,20 +306,70 @@ Learn about the basics of how Kubernetes works with a little terminology.
 
 A Kubernetes cluster consists of one or more virtual machines that are called worker nodes. Every worker node represents a compute host where you can deploy, run, and manage containerized apps. Worker nodes are managed by a Kubernetes master that centrally controls and monitors all Kubernetes resources in the cluster. When you deploy a containerized app, the Kubernetes master decides where to deploy the app, taking into account the deployment requirements and available capacity in the cluster.
 
-**Pod**
+**Node**
 
-Every containerized app that is deployed into a Kubernetes cluster is deployed, run, and managed by a pod. Pods represent the smallest deployable units in a Kubernetes cluster and are used to group containers that must be treated as a single unit. In most cases, a container is deployed to its own pod. However, an app might require a container and other helper containers to be deployed into one pod so that those containers can be addressed by using the same private IP address.
+A node is a computer that is part of the cluster that runs the kublet process. You should not need to worry about nodes for the majority of what you do on Kubernetes.
+
+**Namespace**
+
+A namespace is a logical grouping of different resources for a common application or environment in a Kubernetes cluster. We are able to group together a set of pods, services, ingresses, etc that all relate to the same group of application(s). For example, we currently group together applications based on the application as well as the environment it is running in (i.e. namespaces called “main-site-production” and “main-site-release”).
+
+
+**Pods**
+
+A pod is a unit of one or more [containers](https://www.docker.com/resources/what-container) deployed as a group onto a single node in the cluster. There will always be a container that runs the app along with zero or more helper containers called “sidecars”. They are always co-located onto the same node and the containers within a pod can reference other containers using localhost. Pods are usually created and managed through objects such as a Deployment or Job among others.
 
 **Deployment**
 
-A deployment is a Kubernetes resource where you specify your containers and other Kubernetes resources that are required to run your app, such as persistent storage, services, or annotations. Deployments are documented in a Kubernetes deployment script. When you run a deployment, the Kubernetes master deploys the specified containers into pods taking into account the capacity that is available on the worker nodes of the cluster. Other Kubernetes resources are created and configured as specified in the deployment script. 
+A deployment defines a configuration for a ReplicaSet which includes how many pods should be running as well as the different configuration options to supply to the running pods.
 
-You can use a deployment to define update strategies for your app, which includes the number of pods that you want to add during a rolling update and the number of pods that can be unavailable at a time. When you perform a rolling update, the deployment checks whether the revision is working and stops the rollout when failures are detected.
+A deployment will also define how the new pods are deployed. We are able to define how new pods should be created and how the old pods are deleted. For example, we can have Kubernetes slowly rollout a new version of an app by launching a few new pods and then deleting a few of the old pods repeatedly until all of the old pods have been removed. This allows us to get a new version of the app into the environment with little issue for the end users.
+
+
+**ReplicaSet**
+
+A ReplicaSet controls how many pods are running for a given app. The ReplicaSet will make sure that the correct number of pods is running for a given deployment at all times. If a pod fails and goes missing, the ReplicaSet will be used to launch another pod on the same or a different node. A ReplicaSet is usually not manually created, but is managed through the higher level Deployment object.
+
 
 **Service**
 
-A Kubernetes service groups a set of pods and provides network connection to these pods for other services in the cluster without exposing the actual private IP address of each pod. You can use a service to make your app available within your cluster or to the public internet. 
+A service provides apps with an IP address and a DNS name (provided through the CoreDNS service) to access the pods running for another app. This service endpoint will send our request to one of the running and available pods that are part of the service using round-robin selection. The service is able to identify pods that should be grouped by using a set of label attached to the pods. Services are the primary method of service discovery in Kubernetes.
 
+Although you can get the IP address for a service, it is suggested that you use DNS as the IP has the possibility of changing. With the DNS name you will automatically pick that up but with an IP address you would most likely need to deploy your app before it can be updated.
+
+For example, DNS names for services are in the form, “<name>.<namespace>.svc.cluster.local”. An example of a service DNS name for the service named “my-service” in the “my-service-production” namespace would be, “[my-service.my](http://my-service.my/)-service-production.svc.cluster.local”. There are also other DNS names available for other parts of the system as well.
+
+**Ingress**
+
+An ingress allows us to define how traffic from outside of the cluster can reach a particular services inside the cluster. The Ingress generally takes HTTP traffic and routes it based on the hostname header of the request. This is similar to virtual hosts or OSI layer 7 based routing that has been traditionally done in web servers such as Apache or Nginx.
+
+
+**API Servers**
+
+The API servers are the public endpoint for users of the cluster when requesting that some action is to be performed. You should not be directly concerned with the API servers.
+
+
+
+**Kubelet**
+
+A kubelet is a daemon running on all of the worker nodes that communicates with the Kubernetes API servers. The node reports the amount of resources available on its node so that the API server can decide where to run a pod. You should not need to worry about the kubelet.
+
+**kubectl**
+
+kubectl is a tool for accessing the Kubernetes API through the command line. It is what you will usually use when looking for a namespace, a set of pods or for a service.
+
+It is suggested that you install kubectl on your local machine using the homebrew package manager.
+
+
+**Job**
+
+A job is a pod that is run to complete a task that does not require the app to run at all times. Jobs are usually run for tasks such as a database migration that is needed before a new version of an app can properly function.
+
+
+
+**Helm**
+
+Helm is the tool we currently use for deployments. Helm allows us to template out the YAML configurations for the different parts of a app deployment on Kubernetes. The templating allows us to easily use the same configuration between different environments such as production and DQAs with little duplication.
 
 
 #### Hint KubernetesResources
@@ -327,10 +377,65 @@ A Kubernetes service groups a set of pods and provides network connection to the
 No hint available
 
 
+
+
+#### Task KubernetesComponents
+
+----
+
+There are 4 major components in Kubernetes architecture.
+
+
+
+### Master Components
+
+  * **Kube API Server:** The API Server services REST operations and provides the frontend to the cluster’s shared state for the Kubernetes pods, services, replication controllers and others.
+  
+  * **Kube Scheduler :** Collective resource requirements, hardware/software/policy constraints, affinity and anti-affinity specifications, data locality, inter-workload interference and deadlines.
+  * **Kube Controller Manager :** These controllers include
+	  * Node Controller: Responsible for noticing and responding when nodes go down.
+	  * Replication Controller: Responsible for maintaining the correct number of pods for every replication controller object in the system.
+	  * Endpoints Controller: Populates the Endpoints object (that is, joins Services & Pods).
+	  * Service Account & Token Controllers: Create default accounts and API access tokens for new namespaces.
+	  
+### ETCD Cluster
+
+Consistent and highly-available key value store used as Kubernetes’ backing store for all cluster data.
+
+Always have a backup plan for etcd’s data for your Kubernetes cluster. For in-depth information on etcd, see [etcd documentation.](https://github.com/coreos/etcd/blob/master/Documentation/docs.md)
+
+
+### Node/Slave Components : 
+
+Node components run on every node, maintaining running pods and providing the Kubernetes runtime environment.
+
+  * **kubelet:** An agent that runs on each node in the cluster. It makes sure that containers are running in a pod.The kubelet takes a set of PodSpecs that are provided through various mechanisms and ensures that the containers described in those PodSpecs are running and healthy. The kubelet doesn’t manage containers which were not created by Kubernetes.
+  * **kube-proxy:** [kube-proxy](https://kubernetes.io/docs/admin/kube-proxy/) enables the Kubernetes service abstraction by maintaining network rules on the host and performing connection forwarding.
+  * **Container Runtime:** The container runtime is the software that is responsible for running containers. Kubernetes supports several runtimes: [Docker](http://www.docker.com/), [rkt](https://coreos.com/rkt/), [runc](https://github.com/opencontainers/runc) and any OCI [runtime-spec](https://github.com/opencontainers/runtime-spec) implementation.
+
+  
+### Add Ons
+
+Addons are pods and services that implement cluster features. The pods may be managed by Deployments, ReplicationControllers, and so on. Namespaced addon objects are created in the `**kube-system**` namespace.
+
+  * **DNS:** While the other add-ons are not strictly required, all Kubernetes clusters should have [cluster DNS](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/), as many examples rely on it. Cluster DNS is a DNS server, in addition to the other DNS server(s) in your environment, which serves DNS records for Kubernetes services.Containers started by Kubernetes automatically include this DNS server in their DNS searches.
+  * **Web UI (Dashboard):** [Dashboard](https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/) is a general purpose, web-based UI for Kubernetes clusters. It allows users to manage and troubleshoot applications running in the cluster, as well as the cluster itself.
+  * **Container Resource Monitoring:** [Container Resource Monitoring](https://kubernetes.io/docs/tasks/debug-application-cluster/resource-usage-monitoring/) records generic time-series metrics about containers in a central database, and provides a UI for browsing that data.
+  * **Cluster-level Logging:** A [Cluster-level logging](https://kubernetes.io/docs/concepts/cluster-administration/logging/) mechanism is responsible for saving container logs to a central log store with search/browsing interface.
+
+
 #### Complete KubernetesResources
 
 > Confirm KubernetesResources complete
 
+#### Hint KubernetesComponents
+
+No hint available
+
+
+#### Complete KubernetesComponents
+
+> Confirm KubernetesComponents complete
 
 
 

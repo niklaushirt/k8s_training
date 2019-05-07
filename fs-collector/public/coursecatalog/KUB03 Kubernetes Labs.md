@@ -3,7 +3,7 @@
 
 :course_desc: This course contains the Kubernetes Labs.  
 
-:course_max: 15
+:course_max: 14
 
 :course_auto: no
 
@@ -502,8 +502,17 @@ kubectl: Correctly Configured: pointing to minikube-vm at 192.168.99.100
    
    We can see that our `<public-IP>` is `192.168.99.100`.
    
-6. Now that you have both the address and the port, you can now access the application in the web browser
-   at `<public-IP>:<nodeport>`. In the example case this is `192.168.99.100:31208`.
+6. Now that you have both the address and the port, you can now access the application in the web browser at `<public-IP>:<nodeport>`. In the example case this is `192.168.99.100:31208`.
+
+**Hint**
+
+For your convenience, you can open the webpage directly by typing
+
+```   
+minikube service guestbook
+```   
+
+where guestbook is the name of the exposed kubernetes service.
    
 Congratulations, you've now deployed an application to Kubernetes!
 
@@ -705,6 +714,20 @@ To update and roll back:
    and
    ` minikube status`
 
+
+
+	**Hint**
+	
+	For your convenience, you can open the webpage directly by typing
+	
+	```   
+	$ minikube service guestbook
+	```   
+	
+	where guestbook is the name of the exposed kubernetes service.
+	   
+
+
    To verify that you're running "v2" of guestbook, look at the title of the page,
    it should now be `Guestbook - v2`
 
@@ -769,10 +792,10 @@ configuration files. The configuration file mechanism allows you to have more
 fine-grained control over all of resources being created within the
 Kubernetes cluster.
 
-Before we work with the application we need to clone a github repo:
+You have already cloned the github repo:
 
 ```
-$ git clone https://github.com/IBM/guestbook.git
+$ git clone https://github.com/niklaushirt/guestbook.git
 ```
 
 This repo contains multiple versions of the guestbook application
@@ -781,24 +804,6 @@ as well as the configuration files we'll use to deploy the pieces of the applica
 Change directory by running the command `cd guestbook`. You will find all the
 configurations files for this exercise under the directory `v1`.
 
-
-
-#### Hint Kubernetes_Lab_3_Scale_1
-
-No hint available
-
-
-#### Complete Kubernetes_Lab_3_Scale_1
-
-> Confirm Kubernetes_Lab_3_Scale_1 complete
-
-
-
-
-
-#### Task Kubernetes_Lab_3_Scale_2
-
-----
 
 ### Scale apps natively
 
@@ -899,12 +904,12 @@ This will ask Kubernetes to "diff" our yaml file with the current state
 of the Deployment and apply just those changes.
 
 
-#### Hint Kubernetes_Lab_3_Scale_2
+#### Hint Kubernetes_Lab_3_Scale_1
 
 No hint available
 
 
-#### Complete Kubernetes_Lab_3_Scale_2
+#### Complete Kubernetes_Lab_3_Scale_1
 
 > Confirm Kubernetes_Lab_3_Scale_2 complete
 
@@ -912,7 +917,7 @@ No hint available
 
 
 
-#### Task Kubernetes_Lab_3_Scale_3
+#### Task Kubernetes_Lab_3_Scale_2
 
 ----
 
@@ -966,15 +971,27 @@ Deployment container spec.
   ```
 
 
+	**Hint**
+	
+	For your convenience, you can open the webpage directly by typing
+	
+	```   
+	minikube service guestbook
+	```   
+	
+	where guestbook is the name of the exposed kubernetes service.
+	   
 
-#### Hint Kubernetes_Lab_3_Scale_3
+
+
+#### Hint Kubernetes_Lab_3_Scale_2
 
 No hint available
 
 
-#### Complete Kubernetes_Lab_3_Scale_3
+#### Complete Kubernetes_Lab_3_Scale_2
 
-> Confirm Kubernetes_Lab_3_Scale_3 complete
+> Confirm Kubernetes_Lab_3_Scale_2 complete
 
 
 
