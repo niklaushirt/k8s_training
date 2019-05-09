@@ -152,6 +152,39 @@ $ curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/mini
 $ sudo mv minikube /usr/local/bin
 ```
 
+
+---
+
+### Linux
+  * Requires either the [kvm2 driver](https://github.com/kubernetes/minikube/blob/master/docs/drivers.md#kvm2-driver) (recommended), or VirtualBox
+  * VT-x/AMD-v virtualization must be enabled in BIOS
+  * and by using
+  
+	   ```
+	  $ curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64 && sudo install minikube-linux-amd64 /usr/local/bin/minikube
+	   ```
+
+---
+
+### Windows 10
+  * Requires a hypervisor, such as VirtualBox (recommended) or HyperV
+  * VT-x/AMD-v virtualization must be enabled in BIOS
+  * You can install minikube:
+	  * either using [chocolatey](https://chocolatey.org/) 
+	  
+	  ```
+	  $ choco install minikube
+	  ```
+	  
+	  * or manually: Download and run the [installer](https://storage.googleapis.com/minikube/releases/latest/minikube-installer.exe)
+
+
+
+---
+
+
+# Starting minikube (all macOS, Windows and Linux)
+
 Then we start minikube (parameters are important for the Istio Lab):
 
 ```
@@ -189,25 +222,13 @@ Wait for minikube to start this may take some time to download and start the clu
 
 If you need some more details: [Install MiniKube](https://kubernetes.io/docs/tasks/tools/install-minikube/)
 
----
-
-### Linux
-  * Requires either the [kvm2 driver](https://github.com/kubernetes/minikube/blob/master/docs/drivers.md#kvm2-driver) (recommended), or VirtualBox
-  * VT-x/AMD-v virtualization must be enabled in BIOS
-  * manually:  `curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64 && sudo install minikube-linux-amd64 /usr/local/bin/minikube`
 
 ---
-
-### Windows 10
-  * Requires a hypervisor, such as VirtualBox (recommended) or HyperV
-  * VT-x/AMD-v virtualization must be enabled in BIOS
-  * using [chocolatey](https://chocolatey.org/) `choco install minikube`
-  * manually: Download and run the [installer](https://storage.googleapis.com/minikube/releases/latest/minikube-installer.exe)
-
-
-
-
 ---
+---
+
+
+## Some Tips and Tricks if you run into problems
 
 **Hint**
 
@@ -224,6 +245,9 @@ And start minikube with
 ```
 $ minikube start --vm-driver hyperkit --memory=8192 --cpus=4                                                                                                                                              
 ```
+
+
+
 
 
 **Hint:**
@@ -281,7 +305,7 @@ No hint available
 ----
 
 
-### Download the Kubernetes CLI
+### Install the Kubernetes CLI
 
 To view a local version of the Kubernetes dashboard and to deploy apps into your clusters, you will need to install the Kubernetes CLI that corresponds with your operating system:
 
@@ -290,8 +314,19 @@ To view a local version of the Kubernetes dashboard and to deploy apps into your
 
 **For Windows users:** 
 
-* [Windows](https://storage.googleapis.com/kubernetes-release/release/v1.10.8/bin/windows/amd64/kubectl.exe)
+You can install kubectl: 
 
+* either manually: 
+	* [Download for Windows](https://storage.googleapis.com/kubernetes-release/release/v1.14.0/bin/windows/amd64/kubectl.exe) and 
+	* add the binary in to your PATH.
+	
+* or using [chocolatey](https://chocolatey.org/) 
+	
+	```
+	$ choco install kubernetes-cli
+	```
+
+---
 
 **For OS X and Linux users:**
 

@@ -1,5 +1,5 @@
 
-:course_title: KUB03 Kubernetes Labs
+:course_title: KUB02 Kubernetes Labs
 
 :course_desc: This course contains the Kubernetes Labs.  
 
@@ -728,8 +728,13 @@ To update and roll back:
 	   
 
 
-   To verify that you're running "v2" of guestbook, look at the title of the page,
+	To verify that you're running "v2" of guestbook, look at the title of the page,
    it should now be `Guestbook - v2`
+   
+   Hint
+   If the page doesn’t show the V2 label reload the webpage without caching - ususlly done by holding SHIFT and reload.
+   Otherwise empty the browser cache.
+   
 
 5. If you want to undo your latest rollout, use:
   ```
@@ -825,7 +830,7 @@ to create the object, `kind` of the object we are creating and the `metadata`
 about the object such as a `name`, set of `labels` and optionally `namespace`
 that this object should belong.
 
-Consider the following deployment configuration for guestbook application
+Consider the following deployment configuration for guestbook application (you find those in the v1 directory of the cloned lab source code):
 
 **guestbook-deployment.yaml**
 
@@ -868,6 +873,7 @@ all times.
   ```
    $ cd guestbook/v1/
    $ kubectl create -f guestbook-deployment.yaml
+   
    deployment "guestbook" created
   ```
 
@@ -903,7 +909,25 @@ You should use the following command to make the change effective when you have 
 This will ask Kubernetes to "diff" our yaml file with the current state
 of the Deployment and apply just those changes.
 
+**Hint**
 
+If there is a deployment error please check that your kubectl version is the same as the kubernetes verson running in minikube.
+The `client verson` should match the `server version`:
+
+ ```
+$ kubectl version                                                                                          
+
+Client Version: version.Info{Major:"1", Minor:"14", GitVersion:"v1.14.0", GitCommit:"641856db18352033a0d96dbc99153fa3b27298e5", GitTreeState:"clean", BuildDate:"2019-03-25T15:53:57Z", GoVersion:"go1.12.1", Compiler:"gc", Platform:"darwin/amd64"}
+Server Version: version.Info{Major:"1", Minor:"14", GitVersion:"v1.14.1", GitCommit:"b7394102d6ef778017f2ca4046abbaa23b88c290", GitTreeState:"clean", BuildDate:"2019-04-08T17:02:58Z", GoVersion:"go1.12.1", Compiler:"gc", Platform:"linux/amd64"}
+ ```
+ 
+You can either install the corresponding version of `kubectl` or use the option `--validate=false`
+ 
+```
+$ kubectl apply -f guestbook-deployment.yaml --validate=false
+```
+
+ 
 #### Hint Kubernetes_Lab_3_Scale_1
 
 No hint available

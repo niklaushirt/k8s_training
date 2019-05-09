@@ -1,5 +1,5 @@
 
-:course_title: KUB02 Kubernetes Introduction
+:course_title: KUB99 Kubernetes Introduction
 
 :course_desc: This course contains a refresh of the Container and Kubernetes topics. 
 
