@@ -1,0 +1,727 @@
+<doctype html>
+    <html lang="en">
+        <head>
+            <title>Collector</title>
+            <!-- Copyright 2018 Dave Weilert
+                Permission is hereby granted, free of charge, to any person obtaining a copy of this software 
+                and associated documentation files (the "Software"), to deal in the Software without restriction, 
+                including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+                and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, 
+                subject to the following conditions:
+                
+                The above copyright notice and this permission notice shall be included in all copies or substantial 
+                portions of the Software.
+                
+                THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT 
+                LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+                IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
+                WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 
+                SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+                -->
+            <!-- Required meta tags -->
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+            <!-- Images -->
+            <link rel="icon" type="image/x-icon" href="images/collector.ico">
+            <!-- Bootstrap CSS -->
+            <link rel="stylesheet" href="css/bootstrap.min.css">
+            <!-- Sidenav CSS -->
+            <link rel="stylesheet" href="css/sidenav.css">
+            <!-- Added to support rendering of Answers and Hints -->
+            <link rel="stylesheet" href="css/parsed.css">
+            <!-- Dropzone CSS -->
+            <link rel="stylesheet" href="css/dropzone.css">
+            <!-- Dropzone file drop area CSS -->
+            <style>
+                .dropzone {
+                background: white;
+                border-radius: 5px;
+                border: 2px dashed rgb(0, 135, 247);
+                border-image: none;
+                max-width: 700px;
+                margin-left: auto;
+                margin-right: auto;
+                }
+            </style>
+            <!-- Override Bootstrap tab settings to reduce the padding -->
+            <style>
+                .navbar{
+                min-height:20px !important;; 
+                }   
+                .nav-tabs > li > a { 
+                padding-top: 3px !important; 
+                padding-bottom: 3px !important; 
+                }
+            </style>
+            <!-- Scripts -->
+            <script src="js/jquery.min.js"></script>
+            <script src="js/bootstrap.min.js"></script>
+            <script src="js/dropzone.js"></script>
+            <script src="js/Chart.bundle.min.js"></script>
+        </head>
+        <body>
+            <!-- ==================================== -->
+            <!-- Side nav section                     -->
+            <!-- ==================================== -->
+            <div id="sideNavigation" class="sidenav">
+                <div style="margin-top: 10px;">
+                    <img class="mx-left d-block" src="images/ibm-cloud.png" height="40"  style="margin-left: 10px;">
+                </div>
+                <hr style="height: 1px; color: #000; background-color: #fff; border: none;">
+                <a href="javascript:closeNav()" class="closebtn">&times;</a>
+                <a href="javascript:about()" style="font-family: Arial, Arial, sans-serif;"><span id="menu00"></span></a>
+                <a href="javascript:setTimer()" style="font-family: Arial, sans-serif;"><span id="menu01"></span></a>
+                <a href="javascript:clearTimer()" style="font-family: Arial, sans-serif;"><span id="menu02"></span></a>
+                <a href="javascript:updateCoursesModal()" style="font-family: Arial, sans-serif;"><span id="menu08"></span></a>
+                <a href="javascript:languageModal()" style="font-family: Arial, sans-serif;"><span id="menu11"></span></a>
+                <!--
+                <a href="javascript:clearStats()" style="font-family: Arial, sans-serif;"><span id="menu03"></span></a>
+                -->
+                <hr>
+                <div id="author">
+                    <a href="javascript:fileUpload()" style="font-family: Arial, sans-serif;"><span id="menu04"></span></a>
+                    <a href="javascript:validateCourses()" style="font-family: Arial, sans-serif;"><span id="menu05"></span></a>
+                    <a href="javascript:publishCourses()" style="font-family: Arial, sans-serif;"><span id="menu09"></span></a>
+                    <a href="javascript:deleteCourseModal()" style="font-family: Arial, sans-serif;"><span id="menu10"></span></a>
+                    <a href="javascript:teamModal()" style="font-family: Arial, sans-serif;"><span id="menu07"></span></a>
+                </div>
+                <div id="coursePrint">
+                    <a href="javascript:printModal()" style="font-family: Arial, sans-serif;"><span id="menu06"></span></a>
+                </div>
+            </div>
+            <!-- ==================================== -->
+            <!-- Header section                       -->
+            <!-- ==================================== -->
+            <div class="container">
+                <div class="container" id="titlebar" style="margin-top: 10px;">
+                    <button class="btn btn-outline-primary my-2 my-sm-0 btn-sm pull-xs-left float-left" id="menuButton" type="button" onclick="openNav()">
+                    &#9776;
+                    </button>
+                    <h5>
+                        <span id="ctitle" style="margin-left: 20px; font-family: Arial, sans-serif;">
+                        <span id="headerLabel"></span>
+                        </span>
+                        <span  id="fpi" >
+                            <a href="javascript:about()"><img src="images/ibm-cloud.png" alt="feedback" height="30"  class="float-right"></a>
+                        </span>
+                    </h5>
+                    <span id="timeleft" style="font-size: 200%; text-align: center; color: black; font-family: Arial, sans-serif;" >
+                        <p id="labtime"></p>
+                    </span>
+                </div>
+            </div>
+            <!-- ==================================== -->
+            <!-- Tabs section                         -->
+            <!-- ==================================== -->
+            <div class="container">
+                <ul class="nav nav-tabs" role="tablist" id="mytab">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab" href="#catalog" role="tab"><span id="tab00"></span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#classwork" role="tab"><span id="tab02"></span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#score" role="tab"><span id="tab01"></span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#documents" role="tab"><span id="tab04"></span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#feedback" role="tab"><span id="tab03"></span></a>
+                    </li>
+                    <li class="nav-item" id="graphTab">
+                        <a class="nav-link" data-toggle="tab" href="#insight" role="tab"><span id="tab05"></span></a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <!--- tab -->
+                    <div id="insight" class="container tab-pane">
+                        <div class="container">
+                            <h6 style="margin: 5px; font-family: Arial, sans-serif; padding: 15px; background-color: #e8f0f3; font-size: larger;">
+                                <span id="tab05_hdr"></span>
+                            </h6>                             
+                        </div>
+                        <div id="graphs" class="container">
+
+                        </div>
+                        <!-- Dynamically insert chart canvas elements here -->
+                    </div>
+                    <!--- tab -->
+                    <div id="catalog" class="container tab-pane active">
+                        <div class="text-center">
+                            <div class="container">
+                                <h6 style="margin: 5px; font-family: Arial, sans-serif; padding: 15px; background-color: #e8f0f3; font-size: larger;">
+                                    <span id="tab00_hdr"></span>
+                                </h6>
+                                <div class="row">
+                                    <div class="col-sm-4" style="padding-top: 20px;">
+                                        <div class="form-group">
+                                            <select class="form-control" id="courseList">
+                                                <option></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3" style="padding-top: 20px;">
+                                        <button class="btn btn-outline-primary float-left" id="menuButton" type="button" onclick="startCourse()">
+                                        <span id="tab00_btn"></span>
+                                        </button>
+                                    </div>
+                                    <div class="text-left" style="margin-top: 30px; margin-left: 15px;">
+                                        <span id="courseDesc" style="font-family: Arial, sans-serif;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--- tab -->
+                    <div id="score" class="container tab-pane">
+                        <div class="text-center">
+                            <div class="container">
+                                <h6 style="margin: 5px; font-family: Arial, sans-serif; padding: 15px; background-color: #e8f0f3; font-size: larger;">
+                                    <span id="tab01_hdr"></span>
+                                </h6>
+                                <div id="stats">
+                                    <table class="table table-condensed table-sm">
+                                        <thead>
+                                            <tr style="text-align: center;">
+                                                <th><span id="tab01_ns"></span></th>
+                                                <th>01</th>
+                                                <th>02</th>
+                                                <th>03</th>
+                                                <th>04</th>
+                                                <th>05</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr style="text-align: center; background-color: yellowgreen;">
+                                                <td><span id="tab01_wait"></span></td>
+                                            </tr>
+                                            <!-- No body to display -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--- tab -->
+                    <div id="documents" class="container tab-pane">
+                        <div>
+                            <div class="container text-center">
+                                <h6 style="margin: 5px; font-family: Arial, sans-serif; padding: 15px; background-color: #e8f0f3; font-size: larger;">
+                                    <span id="tab04_hdr">
+                                </h6>
+                                <div id="infodocs" class="container text-left">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--- tab -->
+                    <div id="feedback" class="container tab-pane">
+                        <div class="text-center">
+                            <div class="container">
+                                <!--
+                                <h6 style="margin: 5px; font-family: Arial, sans-serif;">
+                                    <span id="tab03_hdr"></span>
+                                </h6>
+                                -->
+                                <form>
+                                    <div class="form-group">
+                                        <label for="exampleFormControlTextarea1"><span id="tab03_inst"></span></label>
+                                        <textarea class="form-control" id="comments" rows="10"></textarea>
+                                    </div>
+                                </form>
+                                <div class="col-sm-1" style="padding-top: 0px;">
+                                    <button class="btn btn-outline-primary float-left" type="button" onclick="sendFeedback()">
+                                    <span id="tab03_btn"></span>
+                                    </button>
+                                </div>
+                                <div id="feedStatus" style="margin: 10px; font-family: Arial, sans-serif;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--- tab -->
+                    <div id="classwork" class="container tab-pane">
+                        <div class="container">
+                            <h6 class="text-center" style="visibility: hidden; margin-top: 15px; margin-bottom: 15px; font-family: Arial, sans-serif;padding: 15px;font-size: larger; background-color: lightblue">
+                                <span id="tab02_hdr"></span>
+                            </h6>
+                            <div class="row">
+                                <div class="col-sm-4" style="padding-top: 0px;">
+                                    <div class="form-group">
+                                        <select class="form-control" id="topiclabels" >
+                                            <option><span id="tab02_begin"></span></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2" style="padding-top: 0px;">
+                                    <span style="padding-left: 10px;">
+                                    <button id="btn1" class="btn btn-primary" onclick="getBtn1()">
+                                    <span id="btn1_label"></span>
+                                    </button>
+                                    </span>
+                                </div>
+                                <div class="col-sm-2" style="padding-top: 0px;">
+                                    <span style="padding-left: 10px;">
+                                        <button id="btn2" class="btn btn-warning" onclick="getBtn2()">
+                                            <span id="btn2_label"></span>
+                                    </button>
+                                    </span>
+                                </div>
+                                <div class="col-sm-2" style="padding-top: 0px;">
+                                    <span style="padding-left: 10px;">
+                                        <button id="btn3" class="btn btn-success" onclick="getBtn3()">
+                                            <span id="btn3_label"></span>
+                                    </button>
+                                    </span>
+                                </div>
+                                <div class="container" id="holdComplete" style="margin-bottom: 5px; margin-left: 20px; font-family: Arial, sans-serif;background-color: greenyellow; text-align: center; font-size: larger">
+                                    <div id="iComplete"></div>
+                                </div>
+                                <div class="container" id="holdBtn3" style="margin-bottom: 15px; background-color:#e6ffe6; width: 1000px; height: 170px; border: 1px dotted rgb(20, 204, 60); overflow: auto;padding: 15px;">
+                                    <div id="iBtn3"></div>
+                                </div>
+                                <div class="container" id="holdBtn2" style="margin-bottom: 15px; background-color:#ffe6b3; width: 1000px; height:  100px; border: 1px dotted rgb(228, 181, 28); overflow: auto;padding: 15px;">
+                                    <div id="iBtn2"></div>
+                                </div>
+                                <div class="container" id="holdBtn1" style="margin-bottom: 15px; background-color:rgb(244, 249, 255); width: 2000px; height: 650px; border: 1px solid #a6b7fe; overflow: auto;padding: 15px;">
+                                    <div id="iBtn1"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- ==================================== -->
+            <!-- Clear/Reset section       -->
+            <!-- ==================================== -->
+            <div id="deleteModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <div id="">
+                                <h4 class="modal-title" >
+                                    <span style="font-family: Arial, sans-serif;">
+                                    <span id="modal_del_hdr1"></span>
+                                    </span>
+                                </h4>
+                            </div>
+                        </div>
+                        <div class="modal-body" id="delete_modalBody">
+                            <p><span id="modal_del_hdr2"></span></p>
+                            <p><span id="modal_del_confirm"></span></p>
+                            <p class="debug-url"></p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-primary confirm_delete" data-dismiss="modal"><span id="modal_del_btn1"></span></button>
+                            <button type="button" class="btn btn-outline-primary" data-dismiss="modal"><span id="modal_del_btn2"></span></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- ==================================== -->
+            <!-- Team Modal section                   -->   
+            <!-- ==================================== -->
+            <div class="modal fade" id="teamModal" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <div id="teamHeader">
+                                <h4 class="modal-title">
+                                    <span style="font-family: Arial, sans-serif;">
+                                    <span id="modal_team_hdr"></span>
+                                    </span>
+                                </h4>
+                            </div>
+                        </div>
+                        <div class="modal-body">
+                            <div class="container">
+                                <div class="table-wrapper" id="teamShow">
+                                    <!--  table with team name, color, and text color  -->
+                                </div>
+                            </div>     
+                            <div id="teamWait">
+                                <!-- Spinner during wait-->
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal"><span id="modal_team_btn"></span></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==================================== -->
+            <!-- Update courses Modal section         -->   
+            <!-- ==================================== -->
+            <div class="modal fade" id="updateCoursesModal" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <div id="updateHeader">
+                                <h4 class="modal-title">
+                                    <span style="font-family: Arial, sans-serif;">
+                                    <span id="modal_updateC_hdr1"></span>
+                                    </span>
+                                </h4>
+                            </div>
+                        </div>
+                        <div class="modal-body">
+                            <div class="col-sm-12" style="padding-top: 20px;">
+                                <div>
+                                    <span id="modal_updateC_desc"></span>
+                                </div>
+                            </div>
+                            <div class="col-sm-3" style="padding-top: 20px;">
+                                <button type="button" class="btn btn-outline-primary" onclick="updateCourses()" style="margin: 5px;">
+                                &nbsp;&nbsp;&nbsp;<span id="modal_updateC_btn1"></span>&nbsp;&nbsp;&nbsp;
+                                </button>
+                            </div>
+                            <div id="updateCResult" style="margin-top: 20px;">
+                                <!-- Delete status message here -->
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal"><span id="modal_updateC_btn2"></span></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==================================== -->
+            <!-- Delete course Modal section           -->   
+            <!-- ==================================== -->
+            <div class="modal fade" id="deleteCourseModal" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <div id="deleteHeader">
+                                <h4 class="modal-title">
+                                    <span style="font-family: Arial, sans-serif;">
+                                    <span id="modal_delete_hdr1"></span>
+                                    </span>
+                                </h4>
+                            </div>
+                        </div>
+                        <div class="modal-body">
+                            <div class="col-sm-6" style="padding-top: 20px;">
+                                <div class="form-group">
+                                    <select class="form-control" id="deleteList">
+                                        <option>1</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-3" style="padding-top: 20px;">
+                                <button type="button" class="btn btn-outline-primary" onclick="deleteCourse()" style="margin: 5px;">
+                                &nbsp;&nbsp;&nbsp;<span id="modal_delete_btn1"></span>&nbsp;&nbsp;&nbsp;
+                                </button>
+                            </div>
+                            <div id="deleteResult" style="margin-top: 20px;">
+                                <!-- Delete status message here -->>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal"><span id="modal_delete_btn2"></span></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==================================== -->
+            <!-- Language Modal section               -->   
+            <!-- ==================================== -->
+            <div class="modal fade" id="languageModal" tabindex="-1" role="dialog">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <div id="deleteHeader">
+                                    <h4 class="modal-title">
+                                        <span style="font-family: Arial, sans-serif;">
+                                        <span id="modal_lang_hdr1"></span>
+                                        </span>
+                                    </h4>
+                                </div>
+                            </div>
+                            <div class="modal-body">
+                                <div class="col-sm-6" style="padding-top: 20px;">
+                                    <div class="form-group">
+                                        <select class="form-control" id="langList">
+                                            <option>1</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3" style="padding-top: 20px;">
+                                    <button type="button" class="btn btn-outline-primary" onclick="updateLanguage()" style="margin: 5px;">
+                                    &nbsp;&nbsp;&nbsp;<span id="modal_lang_btn1"></span>&nbsp;&nbsp;&nbsp;
+                                    </button>
+                                </div>
+                                <div id="langResult" style="margin-top: 20px;">
+                                    <!-- Language status message here -->
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-dismiss="modal"><span id="modal_lang_btn2"></span></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    
+            <!-- ==================================== -->
+            <!-- Print course Modal section           -->   
+            <!-- ==================================== -->
+            <div class="modal fade" id="printModal" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <div id="printHeader">
+                                <h4 class="modal-title">
+                                    <span style="font-family: Arial, sans-serif;">
+                                    <span id="modal_print_hdr1"></span>
+                                    </span>
+                                </h4>
+                            </div>
+                        </div>
+                        <div class="modal-body">
+                            <div class="col-sm-6" style="padding-top: 20px;">
+                                <div class="form-group">
+                                    <select class="form-control" id="printList">
+                                        <option>1</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-3" style="padding-top: 20px;">
+                                <button type="button" class="btn btn-outline-primary" onclick="printCourse()" style="margin: 5px;">
+                                &nbsp;&nbsp;&nbsp;<span id="modal_print_btn1"></span>&nbsp;&nbsp;&nbsp;
+                                </button>
+                            </div>
+                            <div id="pdfPreview" style="margin-top: 20px;">
+                                <a target="_blank" alt="course" title="Course"
+                                    href="coursecatalog/fs03_diagnose_labs.pdf">Preview PDF</a>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal"><span id="modal_print_btn2"></span></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+    
+            <!-- ==================================== -->
+            <!-- Publish course Modal section         -->   
+            <!-- ==================================== -->
+            <div class="modal fade" id="publishModal" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <div id="publishHeader">
+                                <h4 class="modal-title">
+                                    <span style="font-family: Arial, sans-serif;">
+                                    <span id="modal_publish_hdr1"></span>
+                                    </span>
+                                </h4>
+                            </div>
+                        </div>
+                        <div class="modal-body">
+                            <div class="col-sm-6" style="padding-top: 20px;">
+                                <div id="pubinfo">
+                                    <table class="table table-condensed table-sm">
+                                        <thead>
+                                            <tr style="text-align: center;">
+                                                <th><span>&nbsp;</span></th>
+                                                <th><span id="modal_publish_th2"></span></th>
+                                                <th><span id="modal_publish_th3"></span></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="pubTable">
+                                            <tr style="text-align: left; background-color: white;">
+                                                <td>
+                                                    <button type="button" class="btn-sm btn-outline-primary" onclick="publish('')" >
+                                                        <span id="modal_publish_btn2"></span>
+                                                    </button>
+                                                </td>
+                                                <td style="margin-left: 5px; text-align: center;" id="pubrow-01">Published</td>
+                                                <td style="margin-left: 5px;">FS01 - Something</td>
+                                            </tr>
+                                            <!-- No body to display -->
+                                        </tbody>
+                                    </table>
+                                </div>                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal"><span id="modal_publish_btn1"></span></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==================================== -->
+            <!-- Timer Modal section                  -->   
+            <!-- ==================================== -->
+            <div class="modal fade" id="timerModal" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <div id="timerHeader">
+                                <h4 class="modal-title">
+                                    <span style="font-family: Arial, sans-serif;">
+                                    <span id="modal_time_hdr1"></span>
+                                    </span>
+                                </h4>
+                            </div>
+                        </div>
+                        <div class="modal-body">
+                            <div class="col-sm-3" style="margin-top: 5px;">
+                                &nbsp;
+                            </div>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="xyz"><span id="modal_time_lbl"></span></span>
+                                </div>
+                                <input type="text" id="minutes" class="form-control ">
+                            </div>
+                            <div class="col-sm-3" style="margin-top: 5px;">
+                                <button type="button" class="btn btn-outline-primary" onclick="timer()" style="margin: 5px;">
+                                &nbsp;&nbsp;&nbsp;<span id="modal_time_btn1"></span>&nbsp;&nbsp;&nbsp;
+                                </button>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal"><span id="modal_time_btn2"></span></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==================================== -->
+            <!-- File upload Modal section            -->
+            <!-- ==================================== -->
+            <div class="modal fade" id="fileModal" tabindex="-1" role="dialog" >
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <div id="uploader">
+                                <h5 class="modal-title"><span id="modal_ful_hdr"></span></h5>
+                            </div>
+                        </div>
+                        <div class="modal-body">
+                            <div id="filedropzone">
+                                <form action="/upload" class="dropzone needsclick" id="file-upload-dropzone">
+                                    <div class="dz-message needsclick">
+                                        <span id="modal_ful_msg"></span>
+                                        <span class="note needsclick"></span>
+                                    </div>
+                                </form>
+                            </div>
+                            <!-- 
+                            <button class="btn btn-outline-primary mx-left float-left" type="button" onclick="validateCourses()">
+                            <span id="modal_ful_btn1"></span>
+                            </button>
+                            -->
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal"><span id="modal_ful_btn2"></span></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==================================== -->
+            <!-- Validation Modal section             -->
+            <!-- ==================================== -->
+            <div class="modal fade" id="validateModal" tabindex="-1" role="dialog" >
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h6 class="modal-title"><span id="modal_valid_hdr"></h6>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div id="validateContents" style="font-size: 70%; width: 700px; height: 800px; overflow: scroll;">
+                                <p>
+                                    <!-- dynamically add info here -->
+                                </P>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal"><span id="modal_valid_btn"></span></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==================================== -->
+            <!-- About Modal section                  -->
+            <!-- ==================================== -->
+            <div class="modal fade" id="aboutModal" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header" style="font-family: Arial, sans-serif;">
+                            <h4 class="modal-title"><span id="modal_about_hdr"></span><br>
+                                <span id="version" style="font-size: 60%""></span>
+                            </h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div style="background-color: #eee;">
+                            <div class="align-middle">
+                                <div style="font-size: 80%; text-align: center; margin-bottom: 25px; margin-bottom: 25px; margin-left: 10px;  margin-right: 10px;">
+                                    <p>&nbsp;</p>
+                                    <p><span id="modal_about_lbl"></span>
+                                    </p>
+                                </div>
+                                <div style="font-size: 80%; text-align: center; margin-top: 25px; margin-bottom: 25px;">
+                                    <hr>
+                                    <span id="modal_about_mid"></span>
+                                </div>
+                                <div class="row text-center" style="padding-left: 70px;">
+                                    <div class="col-sm-3">
+                                        &nbsp;
+                                    </div>
+                                    <div class="col-sm-3" style="margin-top: 15px;">
+                                        <img src="images/ibm-cloud.png" style="height:60px; width:auto;" class="mx-auto d-block">
+                                    </div>
+                                    <div class="col-sm-3" style="margin-top: 5px;">
+                                        &nbsp;
+                                    </div>
+                                </div>
+                                <div style="font-size: 80%; text-align: center; margin-top: 25px; margin-bottom: 25px;">
+                                    <hr>
+                                    <span id="modal_about_ui"></span>
+                                </div>
+                                <div class="row text-center" style="padding-left: 70px;">
+                                    <div class="col-sm-3">
+                                        <img src="images/bootstrap-stack.png" style="height:40px; width:auto;" class="mx-auto d-block">
+                                    </div>
+                                    <div class="col-sm-3" style="margin-top: 15px;">
+                                        <img src="images/jQuery.png" style="height:18px; width:auto;" class="mx-auto d-block">
+                                    </div>
+                                    <div class="col-sm-3" style="margin-top: 5px;">
+                                        <img src="images/nodejs.png" style="height:25px; width:auto;">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer" style="background-color: #eee;">
+                            &nbsp;
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- ==================================== -->
+            <!-- Scripts section                      -->
+            <!-- ==================================== -->
+            <!-- Socket.io Script -->
+            <script src="/socket.io/socket.io.js"></script>
+            <!-- Script -->
+            <script src="js/cllrmain.js"></script>
+            <!-- <script src="js/graph.js"></script> -->
+        </body>
+    </html>
+</doctype>

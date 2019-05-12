@@ -1,0 +1,72 @@
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: firebrick-collector-config
+  namespace: default
+data:
+  COLLECTOR_CONFIG: 'http://firebrick-student-ui'
+  INSTRUCTOR_CONFIG: 'http://dashboard.default'
+  APP_NAMESPACE: 'firebrick'
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: firebrick-student-ui
+  namespace: default
+  labels:
+    app: firebrick-student-ui
+spec:
+  selector:
+    matchLabels:
+      app: firebrick-student-ui
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: firebrick-student-ui
+    spec:
+      containers:
+      - name: firebrick-student-ui
+        image: niklaushirt/collector:courselatest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3000
+        env:
+          - name: APP_NAMESPACE
+            valueFrom:
+              configMapKeyRef:
+                name: firebrick-collector-config
+                key: APP_NAMESPACE
+          - name: APP_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: COLLECTOR_CONFIG
+            valueFrom: 
+              configMapKeyRef:
+                name: firebrick-collector-config
+                key: COLLECTOR_CONFIG
+        resources:
+          requests:
+            cpu: 80m
+            memory: 100Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: firebrick-student-ui
+  namespace: default
+  labels:
+    app: firebrick-student-ui
+spec:
+  type: NodePort
+  ports:
+    - port: 80
+      targetPort: 3000
+      protocol: TCP
+      name: firebrick-student-ui
+      nodePort: 31714
+  selector:
+    app: firebrick-student-ui

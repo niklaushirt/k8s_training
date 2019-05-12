@@ -1,0 +1,13 @@
+{
+    "softwareVersion": "2.0.0",
+
+    "instructorLocal": "http://localhost:4200",
+
+    "instructorCloud": "http://dashboard.default",
+
+    "language" : "english",
+    
+    "enablePrint": false
+
+}
+

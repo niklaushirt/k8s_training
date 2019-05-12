@@ -1,0 +1,139 @@
+{    
+    "uiLabels" : {
+        "collectorName": "Collector",
+        "softwareVersion": "1.0.0",
+        "markComplete":"Press to mark completed",
+        "completeMsg": "Marked complete",
+        "student": "Student",
+        "instructor": "Instructor",
+
+        "time_msg": "Remaining time",
+        "time_hour": "h ",
+        "time_min": "m ",
+        "time_sec": "s",
+        "time_stop": "&#x1F6D1; STOP",
+
+        "menu00": "About Collector",
+        "menu01": "Start Timer",
+        "menu02": "Clear Timer",
+        "menu03": "Clear Stats",
+        "menu04": "Upload course",
+        "menu05": "Validate courses",
+        "menu06": "Print course to PDF",
+        "menu07": "Teams",
+        "menu08": "Update course catalog",
+        "menu09": "Publish courses",
+        "menu10": "Delete course",
+        "menu11": "Language",
+
+        "tab00": "Courses",
+        "tab01": "Statistics",
+        "tab02": "Class work",
+        "tab03": "Feedback",
+        "tab04": "Information",
+        "tab05": "Insight",
+
+        "tab00_hdr": "Catalog of courses",
+        "tab00_list": "select course",
+        "tab00_btn": "Begin course",
+        "tab01_hdr": "Completed Work",
+
+        "tab01_ns": "namespace",
+        "tab01_wait": "Waiting for data",
+
+        "tab02_hdr": "Select item from drop down to begin",
+        "tab02_begin": "Begin course to populate",
+        "tab02_list": "select work",
+
+        "tab03_hdr": "Feedback",
+        "tab03_inst": "Enter feedback in the following section and press Send when complete",
+        "tab03_btn": "Send",
+        "tab03_nothing": "Nothing submitted, feedback comments are blank",
+        "tab03_ok": "Feedback was successfully received, thank you.",
+        
+        "tab04_hdr": "Supplemental information. Document links may open new tab.",
+    
+        "tab05_hdr": "Course Insight",
+
+        "modal_del_hdr1": "Confirm clear stats",
+        "modal_del_hdr2": "You are about to delete the completion statistics.",
+        "modal_del_confirm": "Do you want to proceed?",
+        "modal_del_btn1": "Delete",
+        "modal_del_btn2": "Cancel",
+
+        "modal_time_hdr1": "TIMER Set and Start",
+        "modal_time_lbl": "Minutes to count down",
+        "modal_time_btn1": "Start timer",
+        "modal_time_btn2": "Close",
+
+        "modal_ful_hdr": "Course upload",
+        "modal_ful_msg": "Drop course files here or click to upload.<br />",
+        "modal_ful_btn1": "Validate courses",
+        "modal_ful_btn2": "Close",
+
+        "modal_valid_hdr": "Course validation results",
+        "modal_valid_btn": "Close",
+
+        "modal_about_hdr": "Collector",
+        "modal_about_ver": "Version",
+        "modal_about_lbl": "This application is intended to assist with training an enablement.",
+        "modal_about_mid": "Server technology",
+        "modal_about_ui": "User interface technology",
+
+        "modal_print_hdr1": "Print course to PDF",
+        "modal_print_lbl": "Minutes to count down",
+        "modal_print_btn1": "Print",
+        "modal_print_btn2": "Close",
+        "modal_print_list": " select file",
+        "modal_print_preview": "Preview generated PDF",
+        "modal_print_fail": "Failed to generate PDF",
+
+        "modal_delete_hdr1": "Course delete",
+        "modal_delete_btn1": "Delete",
+        "modal_delete_btn2": "Close",
+        "modal_delete_list": " select course to delete",
+        "modal_delete_pass": "Course successfully deleted",
+        "modal_delete_fail": "Failed to delete course",
+
+        "modal_publish_hdr1": "Publish Courses",
+        "modal_publish_pub": "Yes",
+        "modal_publish_unp": "No",
+        "modal_publish_btn1": "Close",
+        "modal_publish_btn2": "Toggle",
+        "modal_publish_th1": "Toggle",
+        "modal_publish_th2": "Published",
+        "modal_publish_th3": "Course",
+
+        "modal_updateC_hdr1": "Update Course Catalog",
+        "modal_updateC_desc": "Press the update button to retrieve the latest course catalog",
+        "modal_updateC_btn1": "Update",
+        "modal_updateC_btn2": "Close",
+        "modal_updateC_pass": "Update completed successfully",
+        "modal_updateC_fail": "Update failed",
+
+        "modal_lang_hdr1": "Select Display language",
+        "modal_lang_btn1": "Select",
+        "modal_lang_btn2": "Close",
+        "modal_lang_list": " select language",
+        "modal_lang_pick": "English, French, German, Spanish",
+        "modal_lang_pass": "Language successfully selected",
+        "modal_lang_fail": "Failed to select language",
+
+        "modal_team_hdr": "Team name and color",
+        "modal_team_lbl": "Team",
+        "modal_team_btn": "Close",
+        
+        "pmsg_001": "Processing course",
+        "pmsg_002": "Content added for segment",
+        "pmsg_003": "Invalid course parameter",
+        "pmsg_004": "Parameter",
+        "pmsg_005": "------ Start new topic ------",
+        "pmsg_006": "Inserting complete button",
+        "pmsg_007": "Error building course auto links, message",
+
+        "graph_01_title": "Time to complete work",
+        "graph_01_yTitle": "Course work",
+        "graph_01_xTitle": "Seconds"
+
+    }
+}
