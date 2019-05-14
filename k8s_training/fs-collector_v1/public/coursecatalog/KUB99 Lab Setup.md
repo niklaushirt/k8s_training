@@ -171,7 +171,7 @@ $ sudo mv minikube /usr/local/bin
   * Requires a hypervisor, such as VirtualBox (recommended) or HyperV
   * VT-x/AMD-v virtualization must be enabled in BIOS
   * You can install minikube:
-	  * either using [chocolatey](https://chocolatey.org/) 
+	  * either using [chocolatey](https://chocolatey.org/install) 
 	  
 	  ```
 	  $ choco install minikube
@@ -189,7 +189,7 @@ $ sudo mv minikube /usr/local/bin
 Then we start minikube (parameters are important for the Istio Lab):
 
 ```
-$ minikube start --vm-driver virtualbox --memory=8192 --cpus=4                                                                                                                                              
+$ minikube start --vm-driver=virtualbox --kubernetes-version v1.14.1 --cpus=4 --memory=8192                                                                                                                                               
 
 😄  minikube v1.0.1 on darwin (amd64)
 💿  Downloading Minikube ISO ...
@@ -244,7 +244,7 @@ $ sudo chown root:wheel /usr/local/bin/docker-machine-driver-hyperkit && sudo ch
 And start minikube with
 
 ```
-$ minikube start --vm-driver hyperkit --memory=8192 --cpus=4                                                                                                                                              
+$ minikube start --vm-driver=virtualbox --kubernetes-version v1.14.1 --cpus=4 --memory=8192                                                                                                                                               
 ```
 
 
@@ -264,10 +264,10 @@ Try deactivating your VPN (Cisco AnyConnect, ...) and/or reboot.
 
 If needed you can specify the VM provider:
 
-`minikube start --memory=8192 --cpus=4 --vm-driver=virtualbox`
+`minikube start --vm-driver=virtualbox --kubernetes-version v1.14.1 --cpus=4 --memory=8192`
 
 
-`minikube start --memory=8192 --cpus=4 --vm-driver=vmwarefusion`
+`minikube start --vm-driver=vmwarefusion --kubernetes-version v1.14.1 --cpus=4 --memory=8192`
 
 ---
 
@@ -318,10 +318,10 @@ To view a local version of the Kubernetes dashboard and to deploy apps into your
 You can install kubectl: 
 
 * either manually: 
-	* [Download for Windows](https://storage.googleapis.com/kubernetes-release/release/v1.14.0/bin/windows/amd64/kubectl.exe) and 
+	* [Download for Windows](https://storage.googleapis.com/kubernetes-release/release/v1.14.1/bin/windows/amd64/kubectl.exe) and 
 	* add the binary in to your PATH.
 	
-* or using [chocolatey](https://chocolatey.org/) 
+* or using [chocolatey](https://chocolatey.org/install) 
 	
 	```
 	$ choco install kubernetes-cli
@@ -334,7 +334,7 @@ You can install kubectl:
 #### Install via command line (preferred)
 
 ```
-$ curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.14.0/bin/darwin/amd64/kubectl
+$ curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.14.1/bin/darwin/amd64/kubectl
 
 $ mv ./kubectl /usr/local/bin/kubectl
 
@@ -349,8 +349,8 @@ $ chmod +x /usr/local/bin/kubectl
 
 Download from:
 
-* [OS X](https://storage.googleapis.com/kubernetes-release/release/v1.14.0/bin/darwin/amd64/kubectl)
-* [Linux](https://storage.googleapis.com/kubernetes-release/release/v1.14.0/bin/linux/amd64/kubectl)
+* [OS X](https://storage.googleapis.com/kubernetes-release/release/v1.14.1/bin/darwin/amd64/kubectl)
+* [Linux](https://storage.googleapis.com/kubernetes-release/release/v1.14.1/bin/linux/amd64/kubectl)
 
 1. Move the executable file to the `/usr/local/bin` directory using the command `mv /<path_to_file>/kubectl /usr/local/bin/kubectl` .
 

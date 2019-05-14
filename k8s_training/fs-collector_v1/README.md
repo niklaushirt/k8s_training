@@ -1,6 +1,7 @@
 docker build -t ibmicpcoc/collector:latest .
-docker run --rm -d -p 3000:3000 -e APP_NAMESPACE=test -e INSTRUCTOR=Y ibmicpcoc/collector:latest
+docker run --rm -d --name test -p 3000:3000 -e APP_NAMESPACE=test -e INSTRUCTOR=Y ibmicpcoc/collector:latest
 
+docker kill test
 
 docker build -t ibmicpcoc/collector:latest .
 

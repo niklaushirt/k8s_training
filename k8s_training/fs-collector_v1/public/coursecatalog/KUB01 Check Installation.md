@@ -109,7 +109,7 @@ In this initial part we will verify that the Lab prerequisites have been install
 
 
 * Verify that minikube is running
-	If not please complete KUB00 Lab Setup
+	If not please complete KUB99 Lab Setup
 
 
 	```
@@ -155,12 +155,17 @@ And you should get version for your client :
 
 ```
 $ kubectl version --short
-Client Version: v1.xx.yy
-error: You must be logged in to the server (the server has asked for the client to provide credentials)
+Client Version: v1.14.1
+Server Version: v1.14.1
 ```
 
-The error at the end is **normal** because we need to specify how to connect to the master (we will see this in the labs section).
+If minikube is not running yet you will get the following, which is **perfectly normal** in this case.
 
+```
+$ kubectl version --short
+Client Version: v1.14.1
+error: You must be logged in to the server (the server has asked for the client to provide credentials)
+```
 
 
 

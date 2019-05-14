@@ -100,6 +100,7 @@
 
 
 
+
 #### Task LabInformation
 
 ----
@@ -184,7 +185,7 @@ No hint available
 ## Enable Kubernetes Dashboard
 
 ```
-$ minikube dashboard                                                                                              
+$ minikube dashboard &                                                                                            
 
 🔌  Enabling dashboard ...
 🤔  Verifying dashboard health ...
@@ -193,9 +194,11 @@ $ minikube dashboard
 🎉  Opening http://127.0.0.1:58935/api/v1/namespaces/kube-system/services/http:kubernetes-dashboard:/proxy/ in your default browser...
 ```
 
+This starts the Kubernetes Dashboard in the background (hence the `&` at the end).
+If the Terminal seems stuck just press `Enter` once and you'll get the prompt back.
 
 
-After a while the Kubernetes Dashboard will open
+After a while the Kubernetes Dashboard will open.
 
 	
 	
@@ -271,7 +274,9 @@ Learn how to use the `kubectl` command line.
 
 Open your terminal:
 
-On your Mac you can hit Command + Space and type Terminal.
+* On your Mac you can hit `Command` + `Space` and type `Terminal`.
+* On your Windows start CMD or Powershell
+* On Linux start the Terminal
 
 Type `kubectl` and you will get the list of all available commands.
 
@@ -406,9 +411,7 @@ Once your client is configured, you are ready to deploy your first application, 
 
 ### 1. Deploy your application
 
-In this part of the lab we will deploy an application called `guestbook`
-that has already been built and uploaded to DockerHub under the name
-`ibmcom/guestbook:v1`.
+In this part of the lab we will deploy an application called `guestbook` that has already been built and uploaded to DockerHub under the name `ibmcom/guestbook:v1`.
 
 
 1. Start by running `guestbook`
@@ -417,8 +420,7 @@ that has already been built and uploaded to DockerHub under the name
 	$ kubectl run guestbook --image=ibmcom/guestbook:v1
 	```
 
-   This action will take a bit of time. To check the status of the running application,
-   you can use ` kubectl get pods`.
+   This action will take a bit of time. To check the status of the running application, you can use ` kubectl get pods`.
 
    You should see output similar to the following:
 
@@ -457,9 +459,7 @@ that has already been built and uploaded to DockerHub under the name
    guestbook   NodePort   10.10.10.253   <none>        3000:31208/TCP   1m
   ```
    
-   We can see that our `<nodeport>` is `31208`. We can see in the output the port mapping from 3000 inside 
-   the pod exposed to the cluster on port 31208. This port in the 31000 range is automatically chosen, 
-   and could be different for you.
+   We can see that our `<nodeport>` is `31208`. We can see in the output the port mapping from 3000 inside  the pod exposed to the cluster on port 31208. This port in the 31000 range is automatically chosen, and could be different for you.
 
 5. `guestbook` is now running on your cluster, and exposed to the internet. We need to find out where it is accessible.
    The worker nodes running in the container service get external IP addresses.
@@ -480,6 +480,9 @@ that has already been built and uploaded to DockerHub under the name
    
 6. Now that you have both the address and the port, you can now access the application in the web browser at `<public-IP>:<nodeport>`. In the example case this is `192.168.99.100:31208`.
 
+---
+---
+
 **Hint**
 
 For your convenience, and in the next labs, you can open the webpage directly by typing
@@ -496,8 +499,7 @@ Congratulations, you've now deployed an application to Kubernetes!
 
 We will be using this deployment in the next lab of this course (Lab2).
 
-You should now go back up to the root of the repository in preparation
-for the next lab: 
+You should now go back up to the root of the repository in preparation for the next lab: 
 
 ` cd ..`
 
@@ -524,12 +526,10 @@ No hint available
 
 ## Lab 2: Scale and Update Deployments
 
-In this lab, you'll learn how to update the number of instances
-a deployment has and how to safely roll out an update of your application
+In this lab, you'll learn how to update the number of instances a deployment has and how to safely roll out an update of your application
 on Kubernetes. 
 
-For this lab, you need a running deployment of the `guestbook` application
-from the previous lab. If you deleted it, recreate it using:
+For this lab, you need a running deployment of the `guestbook` application from the previous lab. If you deleted it, recreate it using:
 
 ```
 $ kubectl run guestbook --image=ibmcom/guestbook:v1
@@ -537,12 +537,9 @@ $ kubectl run guestbook --image=ibmcom/guestbook:v1
     
 ### Scale apps with replicas
 
-A *replica* is a copy of a pod that contains a running service. By having
-multiple replicas of a pod, you can ensure your deployment has the available
-resources to handle increasing load on your application.
+A *replica* is a copy of a pod that contains a running service. By having multiple replicas of a pod, you can ensure your deployment has the available resources to handle increasing load on your application.
 
-1. `kubectl` provides a `scale` subcommand to change the size of an
-   existing deployment. Let's increase our capacity from a single running instance of
+1. `kubectl` provides a `scale` subcommand to change the size of an existing deployment. Let's increase our capacity from a single running instance of
    `guestbook` up to 10 instances:
 
   ```
@@ -550,15 +547,12 @@ resources to handle increasing load on your application.
    deployment "guestbook" scaled
   ```
 
-   Kubernetes will now try to make reality match the desired state of
-   10 replicas by starting 9 new pods with the same configuration as
-   the first.
+   Kubernetes will now try to make reality match the desired state of 10 replicas by starting 9 new pods with the same configuration as the first.
 
 4. To see your changes being rolled out, you can run:
    `kubectl rollout status deployment guestbook`.
 
-   The rollout might occur so quickly that the following messages might
-   _not_ display:
+   The rollout might occur so quickly that the following messages might _not_ display:
 
   ```
    $ kubectl rollout status deployment guestbook
@@ -596,9 +590,7 @@ resources to handle increasing load on your application.
    guestbook-562211614-zsp0j   1/1       Running   0          2m
   ```
 
-**Tip:** Another way to improve availability is to 
- [add clusters and regions](https://console.bluemix.net/docs/containers/cs_planning.html#cs_planning_cluster_config)
-to your deployment, as shown in the following diagram:
+**Tip:** Another way to improve availability is to [add clusters and regions](https://console.bluemix.net/docs/containers/cs_planning.html#cs_planning_cluster_config) to your deployment, as shown in the following diagram:
 
 ![HA with more clusters and regions](./images/cluster_ha_roadmap.png)
 
@@ -678,8 +670,7 @@ To update and roll back:
    deployment "guestbook" successfully rolled out
   ```
 
-4. Test the application as before, by accessing `<public-IP>:<nodeport>` 
-   in the browser to confirm your new code is active.
+4. Test the application as before, by accessing `<public-IP>:<nodeport>`  in the browser to confirm your new code is active.
 
    Remember, to get the "nodeport" and "public-ip" use:
 
@@ -701,8 +692,7 @@ To update and roll back:
 	   
 
 
-	To verify that you're running "v2" of guestbook, look at the title of the page,
-   it should now be `Guestbook - v2`
+	To verify that you're running "v2" of guestbook, look at the title of the page, it should now be `Guestbook - v2`
    
    ---
    
@@ -719,8 +709,7 @@ To update and roll back:
    deployment "guestbook"
   ```
 
-   You can then use `kubectl rollout status deployment/guestbook` to see
-   the status.
+   You can then use `kubectl rollout status deployment/guestbook` to see the status.
    
 6. When doing a rollout, you see references to *old* replicas and *new* replicas.
    The *old* replicas are the original 10 pods deployed when we scaled the application.
@@ -741,8 +730,7 @@ To update and roll back:
 
 # Cleaning up
 
-Before we continue, let's delete the application so we can learn about
-a different way to achieve the same results:
+Before we continue, let's delete the application so we can learn about a different way to achieve the same results:
 
  To remove the deployment, use 
  
@@ -805,8 +793,7 @@ You will find all the configurations files for this exercise under the directory
 Kubernetes can deploy an individual pod to run an application but when you need to scale it to handle a large number of requests a `Deployment` is the resource you want to use.
 A Deployment manages a collection of similar pods. When you ask for a specific number of replicas the Kubernetes Deployment Controller will attempt to maintain that number of replicas at all times.
 
-Every Kubernetes object we create should provide two nested object fields that govern the object’s configuration: the object `spec` and the object `status`. Object `spec` defines the desired state, and object `status` contains Kubernetes system provided information about the actual state of the resource. As described before, Kubernetes will attempt to reconcile
-your desired state with the actual state of the system.
+Every Kubernetes object we create should provide two nested object fields that govern the object’s configuration: the object `spec` and the object `status`. Object `spec` defines the desired state, and object `status` contains Kubernetes system provided information about the actual state of the resource. As described before, Kubernetes will attempt to reconcile your desired state with the actual state of the system.
 
 For Object that we create we need to provide the `apiVersion` you are using to create the object, `kind` of the object we are creating and the `metadata` about the object such as a `name`, set of `labels` and optionally `namespace` that this object should belong.
 
@@ -847,8 +834,7 @@ The above configuration file create a deployment object named 'guestbook' with a
 
 - Create guestbook deployment
 
-   To create a Deployment using this configuration file we use the
-   following command:
+   To create a Deployment using this configuration file we use the following command:
 
   ```
    $ cd guestbook/v1/
@@ -1320,8 +1306,6 @@ No hint available
 #### Complete Cleanup
 
 > Confirm Cleanup complete
-
-
 
 
 
