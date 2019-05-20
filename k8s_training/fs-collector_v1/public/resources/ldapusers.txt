@@ -1,0 +1,45 @@
+version: 1
+
+# Entry 4: cn=developers,ou=Groups,dc=local,dc=io
+dn: cn=developers,ou=Groups,dc=local,dc=io
+cn: developers
+objectclass: groupOfUniqueNames
+objectclass: top
+uniquemember: uid=dev1,ou=People,dc=local,dc=io
+uniquemember: uid=dev2,ou=People,dc=local,dc=io
+uniquemember: uid=dev3,ou=People,dc=local,dc=io
+
+
+
+# Entry 10: uid=dev1,ou=People,dc=local,dc=io
+dn: uid=dev1,ou=People,dc=local,dc=io
+cn: dev1
+objectclass: inetOrgPerson
+objectclass: organizationalPerson
+objectclass: person
+objectclass: top
+sn: dev1
+uid: dev1
+userpassword: {MD5}/gHOKn+6yPr67XyYKgTiKQ==
+
+# Entry 11: uid=dev2,ou=People,dc=local,dc=io
+dn: uid=dev2,ou=People,dc=local,dc=io
+cn: dev2
+objectclass: inetOrgPerson
+objectclass: organizationalPerson
+objectclass: person
+objectclass: top
+sn: dev2
+uid: dev2
+userpassword: {MD5}/gHOKn+6yPr67XyYKgTiKQ==
+
+# Entry 12: uid=dev3,ou=People,dc=local,dc=io
+dn: uid=dev3,ou=People,dc=local,dc=io
+cn: dev3
+objectclass: inetOrgPerson
+objectclass: organizationalPerson
+objectclass: person
+objectclass: top
+sn: dev3
+uid: dev3
+userpassword: {MD5}/gHOKn+6yPr67XyYKgTiKQ==

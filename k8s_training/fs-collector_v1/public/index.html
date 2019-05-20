@@ -58,6 +58,11 @@
             <script src="js/bootstrap.min.js"></script>
             <script src="js/dropzone.js"></script>
             <script src="js/Chart.bundle.min.js"></script>
+
+            <link rel="stylesheet" href="css/highlight/styles/default.css">
+            <script src="css/highlight/highlight.pack.js"></script>
+
+            <script>hljs.initHighlightingOnLoad();</script>
         </head>
         <body>
             <!-- ==================================== -->
@@ -546,6 +551,13 @@
             <!-- Script -->
             <script src="js/cllrmain.js"></script>
             <!-- <script src="js/graph.js"></script> -->
+          <!--   <script>
+            document.addEventListener('DOMAttrModified', (event) => {
+                document.querySelectorAll('pre code').forEach((block) => {
+                  hljs.highlightBlock(block);
+                });
+              });
+            </script> -->
         </body>
     </html>
 </doctype>

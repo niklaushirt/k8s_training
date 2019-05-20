@@ -175,7 +175,7 @@ No hint available
 
 
 
-#### Task Lab_0_minikube
+#### Task Lab0_minikube
 
 ---
 
@@ -250,21 +250,21 @@ Delete your local cluster:
 
 
 
-#### Hint Lab_0_minikube
+#### Hint Lab0_minikube
 
 No hint available
 
 
-#### Complete Lab_0_minikube
+#### Complete Lab0_minikube
 
-> Confirm Lab_0_minikube complete
-
-
+> Confirm Lab0_minikube complete
 
 
 
 
-#### Task Lab_0_kubectl
+
+
+#### Task Lab0_kubectl
 
 ---
 
@@ -319,22 +319,22 @@ For example you can get the nodes in your cluster by typing
 
 
 
-#### Hint Lab_0_kubectl
+#### Hint Lab0_kubectl
 
 No hint available
 
 
-#### Complete Lab_0_kubectl
+#### Complete Lab0_kubectl
 
-> Confirm Lab_0_kubectl complete
-
-
+> Confirm Lab0_kubectl complete
 
 
 
 
 
-#### Task Lab_0_yaml
+
+
+#### Task Lab0_yaml
 
 ---
 
@@ -385,21 +385,21 @@ In this example, the structure `metadata` contains `name` and `labels`. `labels`
 
 
 
-#### Hint Lab_0_yaml
+#### Hint Lab0_yaml
 
 No hint available
 
 
-#### Complete Lab_0_yaml
+#### Complete Lab0_yaml
 
-> Confirm Lab_0_yaml complete
-
-
+> Confirm Lab0_yaml complete
 
 
 
 
-#### Task Lab_1_Deploy
+
+
+#### Task Lab1_Deploy
 
 ----
 
@@ -507,20 +507,20 @@ You should now go back up to the root of the repository in preparation for the n
 
 
 
-#### Hint Lab_1_Deploy
+#### Hint Lab1_Deploy
 
 No hint available
 
 
-#### Complete Lab_1_Deploy
+#### Complete Lab1_Deploy
 
-> Confirm Lab_1_Deploy complete
-
-
+> Confirm Lab1_Deploy complete
 
 
 
-#### Task Lab_2_Scale
+
+
+#### Task Lab2_Scale
 
 ----
 
@@ -594,18 +594,18 @@ A *replica* is a copy of a pod that contains a running service. By having multip
 
 ![HA with more clusters and regions](./images/cluster_ha_roadmap.png)
 
-#### Hint Lab_2_Scale
+#### Hint Lab2_Scale
 
 No hint available
 
 
-#### Complete Lab_2_Scale
+#### Complete Lab2_Scale
 
-> Confirm Lab_2_Scale complete
+> Confirm Lab2_Scale complete
 
 
 
-#### Task Lab_2_Update
+#### Task Lab2_Update
 
 ----
 
@@ -750,20 +750,20 @@ Lab 2 is now complete.
 
 
 
-#### Hint Lab_2_Update
+#### Hint Lab2_Update
 
 No hint available
 
 
-#### Complete Lab_2_Update
+#### Complete Lab2_Update
 
-> Confirm Lab_2_Update complete
-
-
+> Confirm Lab2_Update complete
 
 
 
-#### Task Lab_3_Scale_1
+
+
+#### Task Lab3_Scale_1
 
 ----
 
@@ -890,20 +890,20 @@ $ kubectl apply -f guestbook-deployment.yaml --validate=false
 ```
 
  
-#### Hint Lab_3_Scale_1
+#### Hint Lab3_Scale_1
 
 No hint available
 
 
-#### Complete Lab_3_Scale_1
+#### Complete Lab3_Scale_1
 
-> Confirm Lab_3_Scale_2 complete
-
-
+> Confirm Lab3_Scale_2 complete
 
 
 
-#### Task Lab_3_Scale_2
+
+
+#### Task Lab3_Scale_2
 
 ----
 
@@ -964,20 +964,20 @@ The above configuration creates a Service resource named guestbook. A Service ca
 
 
 
-#### Hint Lab_3_Scale_2
+#### Hint Lab3_Scale_2
 
 No hint available
 
 
-#### Complete Lab_3_Scale_2
+#### Complete Lab3_Scale_2
 
-> Confirm Lab_3_Scale_2 complete
-
-
+> Confirm Lab3_Scale_2 complete
 
 
 
-#### Task Lab_3_Backend_1
+
+
+#### Task Lab3_Backend_1
 
 ----
 
@@ -1056,20 +1056,20 @@ The image running in the container is 'redis:2.8.23' and exposes the standard re
    ```
 
 
-#### Hint Lab_3_Backend_1
+#### Hint Lab3_Backend_1
 
 No hint available
 
 
-#### Complete Lab_3_Backend_1
+#### Complete Lab3_Backend_1
 
-> Confirm Lab_3_Backend_1 complete
-
-
+> Confirm Lab3_Backend_1 complete
 
 
 
-#### Task Lab_3_Backend_2
+
+
+#### Task Lab3_Backend_2
 
 ----
 
@@ -1127,20 +1127,20 @@ We have our simple 3-tier application running but we need to scale the applicati
 
 
 
-#### Hint Lab_3_Backend_2
+#### Hint Lab3_Backend_2
 
 No hint available
 
 
-#### Complete Lab_3_Backend_2
+#### Complete Lab3_Backend_2
 
-> Confirm Lab_3_Backend_2 complete
-
-
+> Confirm Lab3_Backend_2 complete
 
 
 
-#### Task Lab_3_Backend_3
+
+
+#### Task Lab3_Backend_3
 
 ----
 ### Deploy Redis Slave 
@@ -1211,20 +1211,20 @@ $ kubectl exec -it redis-slave-kd7vx  redis-cli
 
 
 
-#### Hint Lab_3_Backend_3
+#### Hint Lab3_Backend_3
 
 No hint available
 
 
-#### Complete Lab_3_Backend_3
+#### Complete Lab3_Backend_3
 
-> Confirm Lab_3_Backend_3 complete
-
-
+> Confirm Lab3_Backend_3 complete
 
 
 
-#### Task Lab_3_Backend_4
+
+
+#### Task Lab3_Backend_4
 
 ----
 
@@ -1272,14 +1272,14 @@ spec:
 	```  
 
 
-#### Hint Lab_3_Backend_4
+#### Hint Lab3_Backend_4
 
 No hint available
 
 
-#### Complete Lab_3_Backend_4
+#### Complete Lab3_Backend_4
 
-> Confirm Lab_3_Backend_4 complete
+> Confirm Lab3_Backend_4 complete
 
 #### Task Cleanup
 

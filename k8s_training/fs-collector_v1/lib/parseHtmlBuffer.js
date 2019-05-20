@@ -54,7 +54,7 @@ let s03 = '</table>';
 let s04 = '<thead>';
 let s05 = '<tr>';
 
-let s06 = '<pre><code>';
+let s06 = '<pre><code';
 let e06 = '</code></pre>';
 
 let s07 = '<p>Confirm ';

@@ -769,7 +769,7 @@ function markComplete(key) {
 	if (selectedTopic<numberofTopics){
 		document.getElementById("topiclabels").selectedIndex=selectedTopic;
 		$("#topiclabels").change();
-		$("#topiclabels").attr("disabled", true);
+		$("#topiclabels").attr("disabled", false);
 		$("#holdBtn1").stop().animate({ scrollTop: 0 }, 500);
 	}
 	else{
@@ -793,6 +793,7 @@ function markComplete(key) {
 	var result = {'namespace': app_namespace, 'item': key};
 	socket.emit('markComplete', result);
 	$("#holdBtn1").scrollTop(0);
+
 
 }
 

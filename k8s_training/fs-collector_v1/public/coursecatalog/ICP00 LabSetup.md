@@ -22,13 +22,22 @@
 
 :infotab: <hr>
 
-:infotab: <h1 id="toc_0">References</h1>
-:infotab: <p><a href="https://istio.io/docs/tasks/">Istio.io</a></p>
-:infotab: <h1 id="toc_1">License</h1>
-:infotab: <p>This code pattern is licensed under the Apache Software License, Version 2.  Separate third party code objects invoked within this code pattern are licensed by their respective providers pursuant to their own separate licenses. Contributions are subject to the <a href="https://developercertificate.org/">Developer Certificate of Origin, Version 1.1 (DCO)</a> and the <a href="http://www.apache.org/licenses/LICENSE-2.0.txt">Apache Software License, Version 2</a>.</p>
-:infotab: <p><a href="http://www.apache.org/foundation/license-faq.html#WhatDoesItMEAN">Apache Software License (ASL) FAQ</a></p>
+:infotab: <h2 id="toc_0">3. Login to ICP</h2>
+:infotab: <p>Console: Open firefox browser in the Skytap window and click on IBMCloudPrivateConsole bookmark.</p>
+:infotab: <div><pre><code class="language-none">The userid is        admin     
+:infotab: <BR>
+:infotab: the password is    icp1nCl0ud</code></pre></div>
+:infotab: <h2 id="toc_1">4. Prepare command line</h2>
+:infotab: <p>CommandLine: Open a terminal window by clicking on the Terminal icon and run: </p>
+:infotab: <div><pre><code class="language-none">sudo su - </code></pre></div>
+:infotab: <p>password is <code>A1rb0rn3</code>.</p>
+:infotab: <p>and then run </p>
+:infotab: <div><pre><code class="language-none">scripts/bin/kubcli.sh admin admin </code></pre></div>
+:infotab: <p>Then, you can start running kubectl commands.</p>
 
 :infotab: <hr>
+
+
 
 
 
@@ -42,11 +51,27 @@
 
 
 
-A Kubernetes-based container platform, IBM Cloud Private, can help you quickly move, modernize and automate workloads or build new cloud-native applications. Development and deployment takes place on your infrastructure, in your data center, or across multiple clouds, both public and private. If you're familiar with Kubernetes, you can explore the IBM Cloud Private environment on your own. It starts with a quick registration step and then you'll have access to 6 server instances hosting Kubernetes nodes, preconfigured with sample applications and services. The sections below are areas that you can explore and include sample applications.
+A Kubernetes-based container platform, IBM Cloud Private, can help you quickly move, modernize and automate workloads or build new cloud-native applications. Development and deployment takes place on your infrastructure, in your data center, or across multiple clouds, both public and private. 
 
-In this tutorial, you will explore the following key capabilities:
+If you're familiar with Kubernetes, you can explore the IBM Cloud Private environment on your own. It starts with a quick registration step and then you'll have access to 6 server instances hosting Kubernetes nodes, preconfigured with sample applications and services. 
 
-    Hands-on experience with IBM Cloud Private in a representative production environment
+The sections below are areas that you can explore and include sample applications.
+
+In this tutorial, you will explore the following key capabilities: 
+
+  
+1. Getting to know the Skytap interface
+1. Access the IBM Cloud Private management console
+1. Modify registry permissions
+1. Deploy the Application
+1. Launch the Application
+1. Expose the Application
+1. Upgrade Helm Release
+1. Scale the Application
+1. Monitoring
+1. Logging
+1. Kubernetes Storage
+1. Authentication
 
 
 
@@ -68,12 +93,15 @@ No hint available
 
 ----
 
+**If you already have an IBMid you can directly skip to the next step.**
+
 ![](./images/signup.png)
 
 [Sign up for an IBM Account](http://ibm.biz/COURSE_SIGNUP) (free)
 
-**Please use your “real” work eMail address.
-Public eMail addresses (Gmail, Yahoo, …) do NOT work.**
+**Please use your “real” work eMail address.**
+
+**Public eMail addresses (Gmail, Yahoo, …) do NOT work.**
 
 
 
@@ -97,22 +125,22 @@ No hint available
 
 # Getting your ICP Instance
 
-
+## 1. Open the reservation page
 
 [Create a Kubernetes Instance (free)](https://www.ibm.com/cloud/garage/dte/tutorial/ibm-cloud-private-hosted-trial) (free)
 
-## 1. Login to your IBM Account
+## 2. Login to your IBM Account
 
 
 ![](./images/ICP1.png)
 
 
-## 2. Reserve an Instance
+## 3. Reserve an Instance
 
 ![](./images/ICP2.png)
 
 
-## 3. Confirmation mail
+## 4. Confirmation mail
 
 A few minutes after completing the reservation form, check your inbox for an email that contains instructions about the environment you reserved. Follow the instructions to log in to the instance.
 
