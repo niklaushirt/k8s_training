@@ -1,5 +1,5 @@
 
-:course_title: KUBADV02 Helm
+:course_title: JTC12 Helm
 
 :course_desc: This course provides the student with the necessary steps to get a basic understanding of Helm.  
 

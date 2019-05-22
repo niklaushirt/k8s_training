@@ -1,5 +1,5 @@
 
-:course_title: JTC99 Lab Setup
+:course_title: JTC90 Kubernetes Lab Setup
 
 :course_desc: This course walks you through the Lab preparations for the Journey to Cloud.
 

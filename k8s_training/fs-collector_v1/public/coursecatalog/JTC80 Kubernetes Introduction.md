@@ -1,5 +1,5 @@
 
-:course_title: KUB98 Kubernetes Introduction
+:course_title: JTC80 Kubernetes Introduction
 
 :course_desc: This course contains a refresh of the Container and Kubernetes topics. 
 

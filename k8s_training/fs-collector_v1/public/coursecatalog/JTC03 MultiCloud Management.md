@@ -3,7 +3,7 @@
 
 :course_desc: This course contains the MultiCloud Manager Labs.  
 
-:course_max: 3
+:course_max: 11
 
 
 :course_auto: no
@@ -17,52 +17,6 @@
 :button3_label: Complete
 
 :button3_delay: 300
-
-
-
-
-
-#### Task CheckLabPrerequisitesMinikube
-
-In this initial part we will verify that the Lab prerequisites have been installed.
-
-
-# 1. Check Minikube
-## Make sure minikube is running 
-
-
-* Verify that minikube is running
-	If not please complete KUB99 Lab Setup
-
-	```
-	$ minikube status
-	
-	host: Running
-	kubelet: Running
-	apiserver: Running
-	kubectl: Correctly Configured: pointing to minikube-vm at 192.168.99.100
-	```
-	
-* Verify kubectl can communicate with your cluster.
-
-	```
-	$ kubectl get nodes
-	
-	NAME       STATUS    ROLES     AGE       VERSION
-	minikube   Ready     master    32m       v1.14.1
-	```
-
-
-
-
-#### Hint CheckLabPrerequisitesMinikube
-
-No hint available
-
-
-#### Complete CheckLabPrerequisitesMinikube
-
-> Confirm CheckLabPrerequisitesMinikube complete
 
 
 
@@ -113,6 +67,29 @@ No hint available
 
 > Confirm Introduction complete
 
+
+#### Task CheckLabPrerequisites
+
+In this initial part we will verify that the Lab prerequisites have been installed.
+
+
+# 1. Check ICP instance
+
+* Click on the link you have received in the eMail
+* Enter the password below the link
+
+![](./images/mail2.png)
+
+
+
+#### Hint CheckLabPrerequisites
+
+No hint available
+
+
+#### Complete CheckLabPrerequisites
+
+> Confirm CheckLabPrerequisites complete
 
 
 

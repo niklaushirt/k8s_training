@@ -1,9 +1,9 @@
 
-:course_title: JTC02 Kubernetes Labs
+:course_title: JTC01 Kubernetes Labs
 
 :course_desc: This course contains the Kubernetes Labs.  
 
-:course_max: 15
+:course_max: 18
 
 :course_auto: no
 
@@ -15,7 +15,7 @@
 
 :button3_label: Complete
 
-:button3_delay: 10000
+:button3_delay: 1000
 
 
 :infotab: <h1 id="toc_0">Tips and Tricks for getting around in the labs</h1>
@@ -101,6 +101,8 @@
 
 
 
+
+
 #### Task LabInformation
 
 ----
@@ -109,7 +111,7 @@
 
 # Lab information
 
-Minikube provides a simple way to run applications in containers on Kubernetes. 
+This Lab has been designed for IBM internal training purposes. 
 
 
 #  Lab overview
@@ -121,10 +123,6 @@ Minikube provides a simple way to run applications in containers on Kubernetes.
 * Lab 2: Builds on lab 1 to expand to a more resilient setup which can survive having containers fail and recover. Lab 2 will also walk through basic services you need to get started with Kubernetes
 
 * Lab 3: Builds on lab 2 by increasing the capabilities of the deployed Guestbook application. This lab covers basic distributed application design and how kubernetes helps you use standard design practices.
-
-* Lab 4: How to enable your application so Kubernetes can automatically monitor and recover your applications with no user intervention.
-
-* Lab D: Debugging tips and tricks to help you along your Kubernetes journey. This lab is useful reference that does not follow in a specific sequence of the other labs. 
 
 
 
@@ -140,6 +138,122 @@ No hint available
 
 
 ----
+
+
+
+
+#### Task CheckLabPrerequisitesMinikube
+
+In this initial part we will verify that the Lab prerequisites have been installed.
+
+
+# 1. Check Minikube
+## Make sure minikube is running 
+
+
+* Verify that minikube is running
+	If not please complete JTC99 K8s Lab Setup
+
+	```
+	$ minikube status
+	
+	host: Running
+	kubelet: Running
+	apiserver: Running
+	kubectl: Correctly Configured: pointing to minikube-vm at 192.168.99.100
+	```
+	
+* Verify kubectl can communicate with your cluster.
+
+	```
+	$ kubectl get nodes
+	
+	NAME       STATUS    ROLES     AGE       VERSION
+	minikube   Ready     master    32m       v1.14.1
+	```
+
+
+
+
+#### Hint CheckLabPrerequisitesMinikube
+
+No hint available
+
+
+#### Complete CheckLabPrerequisitesMinikube
+
+> Confirm CheckLabPrerequisitesMinikube complete
+
+
+#### Task CheckLabPrerequisitesKubectl
+
+# 2. Check kubectl 
+
+type the following command :
+
+`kubectl version --short`
+
+And you should get version for your client :
+
+```
+$ kubectl version --short
+Client Version: v1.14.1
+Server Version: v1.14.1
+```
+
+If minikube is not running yet you will get the following, which is **perfectly normal** in this case.
+
+```
+$ kubectl version --short
+Client Version: v1.14.1
+error: You must be logged in to the server (the server has asked for the client to provide credentials)
+```
+
+
+
+
+
+
+
+#### Hint CheckLabPrerequisitesKubectl
+
+No hint available
+
+
+#### Complete CheckLabPrerequisitesKubectl
+
+> Confirm CheckLabPrerequisitesKubectl complete
+
+
+#### Task CheckLabPrerequisitesGit
+
+
+# 3. Check git 
+
+type the following command :
+
+`git version `
+
+And you should get something similar :
+
+```
+$ git version                                                                                                                         
+git version 2.18.0
+```
+
+
+
+
+#### Hint CheckLabPrerequisitesGit
+
+No hint available
+
+
+#### Complete CheckLabPrerequisitesGit
+
+> Confirm CheckLabPrerequisites complete
+
+
 
 
 
@@ -590,9 +704,6 @@ A *replica* is a copy of a pod that contains a running service. By having multip
    guestbook-562211614-zsp0j   1/1       Running   0          2m
   ```
 
-**Tip:** Another way to improve availability is to [add clusters and regions](https://console.bluemix.net/docs/containers/cs_planning.html#cs_planning_cluster_config) to your deployment, as shown in the following diagram:
-
-![HA with more clusters and regions](./images/cluster_ha_roadmap.png)
 
 #### Hint Lab2_Scale
 
@@ -610,7 +721,7 @@ No hint available
 ----
 
 
-### Update and roll back apps
+### Update apps
 
 Kubernetes allows you to do rolling upgrade of your application to a new container image. This allows you to easily update the running image and also allows you to easily undo a rollout if a problem is discovered during or after deployment.
 
@@ -680,19 +791,19 @@ To update and roll back:
 
 
 
-	**Hint**
+   **Hint**
 	
-	For your convenience, you can open the webpage directly by typing
+   For your convenience and from now on, you can open the webpage directly by typing
 	
 	```   
 	$ minikube service guestbook
 	```   
 	
-	where guestbook is the name of the exposed kubernetes service.
+  where guestbook is the name of the exposed kubernetes service.
 	   
 
 
-	To verify that you're running "v2" of guestbook, look at the title of the page, it should now be `Guestbook - v2`
+ To verify that you're running "v2" of guestbook, look at the title of the page, it should now be `Guestbook - v2`
    
    ---
    
@@ -702,6 +813,8 @@ To update and roll back:
    Otherwise empty the browser cache.
    
    ---   
+
+### Roll back app deployments
 
 5. If you want to undo your latest rollout, use:
   ```
@@ -725,6 +838,9 @@ To update and roll back:
    guestbook-5f5548d4f    10        10        10        21m
    guestbook-768cc55c78   0         0         0         3h
   ```
+
+4. Test the application as before, by reloading the page and making sure that it shows V1 again.
+
 
 ---
 
@@ -791,11 +907,12 @@ You will find all the configurations files for this exercise under the directory
 ### Scale apps natively
 
 Kubernetes can deploy an individual pod to run an application but when you need to scale it to handle a large number of requests a `Deployment` is the resource you want to use.
+
 A Deployment manages a collection of similar pods. When you ask for a specific number of replicas the Kubernetes Deployment Controller will attempt to maintain that number of replicas at all times.
 
 Every Kubernetes object we create should provide two nested object fields that govern the object’s configuration: the object `spec` and the object `status`. Object `spec` defines the desired state, and object `status` contains Kubernetes system provided information about the actual state of the resource. As described before, Kubernetes will attempt to reconcile your desired state with the actual state of the system.
 
-For Object that we create we need to provide the `apiVersion` you are using to create the object, `kind` of the object we are creating and the `metadata` about the object such as a `name`, set of `labels` and optionally `namespace` that this object should belong.
+For the Deployment Object that we create we need to provide the `apiVersion` you are using to create the object, `kind` of the object we are creating and the `metadata` about the object such as a `name`, set of `labels` and optionally `namespace` that this object should belong.
 
 Consider the following deployment configuration for guestbook application (you find those in the v1 directory of the cloned lab source code):
 
@@ -829,6 +946,11 @@ spec:
 The above configuration file create a deployment object named 'guestbook' with a pod containing a single container running the image
 `ibmcom/guestbook:v1`.  Also the configuration specifies replicas set to 3 and Kubernetes tries to make sure that at least three active pods are running at all times.
 
+You can see the file with the following command:
+
+```
+more guestbook-deployment.yaml
+```
 
 ### Deploy the application yaml file
 
@@ -852,7 +974,7 @@ The above configuration file create a deployment object named 'guestbook' with a
   ```
  
 
-	When you change the number of replicas in the configuration, Kubernetes will try to add, or remove, pods from the system to match your request. 
+ When you change the number of replicas in the configuration, Kubernetes will try to add, or remove, pods from the system to match your request. 
 	
 
 
@@ -935,25 +1057,7 @@ The above configuration creates a Service resource named guestbook. A Service ca
    $ kubectl create -f guestbook-service.yaml 
    ```
 
-- Test guestbook app using a browser of your choice using the url
-  `<your-cluster-ip>:<node-port>`
-
-  Remember, to get the `nodeport` and `public-ip` use:
-
-  ```
-  $ kubectl describe service guestbook
-  ```
-  
-  and
-  
-  ```
-  $ minikube status
-  ```
-
-
-	**Hint**
-	
-	For your convenience, you can open the webpage directly by typing
+- Test guestbook app using a browser of your choice using:
 	
 	```   
 	minikube service guestbook
@@ -1045,7 +1149,9 @@ The image running in the container is 'redis:2.8.23' and exposes the standard re
 
     ` $ kubectl exec -it redis-master-q9zg7 redis-cli `
 
-    The kubectl exec command will start a secondary process in the specified container. In this case we're asking for the "redis-cli" command to be executed in the container named "redis-master-q9zg7".  When this process ends the "kubectl exec" command will also exit but the other processes in the container will not be impacted.
+**You have to replace the name of the Pod with the one from the output above.
+**
+  The kubectl exec command will start a secondary process in the specified container. In this case we're asking for the "redis-cli" command to be executed in the container named "redis-master-q9zg7".  When this process ends the "kubectl exec" command will also exit but the other processes in the container will not be impacted.
 
     Once in the container we can use the "redis-cli" command to make sure the redis database is running properly, or to configure it if needed.
 
@@ -1118,6 +1224,7 @@ This creates a Service object named 'redis-master' and configures it to target p
 	```  
   
 You can see now that if you open up multiple browsers and refresh the page to access the different copies of guestbook that they all have a consistent state.
+
 All instances write to the same backing persistent storage, and all instances read from that storage to display the guestbook entries that have been stored.
 
 We have our simple 3-tier application running but we need to scale the application if traffic increases. Our main bottleneck is that we only have one database server to process each request coming though guestbook. One simple solution is to separate the reads and write such that they go to different databases that are replicated properly to achieve data consistency.
@@ -1262,7 +1369,11 @@ spec:
 
    ```
     $ kubectl delete deploy guestbook-v1
+    $ kubectl delete service guestbook
+    $ cd ..
+    $ cd v2
     $ kubectl create -f guestbook-deployment.yaml
+    $ kubectl create -f guestbook-service.yaml
    ```
     
 - Test guestbook app by typing
@@ -1270,7 +1381,7 @@ spec:
 	```   
 	minikube service guestbook
 	```  
-
+ And verify that the V2 still has the guestbook entries.
 
 #### Hint Lab3_Backend_4
 

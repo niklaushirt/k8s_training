@@ -1,5 +1,5 @@
 
-:course_title: ICP00 Lab Setup
+:course_title: JTC91 ICP Lab Setup
 
 :course_desc: This course provides the student with the necessary steps to get the Lab setup for IBM Cloud Private.  
 
@@ -51,28 +51,7 @@
 
 
 
-A Kubernetes-based container platform, IBM Cloud Private, can help you quickly move, modernize and automate workloads or build new cloud-native applications. Development and deployment takes place on your infrastructure, in your data center, or across multiple clouds, both public and private. 
-
-If you're familiar with Kubernetes, you can explore the IBM Cloud Private environment on your own. It starts with a quick registration step and then you'll have access to 6 server instances hosting Kubernetes nodes, preconfigured with sample applications and services. 
-
-The sections below are areas that you can explore and include sample applications.
-
-In this tutorial, you will explore the following key capabilities: 
-
-  
-1. Getting to know the Skytap interface
-1. Access the IBM Cloud Private management console
-1. Modify registry permissions
-1. Deploy the Application
-1. Launch the Application
-1. Expose the Application
-1. Upgrade Helm Release
-1. Scale the Application
-1. Monitoring
-1. Logging
-1. Kubernetes Storage
-1. Authentication
-
+This Lab prepares all the prerequisites for the ICP Lab.
 
 
 
@@ -119,7 +98,7 @@ No hint available
 
 
 ----
-#### Task Getting an ICP Instance
+#### Task Creating an ICP Instance
 
 ----
 
@@ -149,14 +128,14 @@ A few minutes after completing the reservation form, check your inbox for an ema
 ![](./images/mail2.png)
 
 
-#### Hint Getting an ICP Instance
+#### Hint Creating an ICP Instance
 
 No hint available
 
 
-#### Complete Getting an ICP Instance
+#### Complete Creating an ICP Instance
 
-> Confirm Getting an ICP Instance complete
+> Confirm Creating an ICP Instance complete
 
 
 

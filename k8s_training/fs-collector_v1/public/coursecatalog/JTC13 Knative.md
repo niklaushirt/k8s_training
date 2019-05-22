@@ -1,5 +1,5 @@
 
-:course_title: KUBADV05 Knative
+:course_title: JTC13 Knative
 
 :course_desc: This course provides the student with the necessary steps to get a basic understanding of Knative.  
 

@@ -1,9 +1,9 @@
 
-:course_title: ICP01 IBM Cloud Private
+:course_title: JTC02 IBM Cloud Private
 
 :course_desc: This course provides the student with the necessary steps to get a basic understanding of IBM Cloud Private.  
 
-:course_max: 13
+:course_max: 14
 
 :course_auto: no
 
@@ -80,6 +80,31 @@ No hint available
 
 
 
+
+
+
+#### Task CheckLabPrerequisites
+
+In this initial part we will verify that the Lab prerequisites have been installed.
+
+
+# 1. Check ICP instance
+
+* Click on the link you have received in the eMail
+* Enter the password below the link
+
+![](./images/mail2.png)
+
+
+
+#### Hint CheckLabPrerequisites
+
+No hint available
+
+
+#### Complete CheckLabPrerequisites
+
+> Confirm CheckLabPrerequisites complete
 
 
 

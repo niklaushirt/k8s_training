@@ -14,10 +14,12 @@ ibmcloud ks region-set eu-central
 ibmcloud ks cluster-config mycluster
 export KUBECONFIG=/Users/$USER/.bluemix/plugins/container-service/clusters/mycluster/kube-config-fra02-mycluster.yml
 
+kubectl delete -f k8s_deployment_course/instructor
 
-kubectl delete -f k8s_deployment_course/
+kubectl delete -f k8s_deployment_course/student
 
-kubectl apply -f k8s_deployment_course/
+kubectl apply -f k8s_deployment_course/instructor
+kubectl apply -f k8s_deployment_course/student
 kubectl get pods,services
 
 
