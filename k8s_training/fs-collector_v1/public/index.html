@@ -24,7 +24,7 @@
             <!-- Images -->
             <link rel="icon" type="image/x-icon" href="images/collector.ico">
             <!-- Bootstrap CSS -->
-            <link rel="stylesheet" href="css/bootstrap.min.css">
+            <link rel="stylesheet" href="css/bootstrap.css">
             <!-- Sidenav CSS -->
             <link rel="stylesheet" href="css/sidenav.css">
             <!-- Added to support rendering of Answers and Hints -->
@@ -550,6 +550,12 @@
             <script src="/socket.io/socket.io.js"></script>
             <!-- Script -->
             <script src="js/cllrmain.js"></script>
+            <script>$("#iBtn1").bind('DOMNodeInserted DOMNodeRemoved'),(function(){
+                $( "pre:has(code):has(.language-yaml)" ).addClass( "yaml-code" );
+                $( "pre:has(code):has(.language-bash)" ).addClass( "bash-code" );
+            })
+            </script>
+
             <!-- <script src="js/graph.js"></script> -->
           <!--   <script>
             document.addEventListener('DOMAttrModified', (event) => {

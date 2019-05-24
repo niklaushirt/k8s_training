@@ -114,7 +114,7 @@
 This Lab has been designed for IBM internal training purposes. 
 
 
-#  Lab overview
+##  Lab overview
 
 * Lab 0: Provides a walkthrough for getting to know command-line tools and check if minikube is running.
 
@@ -123,6 +123,32 @@ This Lab has been designed for IBM internal training purposes.
 * Lab 2: Builds on lab 1 to expand to a more resilient setup which can survive having containers fail and recover. Lab 2 will also walk through basic services you need to get started with Kubernetes
 
 * Lab 3: Builds on lab 2 by increasing the capabilities of the deployed Guestbook application. This lab covers basic distributed application design and how kubernetes helps you use standard design practices.
+
+---
+---
+
+
+# Nomenclatures
+
+### Shell Commands
+
+Those are the commands that you are going to execute to progress the Labs.
+
+![shell](./images/shell.png)
+
+> **Note:** You do not have to enter the `$` character, it's only there for better legibility.
+> 
+> So in the above example you would only enter/copy-paste `kubectl create -f redis-slave-service.yaml`
+> 
+
+
+### Code Examples
+Code examples are presented like this:
+
+![code](./images/code.png){ width=900px }
+
+This is only for illustration and is not being actively used in the Labs.
+
 
 
 
@@ -147,7 +173,7 @@ No hint available
 In this initial part we will verify that the Lab prerequisites have been installed.
 
 
-# 1. Check Minikube
+# Check Minikube
 ## Make sure minikube is running 
 
 
@@ -187,7 +213,7 @@ No hint available
 
 #### Task CheckLabPrerequisitesKubectl
 
-# 2. Check kubectl 
+# Check kubectl 
 
 type the following command :
 
@@ -228,7 +254,7 @@ No hint available
 #### Task CheckLabPrerequisitesGit
 
 
-# 3. Check git 
+# Check git 
 
 type the following command :
 
@@ -237,7 +263,8 @@ type the following command :
 And you should get something similar :
 
 ```
-$ git version                                                                                                                         
+$ git version
+
 git version 2.18.0
 ```
 
@@ -293,7 +320,7 @@ No hint available
 
 ---
 
-## Lab 0. Get to know minikube
+# Lab 0. Get to know minikube
 
 
 ## Enable Kubernetes Dashboard
@@ -305,7 +332,8 @@ $ minikube dashboard &
 🤔  Verifying dashboard health ...
 🚀  Launching proxy ...
 🤔  Verifying proxy health ...
-🎉  Opening http://127.0.0.1:58935/api/v1/namespaces/kube-system/services/http:kubernetes-dashboard:/proxy/ in your default browser...
+🎉  Opening http://127.0.0.1:58935/api/v1/namespaces/kube-system/services/http:kubernetes-dashboard:/proxy/ 
+in your default browser...
 ```
 
 This starts the Kubernetes Dashboard in the background (hence the `&` at the end).
@@ -382,7 +410,7 @@ No hint available
 
 ---
 
-## Lab 0. Get to know kubectl
+# Lab 0. Get to know kubectl
 
 Learn how to use the `kubectl` command line.
 
@@ -452,7 +480,7 @@ No hint available
 
 ---
 
-## Lab 0. Get to know yaml
+# Lab 0. Get to know yaml
 
 [YAML](https://en.wikipedia.org/wiki/YAML) ("YAML Ain't Markup Language") is a human-readable data serialization language. It is commonly used for configuration files, but could be used in many applications where data is being stored (e.g. debugging output) or transmitted (e.g. document headers). 
 
@@ -467,7 +495,7 @@ The YAML format is generally used to describe Kubernetes objects.
 
 __guestbook-deployment.yaml__
 
-```
+```yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -517,7 +545,7 @@ No hint available
 
 ----
 
-## Lab 1. Set up and deploy your first application
+# Lab 1. Set up and deploy your first application
 
 Learn how to deploy an application to a Kubernetes cluster.
 
@@ -597,15 +625,15 @@ In this part of the lab we will deploy an application called `guestbook` that ha
 ---
 ---
 
-**Hint**
-
-For your convenience, and in the next labs, you can open the webpage directly by typing
-
-```   
-minikube service guestbook
-```   
-
-where guestbook is the name of the exposed kubernetes service.
+> **Hint**
+> 
+> For your convenience, and in the next labs, you can open the webpage directly by typing
+> 
+> ```   
+> minikube service guestbook
+> ```   
+> 
+> where guestbook is the name of the exposed kubernetes service.
    
 ---   
 
@@ -638,16 +666,16 @@ No hint available
 
 ----
 
-## Lab 2: Scale and Update Deployments
+# Lab 2: Scale and Update Deployments
 
 In this lab, you'll learn how to update the number of instances a deployment has and how to safely roll out an update of your application
 on Kubernetes. 
 
-For this lab, you need a running deployment of the `guestbook` application from the previous lab. If you deleted it, recreate it using:
-
-```
-$ kubectl run guestbook --image=ibmcom/guestbook:v1
-```
+> For this lab, you need a running deployment of the `guestbook` application from the previous lab. If you deleted it, recreate it using:
+> 
+> ```
+> $ kubectl run guestbook --image=ibmcom/guestbook:v1
+> ```
     
 ### Scale apps with replicas
 
@@ -781,36 +809,20 @@ To update and roll back:
    deployment "guestbook" successfully rolled out
   ```
 
-4. Test the application as before, by accessing `<public-IP>:<nodeport>`  in the browser to confirm your new code is active.
+4. Test the application as before, by accessing it, using:
 
-   Remember, to get the "nodeport" and "public-ip" use:
-
-   ` kubectl describe service guestbook`
-   and
-   ` minikube status`
-
-
-
-   **Hint**
-	
-   For your convenience and from now on, you can open the webpage directly by typing
-	
 	```   
 	$ minikube service guestbook
-	```   
-	
-  where guestbook is the name of the exposed kubernetes service.
-	   
-
+	```  	   
 
  To verify that you're running "v2" of guestbook, look at the title of the page, it should now be `Guestbook - v2`
    
    ---
    
-    **IMPORTANT !!!**
-    
-   If the page doesn’t show the V2 label reload the webpage without caching - usually done by holding SHIFT and reload.
-   Otherwise empty the browser cache.
+>   **IMPORTANT !!!**
+>     
+>    If the page doesn’t show the V2 label reload the webpage without caching - usually done by holding SHIFT and reload.
+>    Otherwise empty the browser cache.
    
    ---   
 
@@ -883,15 +895,15 @@ No hint available
 
 ----
 
-## Lab 3: Scale and update apps natively, building multi-tier applications.
+# Lab 3: Scale and update apps natively, building multi-tier applications.
 
 In this lab you'll learn how to deploy the same guestbook application we deployed in the previous labs, however, instead of using the `kubectl` command line helper functions we'll be deploying the application using configuration files. The configuration file mechanism allows you to have more fine-grained control over all of resources being created within the Kubernetes cluster.
 
-You have already cloned the github repo:
-
-```
-$ git clone https://github.com/niklaushirt/guestbook.git
-```
+> You should already have cloned the github repo:
+> 
+> ```
+> $ git clone https://github.com/niklaushirt/guestbook.git
+> ```
 
 This repo contains multiple versions of the guestbook application as well as the configuration files we'll use to deploy the pieces of the application.
 
@@ -918,7 +930,7 @@ Consider the following deployment configuration for guestbook application (you f
 
 **guestbook-deployment.yaml**
 
-```
+```yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -993,24 +1005,24 @@ more guestbook-deployment.yaml
 	
 ---
 
-**Hint**
-
-If there is a deployment error please check that your kubectl version is the same as the kubernetes verson running in minikube.
-The `client verson` should match the `server version`:
-
- ```
-$ kubectl version                                                                                          
-
-Client Version: version.Info{Major:"1", Minor:"14", GitVersion:"v1.14.0", GitCommit:"641856db18352033a0d96dbc99153fa3b27298e5", GitTreeState:"clean", BuildDate:"2019-03-25T15:53:57Z", GoVersion:"go1.12.1", Compiler:"gc", Platform:"darwin/amd64"}
-Server Version: version.Info{Major:"1", Minor:"14", GitVersion:"v1.14.1", GitCommit:"b7394102d6ef778017f2ca4046abbaa23b88c290", GitTreeState:"clean", BuildDate:"2019-04-08T17:02:58Z", GoVersion:"go1.12.1", Compiler:"gc", Platform:"linux/amd64"}
- ```
- 
-You can either install the corresponding version of `kubectl` or use the option `--validate=false`
- 
-```
-$ kubectl apply -f guestbook-deployment.yaml --validate=false
-```
-
+> **Hint**
+> 
+> If there is a deployment error please check that your kubectl version is the same as the kubernetes verson running in minikube.
+> The `client verson` should match the `server version`:
+> 
+>  ```
+> $ kubectl version                                                                                          
+> 
+> Client Version: version.Info{Major:"1", Minor:"14", GitVersion:"v1.14.0", GitCommit:"641856db18352033a0d96dbc99153fa3b27298e5", GitTreeState:"clean", BuildDate:"2019-03-25T15:53:57Z", GoVersion:"go1.12.1", Compiler:"gc", Platform:"darwin/amd64"}
+> Server Version: version.Info{Major:"1", Minor:"14", GitVersion:"v1.14.1", GitCommit:"b7394102d6ef778017f2ca4046abbaa23b88c290", GitTreeState:"clean", BuildDate:"2019-04-08T17:02:58Z", GoVersion:"go1.12.1", Compiler:"gc", Platform:"linux/amd64"}
+>  ```
+>  
+> You can either install the corresponding version of `kubectl` or use the option `--validate=false`
+>  
+> ```
+> $ kubectl apply -f guestbook-deployment.yaml --validate=false
+> ```
+> 
  
 #### Hint Lab3_Scale_1
 
@@ -1033,7 +1045,7 @@ We can now define a Service object to expose the deployment to external clients.
 
 **guestbook-service.yaml**
 
-```
+```yaml
 apiVersion: v1
 kind: Service
 metadata:
@@ -1099,7 +1111,7 @@ To solve this we need to have all instances of our app share the same data store
 
 **redis-master-deployment.yaml**
 
-```
+```yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -1153,13 +1165,13 @@ The image running in the container is 'redis:2.8.23' and exposes the standard re
 **
   The kubectl exec command will start a secondary process in the specified container. In this case we're asking for the "redis-cli" command to be executed in the container named "redis-master-q9zg7".  When this process ends the "kubectl exec" command will also exit but the other processes in the container will not be impacted.
 
-    Once in the container we can use the "redis-cli" command to make sure the redis database is running properly, or to configure it if needed.
+   Once in the container we can use the "redis-cli" command to make sure the redis database is running properly, or to configure it if needed.
 
-   ```
-    redis-cli> ping
-    PONG
-    redis-cli> exit
-   ```
+```
+redis-cli> ping
+PONG
+redis-cli> exit
+```
 
 
 #### Hint Lab3_Backend_1
@@ -1185,7 +1197,7 @@ Now we need to expose the `redis-master` Deployment as a Service so that the gue
 
 **redis-master-service.yaml**
 
-```
+```yaml
 apiVersion: v1
 kind: Service
 metadata:
@@ -1258,7 +1270,7 @@ Create a deployment named 'redis-slave' that can talk to redis database to manag
 
 **redis-slave-deployment.yaml**
 
-```
+```yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -1342,7 +1354,7 @@ Deploy redis slave service so we can access it by DNS name. Once redeployed, the
 
 **redis-slave-service.yaml**
 
-```
+```yaml
 apiVersion: v1
 kind: Service
 metadata:

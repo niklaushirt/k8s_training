@@ -325,6 +325,10 @@ socket.on('getInfoResults', function(info) {
 	if (gkey.indexOf(currentConfig.b1_title) > -1 ) {
 		$("#iBtn1").empty();
 		$("#iBtn1").html(info.data);
+		//NIKH
+		$( "pre:has(code):has(.language-yaml)" ).addClass( "yaml-code" );
+		$( "pre:has(code):has(.language-bash)" ).addClass( "bash-code" );
+		
 		$("#holdBtn1").show();
 	}
 	if (currentConfig.b2_title.length > 0){

@@ -30,22 +30,30 @@ pre code {
     padding: 6px 10px;
     border-radius: 3px;
 }
+
+/*NIKH*/
 pre {
     /*background-color: #b9e1ff;
     border: 1px solid #808080;
     color: rgb(0, 0, 78);*/
-    background-color: #002d5e;
-    border: 1px solid #000000;
+    background-color: #00014b;
+    
     color: white;
     font-size: 13px;
     line-height: 19px;
     overflow: auto;
     padding: 6px 10px;
     border-radius: 6px;
+    border: 1px solid black;
+    border-top-width: 18px;
+    border-top-color: #4e4e4e;
+    border-top-style: solid;
 }
 pre code, pre tt {
     background-color: transparent;
     border: none;
+    font-style: italic;
+    font-weight: bold;
 }
 td {
     padding: 5px;

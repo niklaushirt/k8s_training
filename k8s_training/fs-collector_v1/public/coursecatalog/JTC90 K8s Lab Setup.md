@@ -231,59 +231,62 @@ If you need some more details: [Install MiniKube](https://kubernetes.io/docs/tas
 
 ## Some Tips and Tricks if you run into problems
 
-**Hint**
+---
 
-Ir you want to use hyperkit you have to install it with
+> **Hint**
+> 
+> Ir you want to use hyperkit you have to install it with
+> 
+> ```
+> $ brew install hyperkit
+> $ brew install docker-machine-driver-hyperkit
+> $ sudo chown root:wheel /usr/local/bin/docker-machine-driver-hyperkit && sudo chmod u+s /usr/local/bin/docker-machine-driver-hyperkit
+> ```
+> 
+> And start minikube with
+> 
+> ```
+> $ minikube start --vm-driver hyperkit --memory=8192 --cpus=4                                                                                                                                              
+> ```
 
-```
-$ brew install hyperkit
-$ brew install docker-machine-driver-hyperkit
-$ sudo chown root:wheel /usr/local/bin/docker-machine-driver-hyperkit && sudo chmod u+s /usr/local/bin/docker-machine-driver-hyperkit
-```
-
-And start minikube with
-
-```
-$ minikube start --vm-driver hyperkit --memory=8192 --cpus=4                                                                                                                                              
-```
-
-
-
-
-
-**Hint:**
-
-IF you get the following error:
-💣 Error starting cluster: wait: waiting for component=kube-apiserver: timed out waiting for the condition
-
-Try deactivating your VPN (Cisco AnyConnect, ...) and/or reboot.
 
 ---
 
-**Hint:**
-
-If needed you can specify the VM provider:
-
-`minikube start --memory=8192 --cpus=4 --vm-driver=virtualbox`
-
-
-`minikube start --memory=8192 --cpus=4 --vm-driver=vmwarefusion`
+> 
+> **Hint:**
+> 
+> IF you get the following error:
+> 💣 Error starting cluster: wait: waiting for component=kube-apiserver: timed out waiting for the condition
+> 
+> Try deactivating your VPN (Cisco AnyConnect, ...) and/or reboot.
 
 ---
 
-**Hint:**
+> **Hint:**
+> 
+> If needed you can specify the VM provider:
+> 
+> `minikube start --memory=8192 --cpus=4 --vm-driver=virtualbox`
+> 
+> 
+> `minikube start --memory=8192 --cpus=4 --vm-driver=vmwarefusion`
+> 
 
-If you have previously installed minikube, and run:
+---
 
-`minikube start`
-
-And the command returns an error:
-
-`machine does not exist`
-
-You need to wipe the configuration files:
-
-`rm -rf ~/.minikube`
+> **Hint:**
+> 
+> If you have previously installed minikube, and run:
+> 
+> `minikube start`
+> 
+> And the command returns an error:
+> 
+> `machine does not exist`
+> 
+> You need to wipe the configuration files:
+> 
+> `rm -rf ~/.minikube`
 
 
 

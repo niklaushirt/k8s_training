@@ -46,7 +46,7 @@ let course_auto = cllr.course_auto;
 let infotab = [];
 let pMessages = '';
 
-let s01 = '<div><pre><code ';
+let s01 = '<div><pre><code';
 let e01 = '</code></pre></div>';
 
 let s02 = '<table>';
@@ -60,6 +60,9 @@ let e06 = '</code></pre>';
 let s07 = '<p>Confirm ';
 let s08 = '<tbody><tr>';
 let s09 = '</tbody></table>';
+
+//NIKH
+let s10 = '<blockquote';
 
 let r01 = '<br><table class="table-bordered" cellspacing="10">'
 let r02 = '<thead style="background-color: #eee;">';
@@ -479,6 +482,12 @@ let ripBuffer = function() {
                     if (line.startsWith(s08)) {
                         // add shading to table header
                         nline = r04;
+                    }
+
+                    //NIKH
+                    // check for blockquote related lines
+                    if (line.startsWith(s10)) {                       
+                        nline = line + '<br>';
                     }
 
 
