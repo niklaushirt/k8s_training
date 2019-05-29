@@ -23,7 +23,7 @@ kubectl apply -f k8s_deployment_course/student
 kubectl get pods,services
 
 
-
+A
 
 
 # Collector
