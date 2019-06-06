@@ -3,7 +3,7 @@
 
 :course_desc: This course contains the Kubernetes Labs.  
 
-:course_max: 18
+:course_max: 17
 
 :course_auto: no
 
@@ -132,7 +132,7 @@ This Lab has been designed for IBM internal training purposes.
 
 ### Shell Commands
 
-Those are the commands that you are going to execute to progress the Labs.
+The commands that you are going to execute to progress the Labs will look like this:
 
 ![shell](./images/shell.png)
 
@@ -145,7 +145,7 @@ Those are the commands that you are going to execute to progress the Labs.
 ### Code Examples
 Code examples are presented like this:
 
-![code](./images/code.png){ width=900px }
+![code](./images/code.png)
 
 This is only for illustration and is not being actively used in the Labs.
 
@@ -341,8 +341,18 @@ If the Terminal seems stuck just press `Enter` once and you'll get the prompt ba
 
 
 After a while the Kubernetes Dashboard will open.
+If it doesn't please try the solution below.
+**The dashboard is there for convenience and is not needed for the Lab**
 
-	
+---
+---
+
+> **Hint**
+> 
+> If you get a 503 error try to open it directly: 
+> 
+> `http://127.0.0.1:52077/api/v1/namespaces/kube-system/services/http:kubernetes-dashboard:/proxy/`
+> 	
 	
 ## Getting to know minikube
 
@@ -1159,13 +1169,16 @@ The image running in the container is 'redis:2.8.23' and exposes the standard re
 
 - Let us test the redis standalone:
 
-    ` $ kubectl exec -it redis-master-q9zg7 redis-cli `
+    
+    ```
+    $ kubectl exec -it redis-master-q9zg7 redis-cli 
+    ```
 
-**You have to replace the name of the Pod with the one from the output above.
-**
+**You have to replace the name of the Pod with the one from the output above.**
+
   The kubectl exec command will start a secondary process in the specified container. In this case we're asking for the "redis-cli" command to be executed in the container named "redis-master-q9zg7".  When this process ends the "kubectl exec" command will also exit but the other processes in the container will not be impacted.
 
-   Once in the container we can use the "redis-cli" command to make sure the redis database is running properly, or to configure it if needed.
+   Once in the container we can use the "redis-cli" command to make sure the redis database is running properly, or to configure it if needed (only type `ping` without the prompt in front of it, and `exit` to get back to the command line).
 
 ```
 redis-cli> ping

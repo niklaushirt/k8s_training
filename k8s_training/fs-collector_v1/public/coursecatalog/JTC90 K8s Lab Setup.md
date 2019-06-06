@@ -134,11 +134,16 @@ Requires installing a hypervisor, such as [hyperkit](https://github.com/kubernet
 
 The easiest way to install Minikube on macOS is using Homebrew:
 
-```
-# Install brew
-$ /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
-#Install minikube
+#### Install brew
+
+```
+$ /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+```
+
+#### Install minikube
+
+```
 $ brew cask install minikube
 
 ```
@@ -235,7 +240,17 @@ If you need some more details: [Install MiniKube](https://kubernetes.io/docs/tas
 
 > **Hint**
 > 
-> Ir you want to use hyperkit you have to install it with
+> If you get trhe error `no external vswitch found`
+> 
+> Start minikube with this additional switch `--hyperv-virtual-switch "Minikube"`
+
+
+---
+
+
+> **Hint**
+> 
+> If you want to use hyperkit you have to install it with
 > 
 > ```
 > $ brew install hyperkit
