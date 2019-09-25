@@ -1,3 +1,6 @@
+
+docker run -d -p 9010:9000 -v /var/run/docker.sock:/var/run/docker.sock --name PORTAINER --restart always portainer/portainer
+
 docker build -t ibmicpcoc/collector:latest .
 docker run --rm -d --name test -p 3000:3000 -e APP_NAMESPACE=test -e INSTRUCTOR=Y ibmicpcoc/collector:latest
 
