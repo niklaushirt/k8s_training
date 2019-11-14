@@ -1,7 +1,7 @@
 
-:course_title: JTC14 Kubernetes Operators
+:course_title: JTC15 Kubernetes Advanced Operators with GO
 
-:course_desc: This course contains the Kubernetes Operators Labs.  
+:course_desc: This course contains the Kubernetes GO Operators Labs.  
 
 :course_max: 15
 
@@ -91,7 +91,7 @@ No hint available
 
 # Kubernetes Operators
 
-In this Lab you will learn about Kubernetes Operators.
+In this Lab you will learn about Kubernetes GO Operators which are more powerful but also more complicated to implement than Ansible based Operators.
 
 The Operator Framework is an open source toolkit to manage Kubernetes native applications, called Operators, in an effective, automated, and scalable way.
 
@@ -1174,8 +1174,7 @@ No hint available
 
 
 
-
-#### Task Lab1_CleanUpLabOperator
+#### Task Lab3_CleanUpLabOperator
 
 ----
 
@@ -1204,15 +1203,13 @@ No hint available
 
 # Congratulations!!! This concludes Lab 3 on modifying Kubernetes Operators and Controllers
 
-
-#### Hint Lab1_CleanUpLabOperator
+#### Hint Lab3_CleanUpLabOperator
 
 No hint available
 
+#### Complete Lab3_CleanUpLabOperator
 
-#### Complete Lab1_CleanUpLabOperator
-
-> Confirm Lab1_CleanUpLabOperator complete
+> Confirm Lab3_CleanUpLabOperator complete
 
 
 

@@ -1,5 +1,5 @@
 
-:course_title: JTC15 Kubernetes Security
+:course_title: JTC16 Kubernetes Security
 
 :course_desc: This course walks you through the Lab preparations for the Journey to Cloud.
 
@@ -1641,7 +1641,48 @@ $ Confirm Lab4_SecurityToolingRBACView complete
 # Lab 4 - Certificate Management 
 
 
-# Polaris
+# TEST
+
+sudo chmod 777 /etc/kubernetes/addons/
+  574  minikube addons enable ingress
+
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: training-ingress
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    #certmanager.k8s.io/clusterissuer: "letsencrypt-staging"
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  tls:
+  - hosts:
+    - demo.training.com
+  rules:
+  - host: demo.training.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: k8sdemo-service
+          servicePort: 3000
+
+
+
+kubectl get ingress
+
+kubectl get ingress
+NAME               HOSTS               ADDRESS     PORTS     AGE
+training-ingress   demo.training.com               80, 443   83s
+
+kubectl get ingress
+NAME               HOSTS               ADDRESS     PORTS     AGE
+training-ingress   demo.training.com   10.0.2.15   80, 443   83s
+
+kubectl describe ingress training-ingress
+
+# CERT
 
 Polaris runs a variety of checks to ensure that Kubernetes pods and controllers are configured using best practices, helping you avoid problems in the future.
 
@@ -1650,6 +1691,13 @@ You can get more details [here](https://github.com/FairwindsOps/polaris).
 ![](./images/polaris-logo.png)
 
 
+minikube status
+
+💣  Error getting host status: load: filestore "minikube": open /home/training/.minikube/machines/minikube/config.json: permission denied
+
+😿  Sorry that minikube crashed. If this was unexpected, we would love to hear from you:
+👉  https://github.com/kubernetes/minikube/issues/new/choose
+training@training:~/training$ sudo chmod 777 /home/training/.minikube/machines/minikube/config.json
 
 
 ```
@@ -1669,8 +1717,13 @@ deployment.apps/k8straining-nginx-ingress-default-backend created
 ```
 
 
+kubectl get --all-namespaces CertificateSigningRequest
+kubectl get --all-namespaces CertificateRequest
+kubectl get --all-namespaces certificates
 
-
+kubectl get CertificateSigningRequest
+certificaterequests               cr,crs         certmanager.k8s.io             true         CertificateRequest
+certificates                      cert,certs     certmanager.k8s.io             true         Certificate
 
 
 
