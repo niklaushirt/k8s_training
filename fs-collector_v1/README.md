@@ -1,330 +1,530 @@
+<img src="assets/k9s.png">
 
-docker run -d -p 9010:9000 -v /var/run/docker.sock:/var/run/docker.sock --name PORTAINER --restart always portainer/portainer
+# K9s - Kubernetes CLI To Manage Your Clusters In Style!
 
-docker build -t ibmicpcoc/collector:latest .
-docker run --rm -d --name test -p 3000:3000 -e APP_NAMESPACE=test -e INSTRUCTOR=Y ibmicpcoc/collector:latest
+K9s provides a curses based terminal UI to interact with your Kubernetes clusters.
+The aim of this project is to make it easier to navigate, observe and manage
+your applications in the wild. K9s continually watches Kubernetes
+for changes and offers subsequent commands to interact with observed Kubernetes resources.
 
-docker kill test
+---
 
-docker build -t ibmicpcoc/collector:latest .
+[![Go Report Card](https://goreportcard.com/badge/github.com/derailed/k9s?)](https://goreportcard.com/report/github.com/derailed/k9s)
+[![codebeat badge](https://codebeat.co/badges/89e5a80e-dfe8-4426-acf6-6be781e0a12e)](https://codebeat.co/projects/github-com-derailed-k9s-master)
+[![Build Status](https://travis-ci.com/derailed/k9s.svg?branch=master)](https://travis-ci.com/derailed/k9s)
+[![release](https://img.shields.io/github/release-pre/derailed/k9s.svg)](https://github.com/derailed/k9s/releases)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/mum4k/termdash/blob/master/LICENSE)
+[![Releases](https://img.shields.io/github/downloads/derailed/k9s/total.svg)]()
 
-docker tag ibmicpcoc/collector:latest niklaushirt/collector:courselatest
-docker push niklaushirt/collector:courselatest
+<!-- [![k9s](https://snapcraft.io/k9s/badge.svg)](https://snapcraft.io/k9s) -->
 
+---
 
-ibmcloud login -a https://cloud.ibm.com --sso
-ibmcloud ks region-set eu-central
-ibmcloud ks cluster-config mycluster
-export KUBECONFIG=/Users/$USER/.bluemix/plugins/container-service/clusters/mycluster/kube-config-fra02-mycluster.yml
+## Installation
 
-kubectl delete -f k8s_deployment_course/instructor
+K9s is available on Linux, OSX and Windows platforms.
 
-kubectl delete -f k8s_deployment_course/student
+* Binaries for Linux, Windows and Mac are available as tarballs in the [release](https://github.com/derailed/k9s/releases) page.
 
-kubectl apply -f k8s_deployment_course/instructor
-kubectl apply -f k8s_deployment_course/student
-kubectl get pods,services
+* Via Homebrew or LinuxBrew for OSX and Linux
 
+   ```shell
+   brew install derailed/k9s/k9s
+   ```
 
-A
+* Building from source
+   K9s was built using go 1.13 or above. In order to build K9 from source you must:
+   1. Clone the repo
+   2. Add the following command in your go.mod file
 
+      ```text
+      replace (
+        github.com/derailed/k9s => MY_K9S_CLONED_GIT_REPO
+      )
+      ```
 
-# Collector
+   3. Build and run the executable
 
+        ```shell
+        go run main.go
+        ```
 
-docker build -t ibmicpcoc/collector:latest .
-docker run --rm -p 3000:3000 -e APP_NAMESPACE=test ibmicpcoc/collector:latest
+---
 
-ibmcloud cr login
+## PreFlight Checks
 
-docker tag ibmicpcoc/collector:latest registry.eu-gb.bluemix.net/niklaushirt/collector:0.1
-docker push registry.eu-gb.bluemix.net/niklaushirt/collector:0.1
-ibmcloud cr image-list
+* K9s uses 256 colors terminal mode. On `Nix system make sure TERM is set accordingly.
 
+    ```shell
+    export TERM=xterm-256color
+    ```
 
-docker tag ibmicpcoc/collector:latest de.icr.io/niklaushirt/collector:course0.2
-docker push de.icr.io/niklaushirt/collector:0course0.2
-ibmcloud cr image-list
+---
 
+## Screenshots
+
+1. Pods
+      <img src="assets/screen_po.png"/>
+1. Logs
+      <img src="assets/screen_logs.png"/>
+1. Deployments
+      <img src="assets/screen_dp.png"/>
 
 
 ---
 
-Collector is an application developed to assist with enablement and training.  One or more courses can be taught or presented via the user interface. The user interface is browser based and provides two personas, instructor and student.  A series of tabs categorize the actions the user is able to perform.  The student and instructor personas are provided with a core set of common capabilties.  While the instructor persona is provided with additional capabilties that assist with course creation, validation, printing, and usage insights of student interaction. 
-
-----
-
-### Student and Instuctor tabs and menus
-
-The following section provides brief descriptions an images of the student and instructor tabs and menu options.  
-
-
-#### Student tabs
-
-The student is provided with the following tabs:
-
-1. __Courses__ - A drop-down menu of available courses with a 'Begin Course' button.
-2. __Class work__ - This is where the course content is presented.  
-3. __Statistics__ - Provides a tracking of the current completed course work.
-4. __Information__ - Information that may be helpful in the completion of the course is provided on this tab.
-5. __Feedback__ - Provides the ability to submit feedback.  
-
-![](mdimages/tabs_student.png)
-
-
-#### Student menu
-
-
-The instructor is provided with the following additional menu options:
-
-1. __About Collector__ - About information for Collector.
-2. __Start Timer__ - Set and start a timer.
-3. __Clear Timer__ - Clear and reset the timer display information.
-4. __Clear Stats__ - Reset the information that is shown on the Statistics tab.
-
-![](mdimages/menu_student.png)
---
-
-#### Instructor tabs
-
-The instructor is provided with the same tabs as the student plus the __Insights__ tab.  This tab provides a graphical view of the student interactions with each course.
-
-![](mdimages/tabs_instructor.png)
---
-
-#### Instructor menu
-
-The instructor is provided with the same menu options as the student plus the following additional options:
-
-1. __Upload course__ - Add a course to the existing course catalog instance via a drag-n-drop interface.
-2. __Validate course__ - Validate the course to help ensure it will be processed properly within the instruction process of Collector.
-3. __Print course to PDF__ - Create a PDF file of the course content.
-4. __Teams__ - View the defined team (or) students names and colors that are used when displaying statistics.
-
-
-![](mdimages/menu_instructor.png)
-
-
-----
-
-### User interface tabs
-
-#### Courses tab
-
-The initial screen once started will display the __Courses__ tab.  From this tab select the drop down that contains the list of available courses.  
-
-![](mdimages/course_list.png)
-
-> Refer the the __Configuration__ section of this documentation for information on making courses available in this drop down menu.
-
-<br>
-
-Once a course is selected, if defined, a brief description of the course is shown below the drop down list.  This description will contain the content as defined by the course author. To start the course press the _Begin Course_ button .  
-
-Example of selected course with description shown. 
-
-![](mdimages/course_begin.png)
-
-> Refer the the __Course authoring__ section of this documentation for detailed information on creating courses.
-
-
-Once the course has been started the __Class work__ tab will be shown.  This tab will also have adrop down menu of the available work to be performed for this course.  This drop down is dynamic and will change based on the course selected.  The content for the work items are defined by the course author.  
-
-#### Class work tab - course work UI
-
-The course author defines what content will be shown.  As each work item is selected the UI will change based on the course content.  These changes includes the number of sections, number of buttons, an if a _Complete_ button is defined.  When a number and/or capital letter is referenced in the following documentation refer to the matching _red_ numnber or letter in the image below.
-
-* When the work item is selected, number 1, the pale blue section, letter A, will be shown.  This base section is required and will always be shown when a work item is selected. 
-
-* Buttons number 2 and 3 and setions B and C are optional.
-
-* When button number 2 is defined and it is pressed the pale green section, letter B, will be shown.
-
-* When button number 3 is defined and it is pressed the pale orange section, letter C, will be shown.
-
-* Letter D, the complete button, is optional and can be defined to display in one or more of the lettered sections.  If defined, when pressed this button records the completion of the work item.  The completion information is tracked on the __Statistics__ tab.
-
-
-![](mdimages/course_work_ui.png)
-
-#### Statistics tab
-
-The statistics tab will display the progress of the course work.  The number of _red circle_ and _green checkmarks_ is dynamic.  The number of red circle is defined by the course author when creating the course content.  The number of _green checkmarks_ shown is controlled by the number of completed work items.  Completed work items can be created by defining the _complete_ button or by using the auto complete feature.  
-
-> Refer to the Auto complete section of the documentation for details on how to use this feature.
-
-
-<br><br>
-
-----
-## Course authoring
-
-
-The course content used within Collector is created using Markdown.  Markdown is a lightweight markup language with plain text formatting syntax. Its design allows it to be converted to many output formats.  
-
-The Collector UI (user interface) will display the rendered markdown using two primary tabs __Courses__ and __Class work__.  Multiple courses can be available in the drop down of the __Courses__ tab.   
-
-Each course shown in the drop down is a seperate markdown file that is parssed and rendered when Collector is started.  
-
-Select a course from the frop down and press the button labeled _"Begin course"_.  
-
-![](mdimages/course_list.png)
-
-----
-
-Once a course is selected and the "Begin course" button has been pressed the title of the course will be shown in the top header line of the UI.  In the following screen shot the FS01 - Install CLI tools course was selected from the drop down.  The pressing of the button will also cause the UI to switch to the __Class work__ tab.  This tab also has a drop down that is comprised of the work that is available for the course.  As shown in the following image there are three work items for the __FS01 - Install CLI tools__ course.  
-
-
-![](mdimages/course_work.png)
-
-----
-
-When a course work item is selected from the drop down the UI will provide the detail work instructions.  A course work item labeled __Topic Example__ was selected.
-
-The initial work instructions are shown with a pale blue background display area, label: __A__.  Two optional an additional sets of work instructions can also be displayed.  These are areas labeled: __B__ pale green background, and labeled: __C__ pale orange background.  
-
-The two optional work instructions areas are displayed by pressing the associated green button labeled: __2__ and the orange button labeled: __3__.  The buttons to display the associated work areas may not initially show when the work item is selected.  The course author can define a time delay before the button is shown.  Defining this time delay and the label for the button is described in a later section of this document titled, _Course parameters_. 
-
-The following images, Course content (rendered) and Course content (markdown) are for the course titled: __Collector course content examples__.  
-
-### Course content (rendered) 
-
-![](mdimages/course_render.png)
-
-
-### Course content (markdown) 
-
-The course content that was used to create the above rendered view is shown in the following image.  The red labeled items of both images attempt to demonstrate what source was used to create the rendered output.  
-
-Example:  Source line number 7, __:button3_label: Answer__ is what was used to define the rendered orange "Answer" button (red number three in both images).  The lines 1 through 9 define the parameters needed for this course.  Details regarding the parameters are described in a later section of this document titled, _Course parameters_. 
-
-![](mdimages/course_source.png)
-
-
-### Manual completion of class work
-
-Within the markdown for the course a manual completion button can be inserted (shown below).  This button allows the student to indicate the work is completed.  This is identifed in the above images as the item with red number four. 
-
-![](mdimages/complete_button.png)
-
-----
-
-### Course parameters
-
-Collector course content requires parameters that provide configuration and runtime information.  The following table provides an overview of the parameters and a brief description.  
-
-```
-NOTICE: All keywords start an end with colon ":".  These beginning and ending colons are REQUIRED.  
+## Demo Video
+
+* [K9s v0.9.0](https://www.youtube.com/watch?v=bxKfqumjW4I)
+* [K9s v0.7.0 Features](https://youtu.be/83jYehwlql8)
+* [K9s v0 Demo](https://youtu.be/k7zseUhaXeU)
+
+---
+
+## The Command Line
+
+```shell
+# List all available CLI options
+k9s help
+# To get info about K9s runtime (logs, configs, etc..)
+k9s info
+# To run K9s in a given namespace
+k9s -n mycoolns
+# Start K9s in an existing KubeConfig context
+k9s --context coolCtx
 ```
 
-When defing the parameter use one or more spaces the separate the parameter key from the parameter value. 
+---
 
-| Parameter | Description | Default |
-| :--- | :--- | :--- |
-| :course_desc:| A brief course description that will be shown in the __Courses__ tab UI when a course is selected from the drop down. | Learning provided by IBM |
-| :course_title: | A brief course title that is shown in the __Courses__ tab UI drop down.  This title is what is selected to show the course description. | Student course |
-| :course_max: | A numeric value that defines the maximum number of Completed Work items shown in the __Statistics__ tab of the UI. | 10 |
-| :course_auto: | Controls if the course is using auto completion reporting.  Valid values are: yes (or) no | no |
-| :course&#95;auto&#95;links: | If using automated completion (parameter :course_auto: = yes) this parameter defines how to track completion events.  Detail information for configuring this parameter is discussed later in this document.| n/a |
-| :button1_label: | A text value that defines the H4 (####) work segment 1.  This value is used in the drop down list of the __Course work__ tab in the UI.  Detailed information for this parameter is provided later in this document. | Question |
-| :button2_label: | A text value that defines the H4 (####) work segment 2.  The text value that is shown for "Button 2" in the __Class work__ UI tab. | Hint |
-| :button2_delay: | A numeric value that defines the number of milliseconds to delay the displaying of "Button 2". | 5000 |
-| :button3_label: | A text value that defines the H4 (####) work segment 3.  The text value that is shown for "Button 3" in the __Class work__ UI tab. | Answer |
-| :button3_delay: | A numeric value that defines the number of milliseconds to delay the displaying of "Button 3". | 15000 | 
-| :infotab: | Provides the ability to define the content that will be shown on the __Information__ tab of the UI.  Details and examples of this parameter are provide later in this document. | n/a |
+## Key Bindings
 
+K9s uses aliases to navigate most K8s resources.
 
+| Command                     | Result                                             | Example                    |
+|-----------------------------|----------------------------------------------------|----------------------------|
+| `:`alias`<ENTER>`           | View a Kubernetes resource aliases                 | `:po<ENTER>`               |
+| `?`                         | Show keyboard shortcuts and help                   |                            |
+| `Ctrl-a`                    | Show all available resource alias                  | select+`<ENTER>` to view   |
+| `/`filter`ENTER`            | Filter out a resource view given a filter          | `/bumblebeetuna`           |
+| `/`-l label-selector`ENTER` | Filter resource view by labels                     | `/-l app=fred`             |
+| `<Esc>`                     | Bails out of command/filter mode                   |                            |
+| `d`,`v`, `e`, `l`,...       | Key mapping to describe, view, edit, view logs,... | `d` (describes a resource) |
+| `:`ctx`<ENTER>`             | To view and switch to another Kubernetes context   | `:`+`ctx`+`<ENTER>`        |
+| `Ctrl-d`                    | To delete a resource (TAB and ENTER to confirm)    |                            |
+| `Ctrl-k`                    | To delete a resource (no confirmation dialog)      |                            |
+| `:q`, `Ctrl-c`              | To bail out of K9s                                 |                            |
 
-The following provides two example course definitions.  Example one has a maximum of 3 units of class work, no auto completion
+---
 
-The second example is defined with auto completion and Button 3 delay of 30 seconds.  
+## K9s config file ($HOME/.k9s/config.yml)
 
+  K9s keeps its configurations in a dot file in your home directory.
 
-### Example 1
+  > NOTE: This is still in flux and will change while in pre-release stage!
 
+  ```yaml
+  k9s:
+    # Indicates api-server poll intervals.
+    refreshRate: 2
+    # Indicates log view maximum buffer size. Default 1k lines.
+    logBufferSize: 200
+    # Indicates how many lines of logs to retrieve from the api-server. Default 200 lines.
+    logRequestSize: 200
+    # Indicates the current kube context. Defaults to current context
+    currentContext: minikube
+    # Indicates the current kube cluster. Defaults to current context cluster
+    currentCluster: minikube
+    # Persists per cluster preferences for favorite namespaces and view.
+    clusters:
+      cooln:
+        namespace:
+          active: coolio
+          favorites:
+          - cassandra
+          - default
+        view:
+          active: po
+      minikube:
+        namespace:
+          active: all
+          favorites:
+          - all
+          - kube-system
+          - default
+        view:
+          active: dp
+  ```
+
+---
+## Aliases
+
+In K9s you can define your own command aliases (shortnames) to access your resources. In your `$HOME/.k9s` define a file called `alias.yml`. A K9s alias defines pairs of alias:gvr. A gvr represents a fully qualified Kubernetes resource identifier. Here is an example of an alias file:
+
+```yaml
+# $HOME/.k9s/alias.yml
+alias:
+  pp: v1/pods
+  crb: rbac.authorization.k8s.io/v1/clusterrolebindings
 ```
-:course_title: FS01 - Install CLI tools
-:course_desc: This course provides the student with the necessary steps to install the required CLIs (command line interface) tools needed to complete the additional courses. <br><br>If the any of CLI tools are already installed it is recommended the student should update them to the latest verison.  
-:course_max: 3
-:course_auto: no
 
-:button1_label: Task
-:button2_label: Hint
-:button3_label: Complete
+Using this alias file, you can now type pp/crb to list pods, clusterrolebindings respectively.
 
-:infotab: <hr>
-:infotab: <h5>Example debug flow:</h5>
-:infotab: <img class="mx-auto d-block" src="../courseimages/debug-flow.png" height="450" width="1000">
+---
+## Plugins
 
+K9s allows you to define your own cluster commands via plugins. K9s will look at `$HOME/.k9s/plugin.yml` to locate available plugins. A plugin is defined as follows:
 
+```yaml
+# $HOME/.k9s/plugin.yml
+plugin:
+  fred:
+    shortCut: Ctrl-L
+    description: "Pod logs"
+    scopes:
+    - po
+    command: /usr/local/bin/kubectl
+    background: false
+    args:
+    - logs
+    - -f
+    - $NAME
+    - -n
+    - $NAMESPACE
+    - --context
+    - $CONTEXT
 ```
 
-### Example 2
+This defines a plugin for viewing logs on a selected pod using `CtrlL` mnemonic.
 
+The shortcut option represents the command a user would type to activate the plugin. The command represents adhoc commands the plugin runs upon activation. The scopes defines a collection of views shortnames for which the plugin shortcut will be made available to the user.
+
+K9s does provide additional environment variables for you to customize your plugins. Currently, the available environment variables are as follows:
+
+* `$NAMESPACE` -- the selected resource namespace
+* `$NAME` -- the selected resource name
+* `$KUBECONFIG` -- the KubeConfig location.
+* `$CLUSTER` the active cluster name
+* `$CONTEXT` the active context name
+* `$USER` the active user
+* `$GROUPS` the active groups
+* `$COLX` the column at index X for the viewed resource
+
+NOTE: This is an experimental feature! Options and layout may change in future K9s releases as this feature solidifies.
+
+---
+
+## Benchmarking
+
+K9s integrates [Hey](https://github.com/rakyll/hey) from the brilliant and super talented [Jaana Dogan](https://github.com/rakyll) of Google fame. Hey is a CLI tool to benchmark HTTP endpoints similar to AB bench. This preliminary feature currently supports benchmarking port-forwards and services (Read the paint on this is way fresh!).
+
+To setup a port-forward, you will need to navigate to the PodView, select a pod and a container that exposes a given port. Using `SHIFT-F` a dialog comes up to allow you to specify a local port to forward. Once acknowledged, you can navigate to the PortForward view (alias `pf`) listing out your active port-forwards. Selecting a port-forward and using `CTRL-B` will run a benchmark on that HTTP endpoint. To view the results of your benchmark runs, go to the Benchmarks view (alias `be`). You should now be able to select a benchmark and view the run stats details by pressing `<ENTER>`. NOTE: Port-forwards only last for the duration of the K9s session and will be terminated upon exit.
+
+Initially, the benchmarks will run with the following defaults:
+
+* Concurrency Level: 1
+* Number of Requests: 200
+* HTTP Verb: GET
+* Path: /
+
+The PortForward view is backed by a new K9s config file namely: `$HOME/.k9s/bench-mycluster.yml`. Each cluster you connect to will have its own bench config file. Changes to this file should automatically update the PortForward view to indicate how you want to run your benchmarks.
+
+Here is a sample benchmarks.yml configuration. Please keep in mind this file will likely change in subsequent releases!
+
+```yaml
+# This file resides in $HOME/.k9s/bench-mycluster.yml
+benchmarks:
+  # Indicates the default concurrency and number of requests setting if a container or service rule does not match.
+  defaults:
+    # One concurrent connection
+    concurrency: 1
+    # 500 requests will be sent to an endpoint
+    requests: 500
+  containers:
+    # Containers section allows you to configure your http container's endpoints and benchmarking settings.
+    # NOTE: the container ID syntax uses namespace/pod_name:container_name
+    default/nginx:nginx:
+      # Benchmark a container named nginx using POST HTTP verb using http://localhost:port/bozo URL and headers.
+      concurrency: 1
+      requests: 10000
+      http:
+        path: /bozo
+        method: POST
+        body:
+          {"fred":"blee"}
+        header:
+          Accept:
+            - text/html
+          Content-Type:
+            - application/json
+  services:
+    # Similary you can Benchmark an HTTP service exposed either via nodeport, loadbalancer types.
+    # Service ID is ns/svc-name
+    default/nginx:
+      # Hit the service with 5 concurrent sessions
+      concurrency: 5
+      # Issues a total of 500 requests
+      requests: 500
+      http:
+        method: GET
+        # This setting will depend on whether service is nodeport or loadbalancer. Nodeport may require vendor port tuneling setting.
+        # Set this to a node if nodeport or LB if applicable. IP or dns name.
+        host: 10.11.13.14
+        path: /bumblebeetuna
+      auth:
+        user: jean-baptiste-emmanuel
+        password: Zorg!
 ```
-:course_title: FS03 - Trouble shooting
-:course_desc: This course provides the student with the opportunity to trouble shoot multiple problems regarding containers, security, yaml, networking, resources, etc. <br><br>The first lab the student will deploy a new pod to gain an understanding of the process.  All other labs will use the approach of having the team/student research exisitng pods, diagnose the issue, and then resolve the issue.  <br><br>Once the issue is successfully resolved the running container will report the completion of the lab.  No manual process is needed to indicate completion of the lab.
-:course_auto: yes
-:course_auto_links: house=Create,baker=Syntax,carbon=Resources,doors=Images,avail=Security,eagle=Networking,floor=Running,gonzo=Starting
-:course_max: 8
 
-:button1_label: Lab
-:button2_label: Hint
-:button3_label: Step-by-Step
-:button3_delay: 30000
+---
 
-:infotab: <br><a href="https://github.com/IBM-ICP-CoC/faststart-eu/blob/master/documents/M4ICP001-fast-start-2019.pptx"  target="_blank">Presentation - Powerpoint document </a>
-:infotab: <br><a href="https://github.com/IBM-ICP-CoC/faststart-eu/blob/master/documents/M4ICP001-fast-start-2019.pdf"  target="_blank">Presentation - PDF document </a>
+## K9s RBAC FU
 
+On RBAC enabled clusters, you would need to give your users/groups capabilities so that they can use K9s to explore their Kubernetes cluster. K9s needs minimally read privileges at both the cluster and namespace level to display resources and metrics.
 
+These rules below are just suggestions. You will need to customize them based on your environment policies. If you need to edit/delete resources extra Fu will be necessary.
+
+> NOTE! Cluster/Namespace access may change in the future as K9s evolves.
+
+> NOTE! We expect K9s to keep running even in atrophied clusters/namespaces. Please file issues if this is not the case!
+
+### Cluster RBAC scope
+
+```yaml
+---
+# K9s Reader ClusterRole
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: k9s
+rules:
+  # Grants RO access to cluster resources node and namespace
+  - apiGroups: [""]
+    resources: ["nodes", "namespaces"]
+    verbs: ["get", "list", "watch"]
+  # Grants RO access to RBAC resources
+  - apiGroups: ["rbac.authorization.k8s.io"]
+    resources: ["clusterroles", "roles", "clusterrolebindings", "rolebindings"]
+    verbs: ["get", "list", "watch"]
+  # Grants RO access to CRD resources
+  - apiGroups: ["apiextensions.k8s.io"]
+    resources: ["customresourcedefinitions"]
+    verbs: ["get", "list", "watch"]
+  # Grants RO access to metric server
+  - apiGroups: ["metrics.k8s.io"]
+    resources: ["nodes", "pods"]
+    verbs: ["get", "list", "watch"]
+
+---
+# Sample K9s user ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: k9s
+subjects:
+  - kind: User
+    name: fernand
+    apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: ClusterRole
+  name: k9s
+  apiGroup: rbac.authorization.k8s.io
 ```
 
-<br><br>
+### Namespace RBAC scope
 
-----
-## Configuration
+If your users are constrained to certain namespaces, K9s will need to following role to enable read access to namespaced resources.
 
+```yaml
+---
+# K9s Reader Role (default namespace)
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: k9s
+  namespace: default
+rules:
+  # Grants RO access to most namespaced resources
+  - apiGroups: ["", "apps", "autoscaling", "batch", "extensions"]
+    resources: ["*"]
+    verbs: ["get", "list", "watch"]
+  # Grants RO access to metric server
+  - apiGroups: ["metrics.k8s.io"]
+    resources: ["pods"]
+    verbs:
+      - get
+      - list
+      - watch
 
+---
+# Sample K9s user RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: k9s
+  namespace: default
+subjects:
+  - kind: User
+    name: fernand
+    apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role
+  name: k9s
+  apiGroup: rbac.authorization.k8s.io
+```
 
+---
 
+## Skins
 
+You can style K9s based on your own sense of style and look. This is very much an experimental feature at this time, more will be added/modified if this feature has legs so thread accordingly!
 
+By default a K9s view displays resource information using the following coloring scheme:
 
+1. Blue - All good.
+1. Orange/Red - Represents a potential issue with the resource ie a pod is not in a running state.
+1. Green - Indicates a row has changed. A change delta indicator indicates which column changed.
 
+Skins are YAML files, that enable a user to change K9s presentation layer. K9s skins are loaded from `$HOME/.k9s/skin.yml`. If a skin file is detected then the skin would be loaded if not the current stock skin remains in effect.
 
+Below is a sample skin file, more skins would be available in the skins directory, just simply copy any of these in your user's home dir as `skin.yml`.
 
+```yaml
+# InTheNavy Skin...
+k9s:
+  # General K9s styles
+  body:
+    fgColor: dodgerblue
+    bgColor: white
+    logoColor: blue
+  # ClusterInfoView styles.
+  info:
+    fgColor: lightskyblue
+    sectionColor: steelblue
+  frame:
+    # Borders styles.
+    border:
+      fgColor: dodgerblue
+      focusColor: aliceblue
+    # MenuView attributes and styles.
+    menu:
+      fgColor: darkblue
+      keyColor: cornflowerblue
+      # Used for favorite namespaces
+      numKeyColor: cadetblue
+    # CrumbView attributes for history navigation.
+    crumbs:
+      fgColor: white
+      bgColor: steelblue
+      activeColor: skyblue
+    # Resource status and update styles
+    status:
+      newColor: blue
+      modifyColor: powderblue
+      addColor: lightskyblue
+      errorColor: indianred
+      highlightcolor: royalblue
+      killColor: slategray
+      completedColor: gray
+    # Border title styles.
+    title:
+      fgColor: aqua
+      bgColor: white
+      highlightColor: skyblue
+      counterColor: slateblue
+      filterColor: slategray
+  # TableView attributes.
+  table:
+    fgColor: blue
+    bgColor: darkblue
+    cursorColor: aqua
+    # Header row styles.
+    header:
+      fgColor: white
+      bgColor: darkblue
+      sorterColor: orange
+  views:
+    # YAML info styles.
+    yaml:
+      keyColor: steelblue
+      colonColor: blue
+      valueColor: royalblue
+    # Logs styles.
+    logs:
+      fgColor: white
+      bgColor: black
+```
 
+Available color names are defined below:
 
-<br><br>
+| Color Names          |                |                  |                   |                 |
+|----------------------|----------------|------------------|-------------------|-----------------|
+| black                | maroon         | green            | olive             | navy            |
+| purple               | teal           | silver           | gray              | red             |
+| lime                 | yellow         | blue             | fuchsia           | aqua            |
+| white                | aliceblue      | antiquewhite     | aquamarine        | azure           |
+| beige                | bisque         | blanchedalmond   | blueviolet        | brown           |
+| burlywood            | cadetblue      | chartreuse       | chocolate         | coral           |
+| cornflowerblue       | cornsilk       | crimson          | darkblue          | darkcyan        |
+| darkgoldenrod        | darkgray       | darkgreen        | darkkhaki         | darkmagenta     |
+| darkolivegreen       | darkorange     | darkorchid       | darkred           | darksalmon      |
+| darkseagreen         | darkslateblue  | darkslategray    | darkturquoise     | darkviolet      |
+| deeppink             | deepskyblue    | dimgray          | dodgerblue        | firebrick       |
+| floralwhite          | forestgreen    | gainsboro        | ghostwhite        | gold            |
+| goldenrod            | greenyellow    | honeydew         | hotpink           | indianred       |
+| indigo               | ivory          | khaki            | lavender          | lavenderblush   |
+| lawngreen            | lemonchiffon   | lightblue        | lightcoral        | lightcyan       |
+| lightgoldenrodyellow | lightgray      | lightgreen       | lightpink         | lightsalmon     |
+| lightseagreen        | lightskyblue   | lightslategray   | lightsteelblue    | lightyellow     |
+| limegreen            | linen          | mediumaquamarine | mediumblue        | mediumorchid    |
+| mediumpurple         | mediumseagreen | mediumslateblue  | mediumspringgreen | mediumturquoise |
+| mediumvioletred      | midnightblue   | mintcream        | mistyrose         | moccasin        |
+| navajowhite          | oldlace        | olivedrab        | orange            | orangered       |
+| orchid               | palegoldenrod  | palegreen        | paleturquoise     | palevioletred   |
+| papayawhip           | peachpuff      | peru             | pink              | plum            |
+| powderblue           | rebeccapurple  | rosybrown        | royalblue         | saddlebrown     |
+| salmon               | sandybrown     | seagreen         | seashell          | sienna          |
+| skyblue              | slateblue      | slategray        | snow              | springgreen     |
+| steelblue            | tan            | thistle          | tomato            | turquoise       |
+| violet               | wheat          | whitesmoke       | yellowgreen       | grey            |
+| dimgrey              | darkgrey       | darkslategrey    | lightgrey         | lightslategrey  |
+| slategrey            |                |                  |                   |                 |
 
-----
-### Maintainer
+---
 
-IBM ICP CoC
-<br>
+## Known Issues
 
-### License
+This initial drop is brittle. K9s will most likely blow up...
 
+1. You're running older versions of Kubernetes. K9s works best Kubernetes 1.12+.
+2. You don't have enough RBAC fu to manage your cluster.
 
-Copyright &#x00A9; 2019 IBM®
+---
 
-<br>
+## Disclaimer
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the
-"Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
+This is still work in progress! If there is enough interest in the Kubernetes
+community, we will enhance per your recommendations/contributions. Also if you
+dig this effort, please let us know that too!
 
-<br>
+---
 
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+## ATTA Girls/Boys!
 
-<br>
+K9s sits on top of many of opensource projects and libraries. Our *sincere*
+appreciations to all the OSS contributors that work nights and weekends
+to make this project a reality!
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+---
 
+## Meet The Core Team!
 
+* [Gustavo Silva Paiva](https://github.com/paivagustavo)
+   * <img src="assets/mail.png" width="16" height="auto"/>   guustavo.paiva@gmail.com
+   * <img src="assets/twitter.png" width="16" height="auto"/>   [@paivagustavodev](https://twitter.com/paivagustavodev)
+* [Fernand Galiana](https://github.com/derailed)
+   * <img src="assets/mail.png" width="16" height="auto"/>  fernand@imhotep.io
+   * <img src="assets/twitter.png" width="16" height="auto"/> [@kitesurfer](https://twitter.com/kitesurfer?lang=en)
 
+---
+
+<img src="assets/imhotep_logo.png" width="32" height="auto"/> © 2019 Imhotep Software LLC. All materials licensed under [Apache v2.0](http://www.apache.org/licenses/LICENSE-2.0)

@@ -3,7 +3,7 @@
 
 :course_desc: This course walks you through the Lab preparations for the Journey to Cloud.
 
-:course_max: 3
+:course_max: 5
 
 
 :course_auto: no
@@ -17,6 +17,10 @@
 :button3_label: Complete
 
 :button3_delay: 0
+
+
+
+#### Task Prerequisites
 
 
 
@@ -35,6 +39,15 @@
 ### Getting set up
 
 Before we dive into the Labs, you need to be able to run the provided Lab VM. It contains a Minikube cluster and all the configurations for the subsequent labs. 
+
+
+#### Hint Prerequisites
+
+No hint available
+
+#### Complete Prerequisites
+
+Confirm completion of the Lab
 
 
 
@@ -64,7 +77,16 @@ It is important that you use a version equal or newer than 6.0.14!
 * Windows	[VirtualBox](https://www.virtualbox.org/wiki/Downloads), Hyper-V
 
     
-  
+#### Hint SetUpHypervisor
+
+No hint available
+
+#### Complete SetUpHypervisor
+
+Confirm completion of the Lab
+
+
+
 
 
 
@@ -88,13 +110,13 @@ https://aspera.pub/zM7YiFk/k8s_training](https://aspera.pub/zM7YiFk/k8s_training
 
 
 
-#### Option 2: Download from Box (not recommended)
+#### Option 2: Download from Google Drive (not recommended)
 
-The easiest way to install Minikube on macOS is using Homebrew.
+You can also download it from Google Drive, which is **much** slower.
 
 Download it here:
 
-https://aspera.pub/zM7YiFk/k8s_training](https://aspera.pub/zM7YiFk/k8s_training)
+[https://drive.google.com/open?id=1Vjs7zeDoQ7rsUd9W541tPDRlPhMbEnmV](https://drive.google.com/open?id=1Vjs7zeDoQ7rsUd9W541tPDRlPhMbEnmV)
 
 
 
@@ -106,7 +128,7 @@ No hint available
 
 #### Complete DownloadLabVM
 
-> Confirm SetUpHypervisor complete
+Confirm completion of the Lab
 
 
 
@@ -138,34 +160,29 @@ No hint available
 
 #### Complete StartUpVM
 
-> Confirm StartUpVM complete
+Confirm completion of the Lab
 
 
 
+#### Task TestVM
 
-
-
-
-#### Task StartUpVM
-
-
-
-## Part 3 - Testing the VM
+## Part 4 - Testing the VM
 
 1. When the VM is up and running you can login with
 
    User: training
 
-   Pwd: training
+   Pwd: passw0rd
 
 2. You can now open the Firefox browser in the VM and check that you can open a webpage (google.com for example)
 
-#### Hint StartUpVM
+
+
+#### Hint TestVM
 
 No hint available
 
-#### Complete StartUpVM
+#### Complete TestVM
 
-> Confirm StartUpVM complete
-
+Confirm completion of the Lab
 
