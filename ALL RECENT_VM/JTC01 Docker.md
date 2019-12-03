@@ -257,7 +257,7 @@ https://github.com/niklaushirt/training
 ```
 cd training/
 gitrefresh 
-history
+
 ```
 
 

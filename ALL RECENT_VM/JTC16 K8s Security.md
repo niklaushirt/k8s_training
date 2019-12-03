@@ -139,7 +139,6 @@ In this Lab you will learn about some basic Kubernetes security paradigms.
 
 
 
-
 ---
 
 #### Hint Lab0_LabInformation
@@ -241,21 +240,71 @@ https://github.com/niklaushirt/training
 
 1. Open a Terminal window by clicking on the Termnial icon in the left sidebar - we will use this extensively later as well
 
-
-
-
-
-2. Execute the following commands to pull the latest example code from my GitHub repository
-
-   
+2. Execute the following commands to pull the latest example code from my GitHub repository and adjust user rights
 
 ```
+~/training/tools/own.sh 
+
 cd training/
 gitrefresh 
 ```
 
 
+3. Start the demo application
 
+
+```
+kubectl create -f ~/training/deployment/demoapp.yaml
+kubectl create -f ~/training/deployment/demoapp-service.yaml
+kubectl create -f ~/training/deployment/demoapp-backend.yaml
+kubectl create -f ~/training/deployment/demoapp-backend-service.yaml
+```
+
+
+4. Wait for the demo application to be available (the status must be 1/1)
+
+
+```
+kubectl get pods
+
+> NAME                               READY   STATUS    RESTARTS   AGE
+> k8sdemo-backend-5b779f567f-2rbgj   1/1     Running   0          21s
+> k8sdemo-backend-5b779f567f-p6j76   1/1     Running   0          21s
+> k8sdemo-bd6bbd548-jcb6r            1/1     Running   0          21s
+
+```
+
+
+5. Open the demo application in the browser
+
+
+```
+minikube service k8sdemo-service
+
+> |-----------|-----------------|-------------|------------------------|
+> | NAMESPACE |      NAME       | TARGET PORT |          URL           |
+> |-----------|-----------------|-------------|------------------------|
+> | default   | k8sdemo-service |             | http://10.0.2.15:32123 |
+> |-----------|-----------------|-------------|------------------------|
+> 🎉  Opening kubernetes service  default/k8sdemo-service in default browser...
+
+
+```
+
+> If you get the following error 
+> 
+> ```yaml
+> 💣  Error getting machine status: load: filestore "minikube": open /home/training/.minikube/machines/minikube/config.json: permission denied
+> 
+> 😿  Sorry that minikube crashed. If this was unexpected, we would love to hear from you:
+> 👉  https://github.com/kubernetes/minikube/issues/new/choose
+> ```
+> 
+> Please execute: 
+> 
+> ```
+> ~/training/tools/own.sh 
+> ```
 
 
 #### Hint Lab0_Prepare
@@ -339,12 +388,12 @@ First let's create a `Pod` that will assist you in testing the reachability of t
 	
 	You should get the HTML response from the backend server.
 	
-3. And you should be able to ping external adresses 
+3. And you should be able to ping external adresses  (45.55.44.56 is Google)
 
 	```
-	# ping goggle.com
+	# ping 45.55.44.56
 	
-	> PING goggle.com (45.55.44.56): 56 data bytes
+	> PING 45.55.44.56 (45.55.44.56): 56 data bytes
 	> 64 bytes from 45.55.44.56: seq=0 ttl=59 time=133.476 ms
 	> 64 bytes from 45.55.44.56: seq=1 ttl=59 time=136.036 ms
 	> 64 bytes from 45.55.44.56: seq=2 ttl=59 time=125.471 ms
@@ -413,13 +462,19 @@ Now let's create the first `NetworkPolicy` that simply blocks all traffic coming
 3. But you should still be able to ping external adresses 
 
 	```
-	# ping goggle.com
+	# ping 45.55.44.56
 	
-	> ping: bad address 'goggle.com'
+	> PING 45.55.44.56 (45.55.44.56): 56 data bytes
+	> 64 bytes from 45.55.44.56: seq=0 ttl=59 time=133.476 ms
+	> 64 bytes from 45.55.44.56: seq=1 ttl=59 time=136.036 ms
+	> 64 bytes from 45.55.44.56: seq=2 ttl=59 time=125.471 ms
 	```
 
-4. Try to reload the web application. It should **NOT** load.
+4. Reload the web application. It should now load again, but with the error from the backend:
 
+	**Testing DEMO_API
+	STATUS: ERROR	
+	Trying to reach backend ....**
 
 We have just blocked all traffic coming into the pods, but not the outgoing.
 
@@ -490,9 +545,9 @@ Now let's create a `NetworkPolicy` that simply blocks all outgoing traffic from 
 3. And you should not be able to ping external adresses as the `alpine` pod outgoing traffic is blocked.
 	
 	```
-	# ping goggle.com
+	# ping 45.55.44.56
 	
-	> ping: bad address 'goggle.com'
+	...
 	```
 4. Reload the web application. It should now load again, but with the error from the backend:
 
@@ -579,9 +634,9 @@ spec:
 3. You should be able to ping external adresses as outgoing traffic is not blocked.
 	
 	```
-	# ping goggle.com
+	# ping 45.55.44.56
 	
-	> PING goggle.com (45.55.44.56): 56 data bytes
+	> PING 45.55.44.56 (45.55.44.56): 56 data bytes
 	> 64 bytes from 45.55.44.56: seq=0 ttl=59 time=143.152 ms
 	> 64 bytes from 45.55.44.56: seq=1 ttl=59 time=120.875 ms
 	> 64 bytes from 45.55.44.56: seq=2 ttl=59 time=130.981 ms
@@ -884,8 +939,8 @@ kubectl --context=demo-context get pods
 > No resources found.
 > Error from server (Forbidden): pods is forbidden: User "demo" cannot list resource "pods" in API group "" in the namespace "rbactest"
 ```
-    
-    
+
+
 #### Hint Lab2_RBACCreateCredentials
 
 No hint available
@@ -1382,7 +1437,7 @@ The following configuration will create a `Role` and a `RoleBinding` for just th
 	  name: api-role
 	  apiGroup: ""
 	```
-	 
+	
 	Create the RoleBinding
 	
 	```
@@ -1444,7 +1499,6 @@ Confirm Lab3_AddRoleAndRoleBinding complete
 
 #### Task Lab4_SecurityToolingPolaris
 
-
 ---
 
 # Lab 4 - Security and RBAC Tooling
@@ -1494,6 +1548,7 @@ You can get more details [here](https://github.com/FairwindsOps/polaris).
 4. The Polaris Dashboard is now running in your cluster, and exposed to the internet. 
  	You can open it by typing:
 	
+
   	```
 	minikube service polaris-dashboard-service -n polaris
 	```   
@@ -1817,27 +1872,28 @@ In this chapter we will deploy the Clair image scanner and scan an example image
 1. Clients use the Clair API to index their container images; this creates a list of features present in the image and stores them in the database.
 1. Clients use the Clair API to query the database for vulnerabilities of a particular image; correlating vulnerabilities and features is done for each request, avoiding the need to rescan images.
 1. When updates to vulnerability metadata occur, a notification can be sent to alert systems that a change has occurred.
-    
+  
+
 To make things easier we will use the [Klar](https://github.com/optiopay/klar) command line tool to interact with the Clair engine.
     
     
 ### Install the Klar command line tool
 
-   
+
 ```
 wget https://github.com/optiopay/klar/releases/download/v2.4.0/klar-2.4.0-linux-amd64
 sudo chmod +x klar-2.4.0-linux-amd64
 sudo mv klar-2.4.0-linux-amd64 /usr/local/bin/klar
 ```
-    
 
-    
+
+​    
 ### Deploy Clair into the Kubernetes Cluster
 
 Make sure that you have executed the following commands to pull the latest example code from my GitHub repository
 
-   
-```
+
+```shell
 cd training/
 gitrefresh 
 ```
@@ -1850,7 +1906,7 @@ gitrefresh
 
 2. Create the Secret that holds the Clair configuration
 
-	```
+	```shell
 	kubectl create secret generic clairsecret --from-file=./config.yaml
 	
 	> from-file=./config.yaml
@@ -1964,7 +2020,6 @@ Klar returns:
 The output shows the detail for the two vulnerabilities with Medum severity.
 
 You can also output the result to JSON Format to be reused in a CI/CD tool.
-
 
 
 
