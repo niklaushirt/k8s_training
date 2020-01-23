@@ -188,6 +188,7 @@ The commands that you are going to execute to progress the Labs will look like t
 	
 ```
 
+# THIS IS AN EXAMPLE - DO NOT EXECUTE THIS!
 
 > **IMPORTANT NOTE:** The example output of a command is prefixed by ">" in order to make it more distinguishable. 
 > 
@@ -892,7 +893,7 @@ We will use `hostPath` for this example, it is a simple type of `Volume` but you
 1. Create the PersistentVolume
 
 	```
-	kubectl apply -f ~/training/volumes/1-simple-mysql-pv.yml
+	kubectl apply -f ~/training/volumes/1-simple-mysql-pv.yaml
 	
 	> persistentvolume/mysql-pv-volume created
   ```
@@ -934,7 +935,7 @@ spec:
 1. Create the PersistentVolume
 
 	```
-	kubectl apply -f ~/training/volumes/2-simple-mysql-pvc.yml
+	kubectl apply -f ~/training/volumes/2-simple-mysql-pvc.yaml
 	
 	> persistentvolumeclaim/mysql-pv-claim created
 	```
@@ -1010,7 +1011,7 @@ We define several things here:
 1. Create the `Deployment` (this creates the deployment as well as the service to access the mysql container)
 	
 	```
-	kubectl apply -f ~/training/volumes/3-simple-mysql-deployment.yml
+	kubectl apply -f ~/training/volumes/3-simple-mysql-deployment.yaml
 	
 	> deployment.apps/mysql created
 	> service/mysql created
@@ -1180,30 +1181,14 @@ Confirm Lab5_Volumes complete
 # Clean-up
 Delete the elements that we have deployed in order to go back to normal.
 
-1. Delete the demo app
+1. Delete the demo app and the mysql deployment
 
 	```
 	kubectl delete -f ~/training/deployment/demoapp.yaml
 	kubectl delete -f ~/training/deployment/demoapp-service.yaml
 	kubectl delete -f ~/training/deployment/demoapp-backend.yaml
 	kubectl delete -f ~/training/deployment/demoapp-backend-service.yaml
-	```
-
-2. Get the list of Pods
-
-	```
-	kubectl get pods
-	
-	> NAME                     READY   STATUS    RESTARTS   AGE
-	> mysql-7b9b7999d8-v4r5l   1/1     Running   0          4m26s
-	```
-
-3. Delete the Pod (you'll have to use the name of your Pod, which is dynamic)
-
-	```
-	kubectl delete pod mysql-7b9b7999d8-v4r5l
-	
-	> pod "mysql-7b9b7999d8-v4r5l" deleted
+	kubectl delete -f ~/training/volumes/3-simple-mysql-deployment.yaml
 	```
 
 #### Hint Lab6_Cleanup

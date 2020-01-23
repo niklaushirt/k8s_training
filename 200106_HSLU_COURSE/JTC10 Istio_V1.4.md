@@ -20,96 +20,269 @@
 
 
 
-:infotab: <h1 id="toc_0">Tips and Tricks for getting around in the labs</h1>
+:infotab: <h1>Prerequisites for the Lab</h1>
+:infotab: <ul>
+:infotab: <li><p>Internet Access</p>
+:infotab: </li>
+:infotab: <li><p>PC with at least:</p>
+:infotab: <ul>
+:infotab: <li>4 Core CPU</li>
+:infotab: <li>16GB of RAM</li>
+:infotab: <li>30GB of free Disk Space</li>
 :infotab: 
-:infotab: <h2 id="toc_1">Mac Tips</h2>
+:infotab: </ul>
+:infotab: </li>
 :infotab: 
-:infotab: <h3 id="toc_2">Opening Terminal</h3>
-:infotab: 
+:infotab: </ul>
+:infotab: <h1>Tips and Tricks for getting around in the labs</h1>
+:infotab: <h2>Login to the VM</h2>
+:infotab: <pre><code>The userid is      training
+:infotab: <BR>the password is    passw0rd
+:infotab: </code></pre>
+:infotab: <p>&nbsp;</p>
+:infotab: <hr />
+:infotab: <p>&nbsp;</p>
+:infotab: <h2>Mac Tips</h2>
+:infotab: <h3>Opening Terminal</h3>
 :infotab: <p>In order to rapidly open the terminal application, hit CMD - SPACE and type terminal.</p>
-:infotab: 
-:infotab: <p><img src="./images/openterminal.png" alt="terminal"></p>
-:infotab: <HR>
-:infotab: <h2 id="toc_3">Kubernetes Tips</h2>
-:infotab: 
-:infotab: <h3 id="toc_4">Pod Logs</h3>
-:infotab: 
+:infotab: <p><img src="./images/openterminal.png" referrerpolicy="no-referrer" alt="terminal"></p>
+:infotab: <hr />
+:infotab: <p>&nbsp;</p>
+:infotab: <h2>Minikube Tips</h2>
+:infotab: <p>You can open a deployed Kubernetes application by typing:</p>
+:infotab: <pre><code>minikube service &lt;my-service-name&gt;
+:infotab: </code></pre>
+:infotab: <p>&nbsp;</p>
+:infotab: <hr />
+:infotab: <p>&nbsp;</p>
+:infotab: <h2>Kubernetes Tips</h2>
+:infotab: <h3>Pod Logs</h3>
 :infotab: <p>You can look at the logs of any of the pods running under your deployments as follows</p>
-:infotab: 
-:infotab: <div><pre><code class="language-console">kubectl logs &lt;podname&gt;</code></pre></div>
-:infotab: 
-:infotab: <p>Remember that if you have multiple containers running in your pod, you
-:infotab: have to specify the specific container you want to see logs from.</p>
-:infotab: 
-:infotab: <div><pre><code class="language-console">kubectl logs &lt;pod-name&gt; &lt;container-name&gt;</code></pre></div>
-:infotab: 
+:infotab: <pre><code class='language-console' lang='console'>$<$ kubectl logs &lt;pod-name&gt; &lt;container-name&gt;
+:infotab: </code></pre>
 :infotab: <p>This subcommand operates like <code>tail</code>. Including the <code>-f</code> flag will
 :infotab: continue to stream the logs live once the current time is reached.</p>
-:infotab: 
-:infotab: <h3 id="toc_5">kubectl edit and vi</h3>
-:infotab: 
+:infotab: <h3>kubectl edit and vi</h3>
 :infotab: <p>By default, on many Linux and macOS systems, you will be dropped into the editor <code>vi</code>.
-:infotab: If you end up in vi you can start editing by pressing <code>i</code></p>
-:infotab: You can quit by typing <code>ESC :q!</code></p>
-:infotab: And you can save and quit by typing <code>ESC :wq</code></p>
-:infotab: 
+:infotab: If you end up in vi you can quit by typing <code>ESC :q!</code></p>
 :infotab: <p>IF you prefer using nano as an editor, execute </p>
-:infotab: 
-:infotab: <div><pre><code class="language-none">export EDITOR=nano</code></pre></div>
-:infotab: 
+:infotab: <pre><code>export EDITOR=nano
+:infotab: </code></pre>
 :infotab: <p>On Windows, a copy of <code>notepad.exe</code> will be opened with the contents of the file.</p>
-:infotab: 
-:infotab: <h3 id="toc_6">nano basic commands</h3>
-:infotab: 
-:infotab: <div><pre><code class="language-none">Ctrl-O      To save your work (WriteOut)
-:infotab: <BR>Ctrl-X      To exit nano
-:infotab: <BR>Ctrl-W      To search for text in a document
-:infotab: <BR>Ctrl-K      To cut a line of text</code></pre></div>
-:infotab: 
-:infotab: <h3 id="toc_7">busybox pod</h3>
-:infotab: 
+:infotab: <h3>nano basic commands</h3>
+:infotab: <pre><code>Ctrl-O		To save your work (WriteOut)
+:infotab: <BR>Ctrl-X		To exit nano
+:infotab: <BR>Ctrl-W		To search for text in a document
+:infotab: <BR>Ctrl-K		To cut a line of text
+:infotab: </code></pre>
+:infotab: <p>&nbsp;</p>
+:infotab: <h3>busybox pod</h3>
 :infotab: <p>For debugging live, this command frequently helps me:</p>
-:infotab: 
-:infotab: <div><pre><code class="language-console">kubectl run bb --image busybox --restart=Never -it --rm</code></pre></div>
-:infotab: 
+:infotab: <pre><code class='language-console' lang='console'>kubectl run bb --image busybox --restart=Never -it --rm
+:infotab: </code></pre>
 :infotab: <p>In the busybox image is a basic shell that contains useful utilities.</p>
-:infotab: 
 :infotab: <p>Utils I often use are <code>nslookup</code> and <code>wget</code>. </p>
-:infotab: 
 :infotab: <p><code>nslookup</code> is useful for testing DNS resolution in a pod.</p>
-:infotab: 
 :infotab: <p><code>wget</code> is useful for trying to do network requests.</p>
-:infotab: 
-:infotab: <h3 id="toc_8">Service Endpoints</h3>
-:infotab: 
+:infotab: <h3>Service Endpoints</h3>
 :infotab: <p>Endpoint resource can be used to see all the service endpoints.</p>
-:infotab: 
-:infotab: <div><pre><code class="language-console">kubectl get endpoints &lt;service&gt;</code></pre></div>
-:infotab: 
-:infotab: <h3 id="toc_9">ImagePullPolicy</h3>
-:infotab: 
+:infotab: <pre><code class='language-console' lang='console'>$ kubectl get endpoints &lt;service&gt;
+:infotab: </code></pre>
+:infotab: <h3>ImagePullPolicy</h3>
 :infotab: <p>By default Kubernetes will only pull the image on first use. This can
 :infotab: be confusing during development when you expect changes to show up.</p>
-:infotab: 
 :infotab: <p>You should be aware of the three <code>ImagePullPolicy</code>:</p>
-:infotab: 
 :infotab: <ul>
 :infotab: <li>IfNotPresent - the default, only request the image if not present.</li>
 :infotab: <li>Always - always request the image.</li>
 :infotab: <li>Never</li>
-:infotab: </ul>
 :infotab: 
-:infotab: <p>More details on image management may be <a href="https://kubernetes.io/docs/concepts/containers/images/">found here</a>.</p>
+:infotab: </ul>
+:infotab: <p>More details on image management may be <a href='https://kubernetes.io/docs/concepts/containers/images/'>found here</a>.</p>
+:infotab: 
+
+
+
+
+
+#### Task Lab0_LabInformation
+
+----
+
+
+
+# Lab0 - Lab information
+
+Istio a joint collaboration between IBM, Google and Lyft provides an easy way to create a service mesh that will manage many of these complex tasks automatically, without the need to modify the microservices themselves.
+
+In this Lab you will learn the basic operations for setting up and operating an Istio Mesh Network.
+
+
+
+## Lab sources
+
+All the source code for the lab is available here:
+
+https://github.com/niklaushirt/training
+
+
+
+
+##  Lab overview
+
+* In this Lab you will learn the basics of Istio:
+
+1. Get to know Istio
+2. Install Istio
+3. Deploy the Bookinfo Demo App
+4. Monitoring with Kiali
+5. Traffic flow management
+6. Telemetry
+7. Clean Up  
+
+
+
+---
+
+#### Hint Lab0_LabInformation
+
+No hint available
+
+
+#### Complete Lab0_LabInformation
+
+Confirm Lab0_LabInformation complete
+
+----
+
+
+
+
+
+
+
+
+
+#### Task Lab0_LabSemantics
+
+----
+
+
+
+# Lab0 - Lab semantics
+
+
+## Nomenclatures
+
+---
+
+### Shell Commands
+
+The commands that you are going to execute to progress the Labs will look like this:
+
+```
+   kubectl create -f redis-slave-service.yaml
+	
+	> Output Line 1     
+	> Output Line 2
+	> Output Line 3
+	...
+	
+```
+
+
+> **IMPORTANT NOTE:** The example output of a command is prefixed by ">" in order to make it more distinguishable. 
+> 
+> So in the above example you would only enter/copy-paste `kubectl create -f redis-slave-service.yaml` and the output from the command is "Output Line 1" to "Output Line 3" 
+> 
+
+---
+
+### Code Examples
+Code examples are presented like this:
+
+```yaml
+apiVersion: lab.ibm.com/v1beta1
+kind: MyResource
+metadata:
+  name: example
+spec:
+  size: 3
+  image: busybox
+```
+
+This is only for illustration and is not being actively used in the Labs.
+
+
+
+
+#### Hint Lab0_LabSemantics
+
+No hint available
+
+
+#### Complete Lab0_LabSemantics
+
+Confirm Lab0_LabSemantics complete
+
+
+
+
+
+#### Task Lab0_Prepare
+
+---
+
+# Lab 0 - Prepare the Lab environment
+
+Before starting the Labs, let's make sure that we have the latest source code from the GitHub repository:
+
+https://github.com/niklaushirt/training
+
+
+
+1. Open a Terminal window by clicking on the Termnial icon in the left sidebar - we will use this extensively later as well
+
+
+
+
+
+2. Execute the following commands to pull the latest example code from my GitHub repository
+
+   
+
+```
+cd training/
+gitrefresh 
+
+~/training/tools/own.sh 
+```
+
+
+
+
+
+#### Hint Lab0_Prepare
+
+No hint available
+
+
+#### Complete Lab0_Prepare
+
+Confirm Lab0_Prepare complete
+
+----
+
 
 
 
 
 ----
-#### Task Introduction
+#### Task Lab1_IstioIntroduction
 
 ----
 
-## ISTIO Introduction
+# Lab 1 - Get to know ISTIO
 
 Microservices and containers changed application design and deployment patterns, but along with them brought challenges like service discovery, routing, failure handling, and visibility to microservices. "Service mesh" architecture was born to handle these features. Applications are getting decoupled internally as microservices, and the responsibility of maintaining coupling between these microservices is passed to the service mesh.
 
@@ -146,32 +319,15 @@ In the [second part](#part-b-modify-sample-application-to-use-an-external-dataso
 ---
 
 
-### Objectives
 
-After you complete this course, you'll be able to: - Download and install Istio in your cluster - Deploy the Bookinfo sample app - Use metrics, logging and tracing to observe services - Set up the Istio Ingress Gateway - Perform simple traffic management, such as A/B tests and canary deployments 
-
-
-### Workshop
-
-* Lab 1 - Minkube
-* Lab 2 - Installing Istio
-* Lab 3 - Deploy the Bookinfo App
-* Lab 4 - Monitoring with Kiali
-* Lab 5 - Traffic flow management
-* Lab 6 - Access policy enforcement
-* Lab 7 - Telemetry data aggregation
-
-
-----
-
-#### Hint Introduction
+#### Hint Lab1_IstioIntroduction
 
 No hint available
 
 
-#### Complete Introduction
+#### Complete Lab1_IstioIntroduction
 
-> Confirm Introduction complete
+> Confirm Lab1_IstioIntroduction complete
 
 
 ----
@@ -179,76 +335,9 @@ No hint available
 
 
 
-#### Task minikube
-
----
-# Lab 1 - Minikube
 
 
-	
-## Getting to know minikube
-
-### What is Minikube?
-
-Minikube is an open source tool that enables you to run Kubernetes on your laptop or other local machine. It can work with Linux, Mac, and Windows operating systems. It runs a single-node cluster inside a virtual machine on your local machine.
-
-
-minikube runs the official stable release of Kubernetes, with support for standard Kubernetes features like:
-
-* LoadBalancer - using `minikube tunnel`
-* Multi-cluster - using `minikube start -p <name>`
-* NodePorts - using `minikube service`
-* Persistent Volumes
-* Ingress
-* RBAC
-* Dashboard - `minikube dashboard`
-* Container runtimes
-* Configure apiserver and kubelet options via command-line flags
-* Addons - a marketplace for developers to share configurations for running services on minikube
-
-## Useful commands
-
-Start a cluster by running:
-
-`minikube start`
-
-Access Kubernetes Dashboard within Minikube:
-
-`minikube dashboard`
-
-Open this exposed endpoint in your browser:
-
-`minikube service hello-minikube`
-
-Start a second local cluster:
-
-`minikube start -p cluster2`
-
-Stop your local cluster:
-
-`minikube stop`
-
-Delete your local cluster:
-
-`minikube delete`
-
-
-
-#### Hint minikube
-
-No hint available
-
-
-#### Complete minikube
-
-> Confirm minikube complete
-
-
-
-
-
-
-#### Task Installing Istio
+#### Task Lab2_Installing Istio
 
 ----
 
@@ -258,6 +347,8 @@ In this module, you download and install Istio.
 1.  Execute the following command to get the latest ISTIO source:
 
     ```
+     export ISTIO_VERSION=1.4.1
+    
      ~/training/istio/release/downloadIstioCtl.sh
     
     > Downloading istio-1.4.1 from ...
@@ -267,7 +358,7 @@ In this module, you download and install Istio.
 2. Change the directory to the Istio file location.
 
     ```
-    cd training/istio/
+    cd ~/training/istio/
 
     ```
 
@@ -296,7 +387,7 @@ In this module, you download and install Istio.
 
     ```
 
-5. Now let's expose the Kiali web interface:
+5. Now let's expose the different web interfaces (Kiali, Grafana, Jaeger):
 
     ```
     kubectl patch service -n istio-system kiali -p '{"spec": {"ports": [{"nodePort": 31710,"port": 20001,"name": "http-kiali"}],"type": "NodePort"}}'
@@ -360,22 +451,22 @@ Before you continue, make sure all the pods are deployed and are either in the *
 Congratulations! You successfully installed Istio into your cluster.
 
 
-#### Hint Installing Istio
+#### Hint Lab2_Installing
 
 No hint available
 
 
-#### Complete Installing Istio
+#### Complete Lab2_Installing
 
-> Confirm Installing Istio complete
-
-
+> Confirm Lab2_Installing complete
 
 
 
 
 
-#### Task Deploy the Bookinfo app
+
+
+#### Task Lab3_DeployTheBookinfoApp
 
 ----
 
@@ -455,22 +546,22 @@ In Kubernetes, a sidecar is a utility container in the pod, and its purpose is t
 
 
 
-#### Hint Deploy the Bookinfo app
+#### Hint Lab3_DeployTheBookinfoApp
 
 No hint available
 
 
-#### Complete Deploy the Bookinfo app
+#### Complete Lab3_DeployTheBookinfoApp
 
-> Confirm Deploy the Bookinfo app complete
-
-
+> Confirm Lab3_DeployTheBookinfoApp complete
 
 
 
 
 
-#### Task Monitoring with Kiali
+
+
+#### Task Lab4_MonitoringWithKiali
 
 ----
 
@@ -510,8 +601,9 @@ Login is:
 
 1. Select `Graph` in the left hand menu.
 1. Then select `default` from the Namespaces drop-down menu
-1. Make sure that you check all types from the `Display` drop-down menu
-1. And `Requests percent of total` from the `Edge Labels` drop-down menu
+2. Make sure that you select `Versoned App Graph` from the first drop-down menu
+3. And `Requests percent of total` from the second drop-down menu
+1. And make sure that you check all types from the `Display` drop-down menu
 2. If you see no objects, there might be no traffic flowing through your mesh network yet (you chan change the seeting to display inactive objects too)
 3. You might want to change the refresh rate to 10s to more easily observe the changes in traffic
 
@@ -528,22 +620,22 @@ Get more info on the [Kiali](https://www.kiali.io/documentation/overview/) websi
 [Visualizing Your Mesh](https://istio.io/docs/tasks/telemetry/kiali/)
 
 
-#### Hint Monitoring with Kiali
+#### Hint Lab4_MonitoringWithKiali
 
 No hint available
 
 
-#### Complete Monitoring with Kiali
+#### Complete Lab4_MonitoringWithKiali
 
-> Confirm Monitoring with Kiali complete
-
-
+> Confirm Lab4_MonitoringWithKiali complete
 
 
 
 
 
-#### Task Traffic flow management
+
+
+#### Task Lab5_TrafficFlowManagement
 
 ----
 
@@ -607,6 +699,23 @@ This would set all incoming routes on the services (indicated in the line `desti
 
 
   ```
+  
+The definition yaml file that we have just applied looks like this 
+
+```yaml
+kind: VirtualService
+metadata:
+  name: reviews
+spec:
+  hosts:
+  - reviews
+  http:
+  - route:
+    - destination:
+        host: reviews
+        subset: v1
+```          
+
 
 Observe in the Kiali Dashboard. After a short wile you should see that all traffic is going to V1.
 
@@ -625,6 +734,22 @@ This will direct/switch all incoming traffic to version v2 of the reviews micros
 
 
   ```
+  
+The new definition yaml file that we have just applied looks like this 
+
+```yaml
+kind: VirtualService
+metadata:
+  name: reviews
+spec:
+  hosts:
+  - reviews
+  http:
+  - route:
+    - destination:
+        host: reviews
+        subset: v2
+```        
   
 Observe in the [Kiali Dashboard](http://127.0.0.1:31710/kiali/). After a short wile you should see that all traffic is going to V2.
 
@@ -649,7 +774,28 @@ This is indicated by the `weight: 80 and 20` in the yaml file.
   kubectl apply -f ~/training/istio/samples/bookinfo/networking/virtual-service-reviews-80-20.yaml
   ```
 
-Observe in the [Kiali Dashboard](http://127.0.0.1:31710/kiali/). After a short wile you should see that about 80% of the traffic is going to V1 and 80% of the traffic is going to V2.
+The new definition yaml file that we have just applied looks like this 
+
+```yaml
+kind: VirtualService
+metadata:
+  name: reviews
+spec:
+  hosts:
+    - reviews
+  http:
+  - route:
+    - destination:
+        host: reviews
+        subset: v1
+      weight: 80
+    - destination:
+        host: reviews
+        subset: v2
+      weight: 20
+```
+
+Observe in the [Kiali Dashboard](http://127.0.0.1:31710/kiali/). After a short wile you should see that 80% of the traffic is going to V1 and 80% of the traffic is going to V2.
 
 ![](./images/traffic3.png)
 
@@ -716,6 +862,33 @@ Run:
   kubectl apply -f ~/training/istio/samples/bookinfo/networking/virtual-service-reviews-jason-v2-v3.yaml
   ```
   
+  
+The new definition yaml file that we have just applied looks like this 
+
+```yaml  
+kind: VirtualService
+metadata:
+  name: reviews
+spec:
+  hosts:
+  - reviews
+  http:
+  - match:
+    - headers:
+        end-user:
+          exact: jason
+    route:
+    - destination:
+        host: reviews
+        subset: v3
+  - route:
+    - destination:
+        host: reviews
+        subset: v2
+  ```
+  
+  
+  
  Go to the Bookinfo Application: [`http://127.0.0.1:31804/productpage`](http://127.0.0.1:31804/productpage) (replace 127.0.0.1 with the address of your cluster).
  
 **Refresh several times** - You should see only black stars, meaning that you are using V2. 
@@ -730,87 +903,13 @@ Observe in the [Kiali Dashboard](http://127.0.0.1:31710/kiali/). After a short w
 
 ![](./images/traffic5.png)
 
-#### Hint Traffic flow management
+#### Hint Lab5_TrafficFlowManagement
 
 No hint available
 
 
-#### Complete Traffic flow management
-
-> Confirm Traffic flow management complete
-
-
-
-
-
-
-
-#### Task Access policy enforcement
-
-----
-  
-
-# Lab 6 - Access policy enforcement
-
-This step shows you how to control access to your services. It helps to reset the routing rules to ensure that we are starting with a known configuration. The following commands will first set all review requests to v2:
-
-```
-   kubectl apply -f ~/training/istio/samples/bookinfo/networking/virtual-service-all-v1.yaml
-   kubectl apply -f ~/training/istio/samples/bookinfo/networking/virtual-service-reviews-jason-v3-v2.yaml
- 
-```
-
-Go to the Bookinfo Application: [`http://127.0.0.1:31804/productpage`](http://127.0.0.1:31804/productpage) (replace 127.0.0.1 with the address of your cluster).
-
-You'll now see that your `productpage` always shows black stars on the reviews section.
-
-* To deny access to the ratings service for all traffic coming from `reviews-v3`, you will use apply these rules:
-
-  ```
-   kubectl apply -f ~/training/istio/samples/bookinfo/policy/mixer-rule-deny-label.yaml
-
-  
-   kubectl apply -f ~/training/istio/samples/bookinfo/policy/mixer-rule-deny-label.yaml
-   kubectl apply -f ~/training/istio/samples/bookinfo/policy/mixer-rule-ratings-denial.yaml
-   
-   
-      kubectl delete -f ~/training/istio/samples/bookinfo/policy/mixer-rule-deny-label.yaml
-   kubectl delete -f ~/training/istio/samples/bookinfo/policy/mixer-rule-ratings-denial.yaml
-   
-  ```
-
-* To verify if your rule has been enforced, point your browser to your BookInfo Application. You'll notice you see no stars (Ratings service is currently unavailable) from the reviews section unless you are logged in as _jason_, in which case you'll see red stars.
-
-![access-control](./images/access.png)
-
-And in Kiali you should see the following:
-
-![access-control](./images/kiali_2.png)
-
-
-## Cleanup 
-
-Now let's clean up the mess and get back to a nice simple state.
-
-```
-kubectl delete -f ~/training/istio/samples/bookinfo/policy/mixer-rule-deny-label.yaml
-kubectl delete -f ~/training/istio/samples/bookinfo/policy/mixer-rule-ratings-denial.yaml
-kubectl delete -f ~/training/istio/samples/bookinfo/networking/virtual-service-all-v1.yaml
-kubectl delete -f ~/training/istio/samples/bookinfo/networking/virtual-service-reviews-jason-v2-v3.yaml
-kubectl apply -f ~/training/istio/samples/bookinfo/networking/destination-rule-all.yaml
-```
-
-
-
-
-#### Hint Access policy enforcement
-
-No hint available
-
-
-#### Complete Access policy enforcement
-
-> Confirm Access policy enforcement complete
+#### Complete Lab5_TrafficFlowManagement
+> Confirm Lab5_TrafficFlowManagement complete
 
 
 
@@ -818,13 +917,16 @@ No hint available
 
 
 
-#### Task Telemetry data aggregation
+
+
+
+#### Task Lab6_Telemetry
 
 ----
   
 
 
-# Lab 7 - Telemetry data aggregation - metrics, logs and trace spans
+# Lab 6 - Telemetry data aggregation - metrics, logs and trace spans
 
 ### Challenges with microservices
 
@@ -891,28 +993,28 @@ Jaeger is a distributed tracing tool that is available with Istio.
 
 
 
-#### Hint Telemetry data aggregation
+#### Hint Lab6_Telemetry
 
 No hint available
 
 
-#### Complete Telemetry data aggregation
+#### Complete Lab6_Telemetry
 
-> Confirm Telemetry data aggregation complete
-
-
+> Confirm Lab6_Telemetry complete
 
 
 
 
 
-#### Task Clean Up
+
+
+#### Task Lab7_CleanUp
 
 ----
   
 
 
-# Clean-up
+# Lab 7 - Clean-up
 
 
 * To delete the BookInfo app and its route-rules: ` ~/training/istio/samples/bookinfo/platform/kube/cleanup.sh`
@@ -920,10 +1022,18 @@ No hint available
 * To delete Istio from your cluster
 
 ```
+
+kubectl delete -f ~/training/istio/samples/bookinfo/policy/mixer-rule-deny-label.yaml
+kubectl delete -f ~/training/istio/samples/bookinfo/policy/mixer-rule-ratings-denial.yaml
+kubectl delete -f ~/training/istio/samples/bookinfo/networking/virtual-service-all-v1.yaml
+kubectl delete -f ~/training/istio/samples/bookinfo/networking/virtual-service-reviews-jason-v2-v3.yaml
+kubectl apply -f ~/training/istio/samples/bookinfo/networking/destination-rule-all.yaml
+
 kubectl delete -f ~/training/istio/samples/bookinfo/platform/kube/bookinfo.yaml
 kubectl delete -f  ~/training/istio/samples/bookinfo/networking/bookinfo-gateway.yaml
-kubectl delete -f https://raw.githubusercontent.com/niklaushirt/microservices-traffic-management-using-istio/master/istio.yaml
-kubectl delete -f ~/istio/install/kubernetes/helm/istio/templates/crds.yaml
+
+istioctl manifest generate --set profile=demo | kubectl delete -f -
+
 kubectl delete ns istio-system
 
 ```
@@ -931,14 +1041,14 @@ kubectl delete ns istio-system
 
 
 
-#### Hint Clean Up
+#### Hint Lab7_CleanUp
 
 No hint available
 
 
-#### Complete Clean Up
+#### Complete Lab7_CleanUp
 
-> Confirm Clean Up complete
+> Confirm Lab7_CleanUp complete
 
 
 

@@ -187,6 +187,7 @@ The commands that you are going to execute to progress the Labs will look like t
 	
 ```
 
+# THIS IS AN EXAMPLE - DO NOT EXECUTE THIS!
 
 > **IMPORTANT NOTE:** The example output of a command is prefixed by ">" in order to make it more distinguishable. 
 > 

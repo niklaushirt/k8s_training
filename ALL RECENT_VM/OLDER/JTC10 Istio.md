@@ -36,12 +36,12 @@
 :infotab: 
 :infotab: <p>You can look at the logs of any of the pods running under your deployments as follows</p>
 :infotab: 
-:infotab: <div><pre><code class="language-console">$ kubectl logs &lt;podname&gt;</code></pre></div>
+:infotab: <div><pre><code class="language-console">kubectl logs &lt;podname&gt;</code></pre></div>
 :infotab: 
 :infotab: <p>Remember that if you have multiple containers running in your pod, you
 :infotab: have to specify the specific container you want to see logs from.</p>
 :infotab: 
-:infotab: <div><pre><code class="language-console">$ kubectl logs &lt;pod-name&gt; &lt;container-name&gt;</code></pre></div>
+:infotab: <div><pre><code class="language-console">kubectl logs &lt;pod-name&gt; &lt;container-name&gt;</code></pre></div>
 :infotab: 
 :infotab: <p>This subcommand operates like <code>tail</code>. Including the <code>-f</code> flag will
 :infotab: continue to stream the logs live once the current time is reached.</p>
@@ -49,7 +49,9 @@
 :infotab: <h3 id="toc_5">kubectl edit and vi</h3>
 :infotab: 
 :infotab: <p>By default, on many Linux and macOS systems, you will be dropped into the editor <code>vi</code>.
-:infotab: If you end up in vi you can quit by typing <code>ESC :q!</code></p>
+:infotab: If you end up in vi you can start editing by pressing <code>i</code></p>
+:infotab: You can quit by typing <code>ESC :q!</code></p>
+:infotab: And you can save and quit by typing <code>ESC :wq</code></p>
 :infotab: 
 :infotab: <p>IF you prefer using nano as an editor, execute </p>
 :infotab: 
@@ -82,7 +84,7 @@
 :infotab: 
 :infotab: <p>Endpoint resource can be used to see all the service endpoints.</p>
 :infotab: 
-:infotab: <div><pre><code class="language-console">$ kubectl get endpoints &lt;service&gt;</code></pre></div>
+:infotab: <div><pre><code class="language-console">kubectl get endpoints &lt;service&gt;</code></pre></div>
 :infotab: 
 :infotab: <h3 id="toc_9">ImagePullPolicy</h3>
 :infotab: 
@@ -183,51 +185,6 @@ No hint available
 # Lab 1 - Minikube
 
 
-
-## Make sure minikube is running 
-
-
-* Verify that minikube is running
-	If not please complete JTC90 K8s Lab Setup
-
-
-	```
-	$ minikube status
-	
-	host: Running
-	kubelet: Running
-	apiserver: Running
-	kubectl: Correctly Configured: pointing to minikube-vm at 192.168.99.100
-	```
-	
-* Verify kubectl can communicate with your cluster.
-
-	```
-	$ kubectl get nodes
-	
-	NAME       STATUS    ROLES     AGE       VERSION
-	minikube   Ready     master    32m       v1.14.1
-	```
-
-
-
-## Enable Kubernetes Dashboard
-
-```
-$ minikube dashboard                                                                                              
-
-🔌  Enabling dashboard ...
-🤔  Verifying dashboard health ...
-🚀  Launching proxy ...
-🤔  Verifying proxy health ...
-🎉  Opening http://127.0.0.1:58935/api/v1/namespaces/kube-system/services/http:kubernetes-dashboard:/proxy/ in your default browser...
-```
-
-
-
-After a while the Kubernetes Dashboard will open
-
-	
 	
 ## Getting to know minikube
 
@@ -301,31 +258,31 @@ In this module, you download and install Istio.
 1.  Either download Istio directly from [https://github.com/niklaushirt/istio.gits](https://github.com/niklaushirt/istio.git) or get the latest version by using git:
 
     ```
-    $ git clone https://github.com/niklaushirt/istio.git
+    git clone https://github.com/niklaushirt/istio.git
     ```
 
 2. Change the directory to the Istio file location.
 
     ```
-    $ cd istio
+    cd istio
     ```
 
 3. Add the `istioctl` client to your PATH. 
 
     ```
-    $ export PATH=$PWD/bin:$PATH
+    export PATH=$PWD/bin:$PATH
     ```
 
 4. Install Istio’s Custom Resource Definitions via kubectl apply, and wait a few seconds for the CRDs to be committed in the kube-apiserver:
 
     ```
-    $ for i in install/kubernetes/helm/istio-init/files/crd*yaml; do kubectl apply -f $i; done
+    for i in install/kubernetes/helm/istio-init/files/crd*yaml; do kubectl apply -f $i; done
     ```
 
 5. Now let's install Istio demo profile into the `istio-system` namespace in your Kubernetes cluster:
 
     ```
-    $ kubectl apply -f install/kubernetes/istio-demo.yaml
+    kubectl apply -f install/kubernetes/istio-demo.yaml
     ```
 
 
@@ -333,74 +290,71 @@ In this module, you download and install Istio.
 6. Label the default namespace for automatic sidecar injection
 
 	```
-	$ kubectl label namespace default istio-injection=enabled                                                                                   
+	kubectl label namespace default istio-injection=enabled                                                                                   
 	
-	namespace/default labeled
+	> namespace/default labeled
+	```
 	
-	$ kubectl get ns --show-labels                                                                                                              
+	```
+	kubectl get ns --show-labels                                                                                                              
 	
-	$NAME              STATUS   AGE   LABELS
-	default           Active   30m   istio-injection=enabled
-	istio-system      Active   15m   istio-injection=disabled
-	kube-node-lease   Active   30m   <none>
-	kube-public       Active   30m   <none>
-	kube-system       Active   30m   <none>
+	> NAME              STATUS   AGE   LABELS
+	> default           Active   30m   istio-injection=enabled
+	> istio-system      Active   15m   istio-injection=disabled
+	> kube-node-lease   Active   30m   <none>
+	> kube-public       Active   30m   <none>
+	> kube-system       Active   30m   <none>
 	```
 
 
 6. Ensure that the `istio-*` Kubernetes services are deployed before you continue.
 
     ```
-    $ kubectl get svc -n istio-system
-    ```
-    
-    Sample output:
-    
-    ```
-NAME                     TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)                                                                                                                                      AGE
-grafana                  NodePort       10.100.39.1     <none>        3000:31551/TCP                                                                                                                               14h
-istio-citadel            ClusterIP      10.97.131.248   <none>        8060/TCP,15014/TCP                                                                                                                           14h
-istio-egressgateway      ClusterIP      10.97.129.60    <none>        80/TCP,443/TCP,15443/TCP                                                                                                                     14h
-istio-galley             ClusterIP      10.109.79.240   <none>        443/TCP,15014/TCP,9901/TCP                                                                                                                   14h
-istio-ingressgateway     LoadBalancer   10.110.220.29   <pending>     15020:31197/TCP,80:31380/TCP,443:31390/TCP,31400:31400/TCP,15029:32154/TCP,15030:32753/TCP,15031:30805/TCP,15032:31588/TCP,15443:30142/TCP   14h
-istio-pilot              ClusterIP      10.108.237.62   <none>        15010/TCP,15011/TCP,8080/TCP,15014/TCP                                                                                                       14h
-istio-policy             ClusterIP      10.111.7.15     <none>        9091/TCP,15004/TCP,15014/TCP                                                                                                                 14h
-istio-sidecar-injector   ClusterIP      10.106.49.81    <none>        443/TCP                                                                                                                                      14h
-istio-telemetry          ClusterIP      10.98.0.68      <none>        9091/TCP,15004/TCP,15014/TCP,42422/TCP                                                                                                       14h
-jaeger-agent             ClusterIP      None            <none>        5775/UDP,6831/UDP,6832/UDP                                                                                                                   14h
-jaeger-collector         ClusterIP      10.105.150.31   <none>        14267/TCP,14268/TCP                                                                                                                          14h
-jaeger-query             ClusterIP      10.108.240.60   <none>        16686/TCP                                                                                                                                    14h
-kiali                    NodePort       10.99.99.251    <none>        20001:31552/TCP                                                                                                                              14h
-prometheus               ClusterIP      10.104.5.70     <none>        9090/TCP                                                                                                                                     14h
-tracing                  ClusterIP      10.103.33.199   <none>        80/TCP                                                                                                                                       14h
-zipkin                   ClusterIP      10.110.75.25    <none>        9411/TCP
+    kubectl get svc -n istio-system
+ 
+
+	> NAME                     TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)                                                                                                                                      AGE
+	> grafana                  NodePort       10.100.39.1     <none>        3000:31551/TCP                                                                                                                               14h
+	> istio-citadel            ClusterIP      10.97.131.248   <none>        8060/TCP,15014/TCP                                                                                                                           14h
+	> istio-egressgateway      ClusterIP      10.97.129.60    <none>        80/TCP,443/TCP,15443/TCP                                                                                                                     14h
+	> istio-galley             ClusterIP      10.109.79.240   <none>        443/TCP,15014/TCP,9901/TCP                                                                                                                   14h
+	> istio-ingressgateway     LoadBalancer   10.110.220.29   <pending>     15020:31197/TCP,80:31380/TCP,443:31390/TCP,31400:31400/TCP,15029:32154/TCP,15030:32753/TCP,15031:30805/TCP,15032:31588/TCP,15443:30142/TCP   14h
+	> istio-pilot              ClusterIP      10.108.237.62   <none>        15010/TCP,15011/TCP,8080/TCP,15014/TCP                                                                                                       14h
+	> istio-policy             ClusterIP      10.111.7.15     <none>        9091/TCP,15004/TCP,15014/TCP                                                                                                                 14h
+	> istio-sidecar-injector   ClusterIP      10.106.49.81    <none>        443/TCP                                                                                                                                      14h
+	> istio-telemetry          ClusterIP      10.98.0.68      <none>        9091/TCP,15004/TCP,15014/TCP,42422/TCP                                                                                                       14h
+	> jaeger-agent             ClusterIP      None            <none>        5775/UDP,6831/UDP,6832/UDP                                                                                                                   14h
+	> jaeger-collector         ClusterIP      10.105.150.31   <none>        14267/TCP,14268/TCP                                                                                                                          14h
+	> jaeger-query             ClusterIP      10.108.240.60   <none>        16686/TCP                                                                                                                                    14h
+	> kiali                    NodePort       10.99.99.251    <none>        20001:31552/TCP                                                                                                                              14h
+	> prometheus               ClusterIP      10.104.5.70     <none>        9090/TCP                                                                                                                                     14h
+	> tracing                  ClusterIP      10.103.33.199   <none>        80/TCP                                                                                                                                       14h
+	> zipkin                   ClusterIP      10.110.75.25    <none>        9411/TCP
     ```
 
 
 1. Ensure the corresponding pods are all in **`Running`** state before you continue.
 
     ```
-    $ kubectl get pods -n istio-system
-    ```
-    Sample output:
-    
-    ```
-    NAME                                      READY   STATUS      RESTARTS   AGE
-    grafana-5c45779547-v77cl                  1/1     Running     0          103s
-    istio-citadel-79cb95445b-29wvj            1/1     Running     0          102s
-    istio-cleanup-secrets-1.1.0-mp6qq         0/1     Completed   0          112s
-    istio-egressgateway-6dfb8dd765-jzzxf      1/1     Running     0          104s
-    istio-galley-7bccb97448-tk8bz             1/1     Running     0          104s
-    istio-grafana-post-install-1.1.0-bvng6    0/1     Completed   0          113s
-    istio-ingressgateway-679bd59c6-5bsbr      1/1     Running     0          104s
-    istio-pilot-674d4b8469-ttxs8              2/2     Running     0          103s
-    istio-policy-6b8795b6b5-g5m2k             2/2     Running     2          103s
-    istio-security-post-install-1.1.0-cfqpx   0/1     Completed   0          111s
-    istio-sidecar-injector-646d77f96c-55twm   1/1     Running     0          102s
-    istio-telemetry-76c8fbc99f-hxskk          2/2     Running     2          103s
-    istio-tracing-5fbc94c494-5nkjd            1/1     Running     0          102s
-    kiali-56d95cf466-bpgfq                    1/1     Running     0          103s
-    prometheus-8647cf4bc7-qnp6x               1/1     Running     0          102s
+    kubectl get pods -n istio-system
+   
+
+    > NAME                                      READY   STATUS      RESTARTS   AGE
+    > grafana-5c45779547-v77cl                  1/1     Running     0          103s
+    > istio-citadel-79cb95445b-29wvj            1/1     Running     0          102s
+    > istio-cleanup-secrets-1.1.0-mp6qq         0/1     Completed   0          112s
+    > istio-egressgateway-6dfb8dd765-jzzxf      1/1     Running     0          104s
+    > istio-galley-7bccb97448-tk8bz             1/1     Running     0          104s
+    > istio-grafana-post-install-1.1.0-bvng6    0/1     Completed   0          113s
+    > istio-ingressgateway-679bd59c6-5bsbr      1/1     Running     0          104s
+    > istio-pilot-674d4b8469-ttxs8              2/2     Running     0          103s
+    > istio-policy-6b8795b6b5-g5m2k             2/2     Running     2          103s
+    > istio-security-post-install-1.1.0-cfqpx   0/1     Completed   0          111s
+    > istio-sidecar-injector-646d77f96c-55twm   1/1     Running     0          102s
+    > istio-telemetry-76c8fbc99f-hxskk          2/2     Running     2          103s
+    > istio-tracing-5fbc94c494-5nkjd            1/1     Running     0          102s
+    > kiali-56d95cf466-bpgfq                    1/1     Running     0          103s
+    > prometheus-8647cf4bc7-qnp6x               1/1     Running     0          102s
     ```
 
 
@@ -440,7 +394,7 @@ In this part, we will be using the sample BookInfo Application that comes as def
 Envoys are deployed as sidecars on each microservice. Injecting Envoy into your microservice means that the Envoy sidecar would manage the ingoing and outgoing calls for the service. To inject an Envoy sidecar to an existing microservice configuration, do:
 
 ```
-$ kubectl apply -f ./samples/bookinfo/platform/kube/bookinfo.yaml
+kubectl apply -f ./samples/bookinfo/platform/kube/bookinfo.yaml
 ```
 
 
@@ -449,16 +403,16 @@ After a few minutes, you should now have your Kubernetes Pods running and have a
 
 
 ```
-$ kubectl get pods
+kubectl get pods
 
 
-NAME                                        READY     STATUS    RESTARTS   AGE
-details-v1-1520924117-48z17                 2/2       Running   0          6m
-productpage-v1-560495357-jk1lz              2/2       Running   0          6m
-ratings-v1-734492171-rnr5l                  2/2       Running   0          6m
-reviews-v1-874083890-f0qf0                  2/2       Running   0          6m
-reviews-v2-1343845940-b34q5                 2/2       Running   0          6m
-reviews-v3-1813607990-8ch52                 2/2       Running   0          6m
+> NAME                                        READY     STATUS    RESTARTS   AGE
+> details-v1-1520924117-48z17                 2/2       Running   0          6m
+> productpage-v1-560495357-jk1lz              2/2       Running   0          6m
+> ratings-v1-734492171-rnr5l                  2/2       Running   0          6m
+> reviews-v1-874083890-f0qf0                  2/2       Running   0          6m
+> reviews-v2-1343845940-b34q5                 2/2       Running   0          6m
+> reviews-v3-1813607990-8ch52                 2/2       Running   0          6m
 ```
 
 ### Expose the Application via Ingress Gateway
@@ -470,7 +424,7 @@ An Ingress Gateway resource can be created to allow external requests through th
 Create an Istio ingress gateway to access your services over a public IP address.
 
 ```
-$ kubectl apply -f  ./samples/bookinfo/networking/bookinfo-gateway.yaml
+kubectl apply -f  ./samples/bookinfo/networking/bookinfo-gateway.yaml
 ```
 
 
@@ -523,7 +477,7 @@ No hint available
 **In order to create some more sustained traffic, open a new tab in the Terminal and paste the following code**
 
 ```
-$ for i in `seq 1 200000`; do curl http://192.168.99.100:31380/productpage; done
+for i in `seq 1 200000`; do curl http://192.168.99.100:31380/productpage; done
 ```
 
 **Note**
@@ -623,13 +577,13 @@ This step shows you how to configure where you want your service requests to go 
 Before moving on, we have to define the destination rules. The destination rules tell Istio what versions (subsets in Istio terminology) are available for routing. This step is required before fine-grained traffic shaping is possible.
 
 ```
-$ kubectl apply -f ./samples/bookinfo/networking/destination-rule-all.yaml
+kubectl apply -f ./samples/bookinfo/networking/destination-rule-all.yaml
 
 
-destinationrule.networking.istio.io/productpage created
-destinationrule.networking.istio.io/reviews created
-destinationrule.networking.istio.io/ratings created
-destinationrule.networking.istio.io/details created
+> destinationrule.networking.istio.io/productpage created
+> destinationrule.networking.istio.io/reviews created
+> destinationrule.networking.istio.io/ratings created
+> destinationrule.networking.istio.io/details created
 ```
 
 For more details, see the [Istio documentation](https://istio.io/docs/tasks/traffic-management/traffic-shifting/).
@@ -644,7 +598,7 @@ Set Default Routes to `reviews-v1` for all microservices
 This would set all incoming routes on the services (indicated in the line `destination: <service>`) to the deployment with a tag `version: v1`. To set the default routes, run:
 
   ```
-  $ kubectl apply -f ./samples/bookinfo/networking/virtual-service-all-v1.yaml
+  kubectl apply -f ./samples/bookinfo/networking/virtual-service-all-v1.yaml
   ```
 
 Observe in the Kiali Dashboard. After a short wile you should see that all traffic is going to V1.
@@ -658,7 +612,7 @@ Route 100% of the traffic to the `version: v2` of the **reviews microservices**
 This will direct/switch all incoming traffic to version v2 of the reviews microservice. Run:
 
   ```
-  $ kubectl apply -f ./samples/bookinfo/networking/virtual-service-reviews-v2.yaml
+  kubectl apply -f ./samples/bookinfo/networking/virtual-service-reviews-v2.yaml
   ```
   
 Observe in the [Kiali Dashboard](http://192.168.99.100:31552/kiali/). After a short wile you should see that all traffic is going to V2.
@@ -681,7 +635,7 @@ This is indicated by the `weight: 80 and 20` in the yaml file.
   > Using `replace` should allow you to edit existing route-rules.
 
   ```
-  $ kubectl apply -f ./samples/bookinfo/networking/virtual-service-reviews-80-20.yaml
+  kubectl apply -f ./samples/bookinfo/networking/virtual-service-reviews-80-20.yaml
   ```
 
 Observe in the [Kiali Dashboard](http://192.168.99.100:31552/kiali/). After a short wile you should see that about 80% of the traffic is going to V1 and 80% of the traffic is going to V2.
@@ -748,7 +702,7 @@ This would set the route for the user `jason` (You can login as _jason_ with any
 Run:
 
   ```
-  $ kubectl apply -f ./samples/bookinfo/networking/virtual-service-reviews-jason-v2v3
+  kubectl apply -f ./samples/bookinfo/networking/virtual-service-reviews-jason-v2v3
   ```
   
  Go to the Bookinfo Application: [`http://192.168.99.100:31380/productpage`](http://192.168.99.100:31380/productpage) (replace 192.168.99.100 with the address of your cluster).
@@ -790,8 +744,8 @@ No hint available
 This step shows you how to control access to your services. It helps to reset the routing rules to ensure that we are starting with a known configuration. The following commands will first set all review requests to v1, and then apply a rule to route requests from user _jason_ to v2, while all others go to v3:
 
 ```
-   $ kubectl apply -f ./samples/bookinfo/networking/virtual-service-all-v1.yaml
-   $ kubectl apply -f ./samples/bookinfo/networking/virtual-service-reviews-jason-v2-v3.yaml
+   kubectl apply -f ./samples/bookinfo/networking/virtual-service-all-v1.yaml
+   kubectl apply -f ./samples/bookinfo/networking/virtual-service-reviews-jason-v2-v3.yaml
 ```
 
 Go to the Bookinfo Application: [`http://192.168.99.100:31380/productpage`](http://192.168.99.100:31380/productpage) (replace 192.168.99.100 with the address of your cluster).
@@ -801,8 +755,8 @@ You'll now see that your `productpage` always shows red stars on the reviews sec
 * To deny access to the ratings service for all traffic coming from `reviews-v3`, you will use apply these rules:
 
   ```
-   $ kubectl apply -f ./samples/bookinfo/policy/mixer-rule-deny-label.yaml
-   $ kubectl apply -f ./samples/bookinfo/policy/mixer-rule-ratings-denial.yaml
+   kubectl apply -f ./samples/bookinfo/policy/mixer-rule-deny-label.yaml
+   kubectl apply -f ./samples/bookinfo/policy/mixer-rule-ratings-denial.yaml
   ```
 
 * To verify if your rule has been enforced, point your browser to your BookInfo Application. You'll notice you see no stars (Ratings service is currently unavailable) from the reviews section unless you are logged in as _jason_, in which case you'll see black stars.
@@ -819,7 +773,7 @@ And in Kiali you should see the following:
 Now let's clean up the mess and get back to a nice simple state.
 
 ```
-$ kubectl delete -f ./samples/bookinfo/policy/mixer-rule-deny-label.yaml
+kubectl delete -f ./samples/bookinfo/policy/mixer-rule-deny-label.yaml
 kubectl delete -f ./samples/bookinfo/policy/mixer-rule-ratings-denial.yaml
 kubectl delete -f ./samples/bookinfo/networking/virtual-service-all-v1.yaml
 kubectl delete -f ./samples/bookinfo/networking/virtual-service-reviews-jason-v2-v3.yaml
@@ -872,7 +826,7 @@ This step shows you how to configure [Istio Mixer](https://istio.io/docs/concept
 * Make sure you still send traffic to that service. You can renew the `for` loop from earlier.
 
 	```
-	$ for i in `seq 1 200000`; do curl http://192.168.99.100:31380/productpage; done
+	for i in `seq 1 200000`; do curl http://192.168.99.100:31380/productpage; done
 	```
 
 * Point your browser to [`http://192.168.99.100:31551/`](http://192.168.99.100:31551) (replace 192.168.99.100 with the address of your cluster)
@@ -904,7 +858,7 @@ Jaeger is a distributed tracing tool that is available with Istio.
 * Make sure you still send traffic to that service. You can renew the `for` loop from earlier.
 
 	```
-	$ for i in `seq 1 200000`; do curl http://192.168.99.100:31380/productpage; done
+	for i in `seq 1 200000`; do curl http://192.168.99.100:31380/productpage; done
 	```
 
 * Click on one of those traces and you will see the details of the traffic you sent to your BookInfo App. It shows how much time it took for the request on `productpage` to finish. It also shows how much time it took for the requests on the `details`,`reviews`, and `ratings` services.
@@ -946,7 +900,7 @@ No hint available
 * To delete Istio from your cluster
 
 ```
-$  kubectl delete -f ./samples/bookinfo/platform/kube/bookinfo.yaml
+kubectl delete -f ./samples/bookinfo/platform/kube/bookinfo.yaml
 kubectl delete -f  ./samples/bookinfo/networking/bookinfo-gateway.yaml
 kubectl delete -f https://raw.githubusercontent.com/niklaushirt/microservices-traffic-management-using-istio/master/istio.yaml
 kubectl delete -f ~/istio/install/kubernetes/helm/istio/templates/crds.yaml
