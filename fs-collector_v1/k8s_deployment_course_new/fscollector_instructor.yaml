@@ -1,0 +1,94 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: default-instructor-ui-config
+  namespace: default
+data:
+  COLLECTOR_CONFIG: 'http://dashboard.default'
+  APP_NAMESPACE: 'instructor'
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dashboard
+  namespace: default
+  labels:
+    app: dashboard
+spec:
+  selector:
+    matchLabels:
+      app: dashboard
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: dashboard
+    spec:
+      containers:
+      - name: dashboard
+        image: niklaushirt/collector:courselatest
+        imagePullPolicy: Always
+        env:
+          - name: APP_NAMESPACE
+            valueFrom:
+              configMapKeyRef:
+                name: default-instructor-ui-config
+                key: APP_NAMESPACE
+          - name: INSTRUCTOR
+            value: "Y"
+        resources:
+          requests:
+            cpu: 80m
+            memory: 100Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dashboard
+  namespace: default
+  labels:
+    app: dashboard
+spec:
+  type: NodePort
+  selector:
+    app: dashboard
+  ports:
+    - port: 80
+      targetPort: 3000
+      protocol: TCP
+      name: dashboard
+---
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: instructor
+  namespace: default
+  labels:
+    app: dashboard
+  annotations:
+    openshift.io/host.generated: 'true'
+spec:
+  host: >-
+    instructor.cp4mcm001-a376efc1170b9b8ace6422196c51e491-0000.us-south.containers.appdomain.cloud
+  to:
+    kind: Service
+    name: dashboard
+    weight: 100
+  port:
+    targetPort: dashboard
+  wildcardPolicy: None
+status:
+  ingress:
+    - host: >-
+        instructor.cp4mcm001-a376efc1170b9b8ace6422196c51e491-0000.us-south.containers.appdomain.cloud
+      routerName: default
+      conditions:
+        - type: Admitted
+          status: 'True'
+          lastTransitionTime: '2020-03-30T16:14:17Z'
+      wildcardPolicy: None
+      routerCanonicalHostname: >-
+        cp4mcm001-a376efc1170b9b8ace6422196c51e491-0000.us-south.containers.appdomain.cloud
+
+

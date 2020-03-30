@@ -1,0 +1,102 @@
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: _COLOR_-collector-config
+  namespace: default
+data:
+  COLLECTOR_CONFIG: 'http://_COLOR_-student-ui'
+  INSTRUCTOR_CONFIG: 'http://dashboard.default'
+  APP_NAMESPACE: '_COLOR_'
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: _COLOR_-student-ui
+  namespace: default
+  labels:
+    app: _COLOR_-student-ui
+spec:
+  selector:
+    matchLabels:
+      app: _COLOR_-student-ui
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: _COLOR_-student-ui
+    spec:
+      containers:
+      - name: _COLOR_-student-ui
+        image: niklaushirt/collector:courselatest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3000
+        env:
+          - name: APP_NAMESPACE
+            valueFrom:
+              configMapKeyRef:
+                name: _COLOR_-collector-config
+                key: APP_NAMESPACE
+          - name: APP_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: COLLECTOR_CONFIG
+            valueFrom: 
+              configMapKeyRef:
+                name: _COLOR_-collector-config
+                key: COLLECTOR_CONFIG
+        resources:
+          requests:
+            cpu: 80m
+            memory: 100Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: _COLOR_-student-ui
+  namespace: default
+  labels:
+    app: _COLOR_-student-ui
+spec:
+  type: NodePort
+  ports:
+    - port: 80
+      targetPort: 3000
+      protocol: TCP
+      name: _COLOR_-student-ui
+  selector:
+    app: _COLOR_-student-ui
+---
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: _COLOR_
+  namespace: default
+  labels:
+    app: _COLOR_-student-ui
+  annotations:
+    openshift.io/host.generated: 'true'
+spec:
+  host: >-
+    _COLOR_.cp4mcm001-a376efc1170b9b8ace6422196c51e491-0000.us-south.containers.appdomain.cloud
+  to:
+    kind: Service
+    name: _COLOR_-student-ui
+    weight: 100
+  port:
+    targetPort: _COLOR_-student-ui
+  wildcardPolicy: None
+status:
+  ingress:
+    - host: >-
+        _COLOR_.cp4mcm001-a376efc1170b9b8ace6422196c51e491-0000.us-south.containers.appdomain.cloud
+      routerName: default
+      conditions:
+        - type: Admitted
+          status: 'True'
+      wildcardPolicy: None
+      routerCanonicalHostname: >-
+        cp4mcm001-a376efc1170b9b8ace6422196c51e491-0000.us-south.containers.appdomain.cloud
